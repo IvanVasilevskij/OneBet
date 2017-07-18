@@ -13,7 +13,7 @@ import java.util.List;
                 query = "select u from User u where u.login = :login"
         )
 )
-@Table(name = "USER")
+@Table(name = "USERS")
 public class User {
     public static final String RootUserName = "root";
     public static final String FindByLogin = "User.findByLogin";
@@ -23,11 +23,16 @@ public class User {
     @Column(name = "ID", insertable = false, updatable = false)
     private int userId;
 
+    @Column(name = "LOGIN")
+    @NotNull
+    private String login;
+
     @Column(name = "FIRST_NAME")
     @NotNull
     private String firstName;
 
     @Column(name = "LAST_NAME")
+    @NotNull
     private String lastName;
 
     @Column(name = "BALANCE")
@@ -36,6 +41,14 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Bets> bets;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     public int getUserId() {
         return userId;

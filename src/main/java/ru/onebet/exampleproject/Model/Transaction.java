@@ -4,6 +4,7 @@ package ru.onebet.exampleproject.Model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "TRANSACTIONS")
 public class Transaction {
 
     @Id
@@ -11,11 +12,10 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "USER")
     @ManyToOne(optional = false)
     private User user;
 
-    @Column(name = "ROOT")
+    @ManyToOne(optional = false)
     private User root;
 
     @Column(name = "AMOUNT")
