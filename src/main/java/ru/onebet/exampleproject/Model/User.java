@@ -39,6 +39,10 @@ public class User {
     @NotNull
     private double balance;
 
+    @Column(name = "EMAIL")
+    @NotNull
+    private String email;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Bets> bets;
 
@@ -88,6 +92,14 @@ public class User {
 
     public void setBets(List<Bets> bets) {
         this.bets = bets;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

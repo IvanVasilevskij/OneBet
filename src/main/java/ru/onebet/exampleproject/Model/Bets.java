@@ -5,7 +5,6 @@ import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "BETS")
@@ -22,11 +21,11 @@ public class Bets {
 
     @ManyToOne(optional = false)
     @NotNull
-    private AllComand comandOne;
+    private ComandOfDota comandOne;
 
     @ManyToOne(optional = false)
     @NotNull
-    private AllComand comandTwo;
+    private ComandOfDota comandTwo;
 
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
@@ -58,19 +57,19 @@ public class Bets {
         this.date = date;
     }
 
-    public AllComand getComandOne() {
+    public ComandOfDota getComandOne() {
         return comandOne;
     }
 
-    public void setComandOne(AllComand comandOne) {
+    public void setComandOne(ComandOfDota comandOne) {
         this.comandOne = comandOne;
     }
 
-    public AllComand getComandTwo() {
+    public ComandOfDota getComandTwo() {
         return comandTwo;
     }
 
-    public void setComandTwo(AllComand comandTwo) {
+    public void setComandTwo(ComandOfDota comandTwo) {
         this.comandTwo = comandTwo;
     }
 

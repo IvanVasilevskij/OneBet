@@ -24,29 +24,20 @@ public class CreatingUsers {
         }
     }
 
-    public User createUser(String login, String firstName, String lastName) throws EntityExistsException {
-        User user = new User();
-        user.setLogin(login);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setBalance(0.0);
-
-        em.persist(user);
-
-        return user;
-    }
-
-    public User ensureRootUser() {
-        em.getTransaction().begin();
-
+    public String createUser(String login, String firstName, String lastName, String email) throws EntityExistsException {
         try {
-            User root = findUser(User.RootUserName);
-            if (root == null) {
-                root = createUser(User.RootUserName, "root", "root");
-            }
-            em.getTransaction().commit();
+            if (findUser(login) == null) {
+                User user = new User();
+                user.setLogin(login);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setBalance(0.0);
+                user.setEmail(email);
 
-            return root;
+                em.persist(user);
+
+                return "Пользователь успешно создан";
+            } else return "Пользователь с таким login:" + login + " уже существует";
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

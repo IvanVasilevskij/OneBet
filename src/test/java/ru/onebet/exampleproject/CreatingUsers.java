@@ -34,14 +34,19 @@ public class CreatingUsers {
 
         User user = new User();
         user.setLogin("root");
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
+        user.setFirstName("Ivan");
+        user.setLastName("Vasilevskij");
         user.setBalance(1.0);
+        user.setEmail("vasilevskij.ivan@gmail.com");
 
         em.persist(user);
 
         em.getTransaction().commit();
 
         assertEquals("root", em.find(User.class, user.getUserId()).getLogin());
+        assertEquals("Ivan", em.find(User.class, user.getUserId()).getFirstName());
+        assertEquals("Vasilevskij", em.find(User.class, user.getUserId()).getLastName());
+        assertEquals(1.0, em.find(User.class, user.getUserId()).getBalance(),0.0);
+        assertEquals("vasilevskij.ivan@gmail.com", em.find(User.class, user.getUserId()).getEmail());
     }
 }
