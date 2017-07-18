@@ -5,8 +5,10 @@ import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Table(name = "BETS")
 public class Bets {
 
     @Id
@@ -18,15 +20,13 @@ public class Bets {
     @NotNull
     private Date date;
 
-    @Column(name = "COMAND_ONE")
     @ManyToOne(optional = false)
     @NotNull
-    private Comand comandOne;
+    private AllComand comandOne;
 
-    @Column(name = "COMAND_TWO")
     @ManyToOne(optional = false)
     @NotNull
-    private Comand comandTwo;
+    private AllComand comandTwo;
 
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
@@ -38,6 +38,9 @@ public class Bets {
     @Column(name = "PERSENT_TO_COMAND_TWO")
     @NotNull
     private double persentComandTwo;
+
+    @ManyToOne(optional = false)
+    private User user;
 
     public int getId() {
         return id;
@@ -55,19 +58,19 @@ public class Bets {
         this.date = date;
     }
 
-    public Comand getComandOne() {
+    public AllComand getComandOne() {
         return comandOne;
     }
 
-    public void setComandOne(Comand comandOne) {
+    public void setComandOne(AllComand comandOne) {
         this.comandOne = comandOne;
     }
 
-    public Comand getComandTwo() {
+    public AllComand getComandTwo() {
         return comandTwo;
     }
 
-    public void setComandTwo(Comand comandTwo) {
+    public void setComandTwo(AllComand comandTwo) {
         this.comandTwo = comandTwo;
     }
 
@@ -93,5 +96,13 @@ public class Bets {
 
     public void setPersentComandTwo(double persentComandTwo) {
         this.persentComandTwo = persentComandTwo;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
