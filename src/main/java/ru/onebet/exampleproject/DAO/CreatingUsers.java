@@ -43,4 +43,16 @@ public class CreatingUsers {
             throw new IllegalStateException(t);
         }
     }
+
+    public String deleteUser(String login) throws EntityExistsException {
+        try {
+            if (findUser(login) != null) {
+                em.remove(findUser(login));
+                return "Пользователя с таким login: " + login + "не существует.";
+            } else return "Пользователя с таким login: " + login + "не существует.";
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
 }
