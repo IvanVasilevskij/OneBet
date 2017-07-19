@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.Model;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "TRANSACTIONS")
@@ -19,7 +20,10 @@ public class Transaction {
     private User root;
 
     @Column(name = "AMOUNT")
-    private double amounr;
+    private double amount;
+
+    @Column(name = "DATE")
+    private Date date;
 
     public int getId() {
         return id;
@@ -45,11 +49,19 @@ public class Transaction {
         this.root = root;
     }
 
-    public double getAmounr() {
-        return amounr;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setAmounr(double amounr) {
-        this.amounr = amounr;
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

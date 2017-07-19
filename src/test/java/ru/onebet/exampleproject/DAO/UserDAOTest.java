@@ -32,7 +32,11 @@ public class UserDAOTest {
     public void testCreateUser() throws Exception {
         em.getTransaction().begin();
 
-        User user = new UserDAO(em).createUser("root","Ivan","Vasilevskij", "vasilevskij.ivan@gmail.com");
+        User user = new UserDAO(em).createUser(
+                "root",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
 
         em.persist(user);
 

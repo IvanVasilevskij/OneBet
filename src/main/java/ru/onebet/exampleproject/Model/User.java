@@ -28,11 +28,9 @@ public class User {
     private String login;
 
     @Column(name = "FIRST_NAME")
-    @NotNull
     private String firstName;
 
     @Column(name = "LAST_NAME")
-    @NotNull
     private String lastName;
 
     @Column(name = "BALANCE")
@@ -45,6 +43,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Bets> bets;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
 
     public String getLogin() {
         return login;
@@ -100,6 +101,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
 

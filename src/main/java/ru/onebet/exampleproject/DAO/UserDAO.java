@@ -54,4 +54,24 @@ public class UserDAO {
             throw new IllegalStateException(t);
         }
     }
+    public User ensureRootUser() {
+        em.getTransaction().begin();
+
+        try {
+            User root = findUser(User.RootUserName);
+            if (root == null) {
+                root = createUser(User.RootUserName,
+                        "Ivan",
+                        "Vasilevskij",
+                        "vasilevskij.ivan@gmail.com");
+            }
+
+            em.getTransaction().commit();
+
+            return root;
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
 }
