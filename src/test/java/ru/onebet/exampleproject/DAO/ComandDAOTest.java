@@ -65,6 +65,24 @@ public class ComandDAOTest {
         ComandOfDota comandFinded = dao.findComandByComandName("EG");
         em.getTransaction().commit();
 
-        assertEquals(comandOne,comandFinded);
+        assertEquals(comandOne, comandFinded);
+    }
+
+    @Test
+    public void testDeleteComandByComandName() throws Exception {
+        em.getTransaction().begin();
+        ComandDAO dao = new ComandDAO(em);
+        ComandOfDota comandOne = dao.createComand(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
+        em.persist(comandOne);
+        dao.deleteComandByComandName("EG");
+        em.getTransaction().commit();
+
+        assertEquals(null, dao.findComandByComandName("EG"));
     }
 }

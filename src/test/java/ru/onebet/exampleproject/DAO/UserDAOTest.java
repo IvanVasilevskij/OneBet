@@ -80,6 +80,5 @@ public class UserDAOTest {
         em.getTransaction().commit();
 
         assertEquals(user,userFinded);
-
     }
 }

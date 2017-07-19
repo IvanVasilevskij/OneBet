@@ -45,4 +45,15 @@ public class ComandDAO {
         }
     }
 
+    public void deleteComandByComandName(String comandName) {
+        try {
+            if (findComandByComandName(comandName) != null) {
+                em.remove(findComandByComandName(comandName));
+            }
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
+
 }
