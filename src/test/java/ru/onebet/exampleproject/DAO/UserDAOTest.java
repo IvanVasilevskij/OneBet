@@ -11,6 +11,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class UserDAOTest {
     private EntityManagerFactory emf;
@@ -30,17 +31,12 @@ public class UserDAOTest {
 
     @Test
     public void testCreateUser() throws Exception {
-        em.getTransaction().begin();
 
         User user = new UserDAO(em).createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
-
-        em.persist(user);
-
-        em.getTransaction().commit();
 
         assertEquals("root", em.find(User.class, user.getUserId()).getLogin());
         assertEquals("Ivan", em.find(User.class, user.getUserId()).getFirstName());
@@ -52,37 +48,39 @@ public class UserDAOTest {
 
     @Test
     public void testDeleteUserByLogin() throws Exception {
-        em.getTransaction().begin();
+
         User user = new UserDAO(em).createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
-        em.persist(user);
-
         UserDAO dao = new UserDAO(em);
         dao.deleteUserByLogin(user.getLogin());
 
-        em.getTransaction().commit();
         assertEquals(null, dao.findUser("root"));
     }
 
     @Test
     public void testFindUser() throws Exception {
-        em.getTransaction().begin();
+
         User user = new UserDAO(em).createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
-        em.persist(user);
-
         UserDAO dao = new UserDAO(em);
         User userFinded = dao.findUser("root");
-        em.getTransaction().commit();
 
         assertEquals(user,userFinded);
+    }
+
+    @Test
+    public void testEnsureRootUser() throws Exception {
+        User root = new UserDAO(em).ensureRootUser();
+        User rootTwo = new UserDAO(em).ensureRootUser();
+
+        assertSame(root, rootTwo);
     }
 }

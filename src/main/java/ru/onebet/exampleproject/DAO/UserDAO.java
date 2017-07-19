@@ -25,6 +25,7 @@ public class UserDAO {
     }
 
     public User createUser(String login, String firstName, String lastName, String email) throws EntityExistsException {
+        em.getTransaction().begin();
         try {
             if (findUser(login) == null) {
                 User user = new User();
@@ -35,7 +36,7 @@ public class UserDAO {
                 user.setEmail(email);
 
                 em.persist(user);
-
+                em.getTransaction().commit();
                 return user;
             } else return findUser(login);
         } catch (Throwable t) {
@@ -45,18 +46,18 @@ public class UserDAO {
     }
 
     public void deleteUserByLogin(String login) throws EntityExistsException {
+        em.getTransaction().begin();
         try {
             if (findUser(login) != null) {
                 em.remove(findUser(login));
             }
+            em.getTransaction().commit();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
     public User ensureRootUser() {
-        em.getTransaction().begin();
-
         try {
             User root = findUser(User.RootUserName);
             if (root == null) {
@@ -65,9 +66,6 @@ public class UserDAO {
                         "Vasilevskij",
                         "vasilevskij.ivan@gmail.com");
             }
-
-            em.getTransaction().commit();
-
             return root;
         } catch (Throwable t) {
             em.getTransaction().rollback();

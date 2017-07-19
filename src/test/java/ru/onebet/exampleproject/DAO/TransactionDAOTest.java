@@ -30,8 +30,9 @@ public class TransactionDAOTest {
 
     @Test
     public void testEmitMoney() throws Exception {
+
         UserDAO daoU = new UserDAO(em);
-        daoU.ensureRootUser();
+        User root = daoU.ensureRootUser();
 
         TransactionDAO daoT = new TransactionDAO(em);
         daoT.emitMoney(500.0);
@@ -48,17 +49,24 @@ public class TransactionDAOTest {
 
     @Test
     public void testSendMoney() throws Exception {
-        UserDAO daoU = new UserDAO(em);
 
-        em.getTransaction().begin();
+        UserDAO daoU = new UserDAO(em);
         daoU.ensureRootUser();
 
-        User user = new User();
+        User user = new UserDAO(em).createUser(
+                "user",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+        em.getTransaction().begin();
+
         user.setBalance(150.0);
-        em.persist(user);
+
         em.getTransaction().commit();
 
         TransactionDAO daoT = new TransactionDAO(em);
+
         daoT.sendMoney(user, 100.0);
 
         assertEquals(50.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
@@ -70,6 +78,33 @@ public class TransactionDAOTest {
         assertEquals(0.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
         assertEquals(150.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
         assertEquals(50.0,daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount(),0.0);
+    }
 
+    @Test
+    public void testReciveMoney() throws Exception {
+        UserDAO daoU = new UserDAO(em);
+        User root = daoU.ensureRootUser();
+
+        TransactionDAO daoT = new TransactionDAO(em);
+        daoT.emitMoney(500.0);
+
+        User user = new UserDAO(em).createUser(
+                "user",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+
+        daoT.reciveMoney(user, 100.0);
+
+        assertEquals(100.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
+        assertEquals(400.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
+        assertEquals(100.0,daoU.findUser(user.getLogin()).getTransactions().get(0).getAmount(),0.0);
+
+        daoT.reciveMoney(user, 50.0);
+
+        assertEquals(150.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
+        assertEquals(350.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
+        assertEquals(50.0,daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount(),0.0);
     }
 }

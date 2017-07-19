@@ -18,6 +18,7 @@ public class TransactionDAO {
         if (amount < 0) throw new IllegalArgumentException();
 
         em.getTransaction().begin();
+
         UserDAO dao = new UserDAO(em);
         try {
             User root = dao.findUser(User.RootUserName);
@@ -35,6 +36,7 @@ public class TransactionDAO {
             root.setBalance(root.getBalance() + amount);
 
             em.getTransaction().commit();
+
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -43,7 +45,9 @@ public class TransactionDAO {
 
     public void sendMoney(User user, double amount) {
         if (amount < 0) throw new IllegalArgumentException();
+
         em.getTransaction().begin();
+
         UserDAO daoU = new UserDAO(em);
         try {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
@@ -65,6 +69,7 @@ public class TransactionDAO {
             root.setBalance(root.getBalance()+amount);
 
             em.getTransaction().commit();
+
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -72,32 +77,36 @@ public class TransactionDAO {
     }
     public void reciveMoney (User user, double amount) {
         if (amount < 0) throw new IllegalArgumentException();
+
         em.getTransaction().begin();
+
         UserDAO daoU = new UserDAO(em);
-        User root = daoU.ensureRootUser();
         try {
-            if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No user");
-            if (root.getBalance() < amount) {
-                emitMoney(amount);
-            }
+            if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
+            User root = daoU.findUser(User.RootUserName);
+            if (root == null) throw new IllegalStateException("No root user");
+            if (amount > root.getBalance()) throw new IllegalArgumentException("Please do emitMoney");
+
+//            if (amount > root.getBalance()) emitMoney(amount);
+
             Transaction t = new Transaction();
             t.setDate(new Date());
             t.setAmount(amount);
             t.setUser(user);
             t.setRoot(root);
 
-            user.setBalance(user.getBalance()+amount);
-            root.setBalance(root.getBalance()-amount);
-
             em.persist(t);
             em.refresh(user);
             em.refresh(root);
 
+            user.setBalance(user.getBalance()+amount);
+            root.setBalance(root.getBalance()-amount);
+
             em.getTransaction().commit();
+
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
-
 }
