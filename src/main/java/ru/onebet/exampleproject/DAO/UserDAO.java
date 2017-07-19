@@ -7,10 +7,10 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-public class CreatingUsers {
+public class UserDAO {
     private final EntityManager em;
 
-    public CreatingUsers(EntityManager em) {
+    public UserDAO(EntityManager em) {
         this.em = em;
     }
 
@@ -24,7 +24,7 @@ public class CreatingUsers {
         }
     }
 
-    public String createUser(String login, String firstName, String lastName, String email) throws EntityExistsException {
+    public User createUser(String login, String firstName, String lastName, String email) throws EntityExistsException {
         try {
             if (findUser(login) == null) {
                 User user = new User();
@@ -36,20 +36,19 @@ public class CreatingUsers {
 
                 em.persist(user);
 
-                return "Пользователь успешно создан";
-            } else return "Пользователь с таким login:" + login + " уже существует";
+                return user;
+            } else return findUser(login);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
 
-    public String deleteUser(String login) throws EntityExistsException {
+    public void deleteUserByLogin(String login) throws EntityExistsException {
         try {
             if (findUser(login) != null) {
                 em.remove(findUser(login));
-                return "Пользователя с таким login: " + login + "не существует.";
-            } else return "Пользователя с таким login: " + login + "не существует.";
+            }
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

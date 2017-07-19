@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject;
+package ru.onebet.exampleproject.DAO;
 
 
 import org.junit.After;
@@ -12,7 +12,7 @@ import javax.persistence.Persistence;
 
 import static org.junit.Assert.assertEquals;
 
-public class AddingComand {
+public class ComandDAOTest {
     private EntityManagerFactory emf;
     private EntityManager em;
 
@@ -29,15 +29,16 @@ public class AddingComand {
     }
 
     @Test
-    public void testComandAdd() throws Exception {
+    public void testCreateComand() throws Exception {
         em.getTransaction().begin();
-        ComandOfDota comandOne = new ComandOfDota();
-        comandOne.setComandName("EG");
-        comandOne.setRoleMid("Sumail");
-        comandOne.setRoleCarry("Arteezy");
-        comandOne.setRoleHard("Universe");
-        comandOne.setRoleSupFour("Zai");
-        comandOne.setRoleSupFive("Crit");
+        ComandDAO dao = new ComandDAO(em);
+        ComandOfDota comandOne = dao.createComand(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
         em.persist(comandOne);
         em.getTransaction().commit();
 
@@ -49,4 +50,21 @@ public class AddingComand {
         assertEquals("Crit", em.find(ComandOfDota.class, comandOne.getId()).getRoleSupFive());
     }
 
+    @Test
+    public void testFindComandByComandName() throws Exception {
+        em.getTransaction().begin();
+        ComandDAO dao = new ComandDAO(em);
+        ComandOfDota comandOne = dao.createComand(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
+        em.persist(comandOne);
+        ComandOfDota comandFinded = dao.findComandByComandName("EG");
+        em.getTransaction().commit();
+
+        assertEquals(comandOne,comandFinded);
+    }
 }

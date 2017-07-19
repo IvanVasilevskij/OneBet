@@ -7,10 +7,10 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-public class AddNewComand {
+public class ComandDAO {
     private final EntityManager em;
 
-    public AddNewComand(EntityManager em) {
+    public ComandDAO(EntityManager em) {
         this.em = em;
     }
 
@@ -24,7 +24,7 @@ public class AddNewComand {
         }
     }
 
-    public String createUser(String conamdName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
+    public ComandOfDota createComand(String conamdName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
         try {
             if (findComandByComandName(conamdName) == null) {
                 ComandOfDota comandOne = new ComandOfDota();
@@ -37,8 +37,8 @@ public class AddNewComand {
 
                 em.persist(comandOne);
 
-                return "Команда успешно добавлена";
-            } else return "Команда " + conamdName + "уже существует";
+                return comandOne;
+            } else return findComandByComandName(conamdName);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
