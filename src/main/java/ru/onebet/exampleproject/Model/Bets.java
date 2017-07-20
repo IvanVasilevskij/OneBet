@@ -7,8 +7,16 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@NamedQueries(
+        @NamedQuery(
+                name = Bets.FindBySearchingMark,
+                query = "select b from Bets b where b.searchingMark = :searchingMark"
+        )
+)
 @Table(name = "BETS")
 public class Bets {
+
+    public static final String FindBySearchingMark = "Bets.findBySearchingMark";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +47,9 @@ public class Bets {
     @NotNull
     private double persentComandTwo;
 
-    @ManyToOne(optional = false)
-    private User user;
+    @Column(name = "SEARCHING_MARK")
+    @NotNull
+    private String searchingMark;
 
     public int getId() {
         return id;
@@ -98,11 +107,11 @@ public class Bets {
         this.persentComandTwo = persentComandTwo;
     }
 
-    public User getUser() {
-        return user;
+    public String getSearchingMark() {
+        return searchingMark;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSearchingMark(String searcingMark) {
+        this.searchingMark = searcingMark;
     }
 }

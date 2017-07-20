@@ -1,8 +1,6 @@
 package ru.onebet.exampleproject.DAO;
 
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import ru.onebet.exampleproject.Model.User;
 import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import static org.junit.Assert.assertEquals;
 

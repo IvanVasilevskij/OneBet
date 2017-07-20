@@ -46,10 +46,18 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Bets> bets;
+    private List<MakingBets> bets;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getLogin() {
         return login;
@@ -65,14 +73,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -99,20 +99,20 @@ public class User {
         this.balance = balance;
     }
 
-    public List<Bets> getBets() {
-        return bets;
-    }
-
-    public void setBets(List<Bets> bets) {
-        this.bets = bets;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<MakingBets> getBets() {
+        return bets;
+    }
+
+    public void setBets(List<MakingBets> bets) {
+        this.bets = bets;
     }
 
     public List<Transaction> getTransactions() {

@@ -8,6 +8,7 @@ import ru.onebet.exampleproject.Model.User;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 @Service
 public class UserDAO {
@@ -73,6 +74,22 @@ public class UserDAO {
                         "vasilevskij.ivan@gmail.com");
             }
             return root;
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
+
+    public boolean checkPassword(String login, String password) {
+        User user = findUser(login);
+        if (user == null) throw new IllegalArgumentException("User not exist");
+        return user.getPassword() == password ? true : false;
+    }
+
+    public List<User> getAllUser() {
+        try {
+            List<User> users = em.createQuery("from User").getResultList();
+            return users;
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

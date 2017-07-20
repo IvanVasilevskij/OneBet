@@ -16,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -85,5 +87,37 @@ public class UserDAOTest {
         User rootTwo = daoU.ensureRootUser();
 
         assertSame(root, rootTwo);
+    }
+
+    @Test
+    public void testCheckPassword() throws Exception {
+        User userOne = daoU.createUser(
+                "userOne",
+                "123456",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+        assertEquals(true, daoU.checkPassword("userOne","123456"));
+        assertEquals(false, daoU.checkPassword("userOne","123457"));
+
+    }
+
+    @Test
+    public void testGetAllUsers() throws Exception {
+        User userOne = daoU.createUser(
+                "userOne",
+                "password",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+        User userTwo = daoU.createUser(
+                "userTwo",
+                "password",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+        List<User> result = daoU.getAllUser();
+        assertEquals(2, result.size());
     }
 }

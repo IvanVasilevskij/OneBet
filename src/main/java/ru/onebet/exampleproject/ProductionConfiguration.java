@@ -21,4 +21,6 @@ public class ProductionConfiguration {
     public EntityManager getEntityManager(EntityManagerFactory emf) {
         return emf.createEntityManager();
     }
+
+
 }
