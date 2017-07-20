@@ -1,15 +1,19 @@
 package ru.onebet.exampleproject.DAO;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.onebet.exampleproject.Model.ComandOfDota;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+@Service
 public class ComandDAO {
     private final EntityManager em;
 
+    @Autowired
     public ComandDAO(EntityManager em) {
         this.em = em;
     }

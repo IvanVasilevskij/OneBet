@@ -1,27 +1,33 @@
 package ru.onebet.exampleproject.DAO;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.onebet.exampleproject.Model.Transaction;
 import ru.onebet.exampleproject.Model.User;
 
 import javax.persistence.EntityManager;
 import java.util.Date;
 
+@Service
 public class TransactionDAO {
     private final EntityManager em;
 
+    @Autowired
     public TransactionDAO(EntityManager em) {
         this.em = em;
     }
+
+    @Autowired
+    public UserDAO daoU;
 
     public void emitMoney(double amount) {
         if (amount < 0) throw new IllegalArgumentException();
 
         em.getTransaction().begin();
 
-        UserDAO dao = new UserDAO(em);
         try {
-            User root = dao.findUser(User.RootUserName);
+            User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 
             Transaction t = new Transaction();

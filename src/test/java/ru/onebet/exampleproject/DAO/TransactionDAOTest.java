@@ -4,7 +4,13 @@ package ru.onebet.exampleproject.DAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.Model.User;
+import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,29 +18,26 @@ import javax.persistence.Persistence;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TransactionDAOTest {
-    private EntityManagerFactory emf;
+
+    @Autowired
     private EntityManager em;
 
-    @Before
-    public void setUp() throws Exception {
-        emf = Persistence.createEntityManagerFactory("postgres");
-        em = emf.createEntityManager();
-    }
+    @Autowired
+    private UserDAO daoU;
 
-    @After
-    public void tearDown() throws Exception {
-        if (em != null) em.close();
-        if (emf != null) emf.close();
-    }
+    @Autowired
+    private TransactionDAO daoT;
+
 
     @Test
     public void testEmitMoney() throws Exception {
 
-        UserDAO daoU = new UserDAO(em);
         User root = daoU.ensureRootUser();
 
-        TransactionDAO daoT = new TransactionDAO(em);
         daoT.emitMoney(500.0);
 
 
@@ -50,10 +53,9 @@ public class TransactionDAOTest {
     @Test
     public void testSendMoney() throws Exception {
 
-        UserDAO daoU = new UserDAO(em);
-        daoU.ensureRootUser();
+        User root = daoU.ensureRootUser();
 
-        User user = new UserDAO(em).createUser(
+        User user = daoU.createUser(
                 "user",
                 "Ivan",
                 "Vasilevskij",
@@ -64,8 +66,6 @@ public class TransactionDAOTest {
         user.setBalance(150.0);
 
         em.getTransaction().commit();
-
-        TransactionDAO daoT = new TransactionDAO(em);
 
         daoT.sendMoney(user, 100.0);
 
@@ -82,13 +82,11 @@ public class TransactionDAOTest {
 
     @Test
     public void testReciveMoney() throws Exception {
-        UserDAO daoU = new UserDAO(em);
         User root = daoU.ensureRootUser();
 
-        TransactionDAO daoT = new TransactionDAO(em);
         daoT.emitMoney(500.0);
 
-        User user = new UserDAO(em).createUser(
+        User user = daoU.createUser(
                 "user",
                 "Ivan",
                 "Vasilevskij",

@@ -4,7 +4,13 @@ package ru.onebet.exampleproject.DAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.Model.User;
+import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,26 +19,21 @@ import javax.persistence.Persistence;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserDAOTest {
-    private EntityManagerFactory emf;
+
+    @Autowired
     private EntityManager em;
 
-    @Before
-    public void setUp() throws Exception {
-        emf = Persistence.createEntityManagerFactory("postgres");
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        if (em != null) em.close();
-        if (emf != null) emf.close();
-    }
+    @Autowired
+    private UserDAO daoU;
 
     @Test
     public void testCreateUser() throws Exception {
 
-        User user = new UserDAO(em).createUser(
+        User user = daoU.createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
@@ -49,37 +50,35 @@ public class UserDAOTest {
     @Test
     public void testDeleteUserByLogin() throws Exception {
 
-        User user = new UserDAO(em).createUser(
+        User user = daoU.createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
-        UserDAO dao = new UserDAO(em);
-        dao.deleteUserByLogin(user.getLogin());
+        daoU.deleteUserByLogin(user.getLogin());
 
-        assertEquals(null, dao.findUser("root"));
+        assertEquals(null, daoU.findUser("root"));
     }
 
     @Test
     public void testFindUser() throws Exception {
 
-        User user = new UserDAO(em).createUser(
+        User user = daoU.createUser(
                 "root",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
-        UserDAO dao = new UserDAO(em);
-        User userFinded = dao.findUser("root");
+        User userFinded = daoU.findUser("root");
 
         assertEquals(user,userFinded);
     }
 
     @Test
     public void testEnsureRootUser() throws Exception {
-        User root = new UserDAO(em).ensureRootUser();
-        User rootTwo = new UserDAO(em).ensureRootUser();
+        User root = daoU.ensureRootUser();
+        User rootTwo = daoU.ensureRootUser();
 
         assertSame(root, rootTwo);
     }

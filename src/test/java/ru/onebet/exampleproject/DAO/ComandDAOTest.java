@@ -4,7 +4,13 @@ package ru.onebet.exampleproject.DAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.Model.ComandOfDota;
+import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,27 +18,24 @@ import javax.persistence.Persistence;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ComandDAOTest {
-    private EntityManagerFactory emf;
+
+    @Autowired
     private EntityManager em;
 
-    @Before
-    public void setUp() throws Exception {
-        emf = Persistence.createEntityManagerFactory("postgres");
-        em = emf.createEntityManager();
-    }
+    @Autowired
+    private UserDAO daoU;
 
-    @After
-    public void tearDown() throws Exception {
-        if (em != null) em.close();
-        if (emf != null) emf.close();
-    }
+    @Autowired
+    private ComandDAO daoC;
 
     @Test
     public void testCreateComand() throws Exception {
         em.getTransaction().begin();
-        ComandDAO dao = new ComandDAO(em);
-        ComandOfDota comandOne = dao.createComand(
+        ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -53,8 +56,7 @@ public class ComandDAOTest {
     @Test
     public void testFindComandByComandName() throws Exception {
         em.getTransaction().begin();
-        ComandDAO dao = new ComandDAO(em);
-        ComandOfDota comandOne = dao.createComand(
+        ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -62,7 +64,7 @@ public class ComandDAOTest {
                 "Zai",
                 "Crit");
         em.persist(comandOne);
-        ComandOfDota comandFinded = dao.findComandByComandName("EG");
+        ComandOfDota comandFinded = daoC.findComandByComandName("EG");
         em.getTransaction().commit();
 
         assertEquals(comandOne, comandFinded);
@@ -71,8 +73,7 @@ public class ComandDAOTest {
     @Test
     public void testDeleteComandByComandName() throws Exception {
         em.getTransaction().begin();
-        ComandDAO dao = new ComandDAO(em);
-        ComandOfDota comandOne = dao.createComand(
+        ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -80,9 +81,9 @@ public class ComandDAOTest {
                 "Zai",
                 "Crit");
         em.persist(comandOne);
-        dao.deleteComandByComandName("EG");
+        daoC.deleteComandByComandName("EG");
         em.getTransaction().commit();
 
-        assertEquals(null, dao.findComandByComandName("EG"));
+        assertEquals(null, daoC.findComandByComandName("EG"));
     }
 }

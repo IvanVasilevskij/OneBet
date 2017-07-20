@@ -12,6 +12,21 @@
             <property name="hibernate.connection.password" value="4012659172" />
              <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.flushMode" value="FLUSH_AUTO" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="postgresTest">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="hibernate.archive.autodetection" value="class" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/ru.onebet.test" />
+            <property name="hibernate.connection.username" value="postgres" />
+            <property name="hibernate.connection.password" value="4012659172" />
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.flushMode" value="FLUSH_AUTO" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
         </properties>
     </persistence-unit>
