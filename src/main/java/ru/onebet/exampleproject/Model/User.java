@@ -27,6 +27,10 @@ public class User {
     @NotNull
     private String login;
 
+    @Column(name = "PASSWORD")
+    @NotNull
+    private String password;
+
     @Column(name = "FIRST_NAME")
     private String firstName;
 
@@ -53,6 +57,14 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getUserId() {

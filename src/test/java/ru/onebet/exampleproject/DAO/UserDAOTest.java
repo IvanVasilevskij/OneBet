@@ -35,11 +35,13 @@ public class UserDAOTest {
 
         User user = daoU.createUser(
                 "root",
+                "password",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
         assertEquals("root", em.find(User.class, user.getUserId()).getLogin());
+        assertEquals("password", em.find(User.class, user.getUserId()).getPassword());
         assertEquals("Ivan", em.find(User.class, user.getUserId()).getFirstName());
         assertEquals("Vasilevskij", em.find(User.class, user.getUserId()).getLastName());
         assertEquals(0.0, em.find(User.class, user.getUserId()).getBalance(),0.0);
@@ -52,6 +54,7 @@ public class UserDAOTest {
 
         User user = daoU.createUser(
                 "root",
+                "password",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
@@ -66,6 +69,7 @@ public class UserDAOTest {
 
         User user = daoU.createUser(
                 "root",
+                "password",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");

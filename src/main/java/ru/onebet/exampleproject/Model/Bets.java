@@ -32,6 +32,7 @@ public class Bets {
     private double persentComandOne;
 
     @Column(name = "PERSENT_TO_DROW")
+    @NotNull
     private double persentToDrow;
 
     @Column(name = "PERSENT_TO_COMAND_TWO")

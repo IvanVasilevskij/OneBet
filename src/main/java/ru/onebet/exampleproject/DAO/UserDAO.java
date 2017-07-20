@@ -28,12 +28,13 @@ public class UserDAO {
         }
     }
 
-    public User createUser(String login, String firstName, String lastName, String email) throws EntityExistsException {
+    public User createUser(String login,String password, String firstName, String lastName, String email) throws EntityExistsException {
         em.getTransaction().begin();
         try {
             if (findUser(login) == null) {
                 User user = new User();
                 user.setLogin(login);
+                user.setPassword(password);
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setBalance(0.0);
@@ -66,6 +67,7 @@ public class UserDAO {
             User root = findUser(User.RootUserName);
             if (root == null) {
                 root = createUser(User.RootUserName,
+                        "password",
                         "Ivan",
                         "Vasilevskij",
                         "vasilevskij.ivan@gmail.com");

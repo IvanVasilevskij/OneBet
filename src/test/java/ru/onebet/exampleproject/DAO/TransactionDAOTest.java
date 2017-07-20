@@ -57,6 +57,7 @@ public class TransactionDAOTest {
 
         User user = daoU.createUser(
                 "user",
+                "password",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
@@ -88,6 +89,7 @@ public class TransactionDAOTest {
 
         User user = daoU.createUser(
                 "user",
+                "password",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
