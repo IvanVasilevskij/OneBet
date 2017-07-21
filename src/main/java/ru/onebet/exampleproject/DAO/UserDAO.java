@@ -80,10 +80,16 @@ public class UserDAO {
         }
     }
 
-    public boolean checkPassword(String login, String password) {
+    public User checkPassword(String login, String password) {
         User user = findUser(login);
         if (user == null) throw new IllegalArgumentException("User not exist");
-        return user.getPassword() == password ? true : false;
+        return user;
+    }
+
+    public double checkBalanceForBet(String login,String password, double amount) {
+        User user = checkPassword(login,password);
+        if (user.getBalance() < amount) throw new IllegalArgumentException("User have no balance for this bet");
+        return user.getBalance();
     }
 
     public List<User> getAllUser() {

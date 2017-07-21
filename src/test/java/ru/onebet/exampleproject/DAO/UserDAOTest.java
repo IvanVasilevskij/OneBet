@@ -46,7 +46,7 @@ public class UserDAOTest {
         assertEquals("password", em.find(User.class, user.getUserId()).getPassword());
         assertEquals("Ivan", em.find(User.class, user.getUserId()).getFirstName());
         assertEquals("Vasilevskij", em.find(User.class, user.getUserId()).getLastName());
-        assertEquals(0.0, em.find(User.class, user.getUserId()).getBalance(),0.0);
+        assertEquals(0.0, em.find(User.class, user.getUserId()).getBalance(), 0.0);
         assertEquals("vasilevskij.ivan@gmail.com", em.find(User.class, user.getUserId()).getEmail());
     }
 
@@ -78,7 +78,7 @@ public class UserDAOTest {
 
         User userFinded = daoU.findUser("root");
 
-        assertEquals(user,userFinded);
+        assertEquals(user, userFinded);
     }
 
     @Test
@@ -98,8 +98,7 @@ public class UserDAOTest {
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
-        assertEquals(true, daoU.checkPassword("userOne","123456"));
-        assertEquals(false, daoU.checkPassword("userOne","123457"));
+        assertEquals(userOne, daoU.checkPassword("userOne", "123456"));
 
     }
 
@@ -119,5 +118,48 @@ public class UserDAOTest {
                 "vasilevskij.ivan@gmail.com");
         List<User> result = daoU.getAllUser();
         assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testCheckBalanceForBet() throws Exception {
+        User userOne = daoU.createUser(
+                "userOne",
+                "password",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+        em.getTransaction().begin();
+
+        userOne.setBalance(250.0);
+
+        em.persist(userOne);
+        em.getTransaction().commit();
+
+        assertEquals(250.0, daoU.checkBalanceForBet("userOne",
+                "password",
+                150.0),0.0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCheckBalanceForBetWithException() throws Exception {
+        User userOne = daoU.createUser(
+                "userOne",
+                "password",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+        em.getTransaction().begin();
+
+        userOne.setBalance(250.0);
+
+        em.persist(userOne);
+        em.getTransaction().commit();
+
+        assertEquals(true, daoU.checkBalanceForBet("userOne",
+                "password",
+                350.0));
+
     }
 }

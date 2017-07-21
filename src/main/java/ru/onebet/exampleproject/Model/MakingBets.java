@@ -23,6 +23,9 @@ public class MakingBets {
     @ManyToOne(optional = false)
     private User user;
 
+    @ManyToOne(optional = false)
+    private Bets bet;
+
     public int getId() {
         return id;
     }
@@ -53,5 +56,13 @@ public class MakingBets {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Bets getBet() {
+        return bet;
+    }
+
+    public void setBet(Bets bet) {
+        this.bet = bet;
     }
 }
