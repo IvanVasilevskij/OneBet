@@ -54,7 +54,6 @@ public class TransactionDAO {
 
         em.getTransaction().begin();
 
-        UserDAO daoU = new UserDAO(em);
         try {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
             if (amount > user.getBalance()) throw new IllegalArgumentException("No have money on balance");

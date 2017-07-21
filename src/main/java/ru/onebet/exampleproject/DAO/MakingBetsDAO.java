@@ -61,6 +61,8 @@ public class MakingBetsDAO {
         em.persist(mBet);
 
         em.getTransaction().commit();
+
+
     }
 
     public List<Bets> allMakedBets() {

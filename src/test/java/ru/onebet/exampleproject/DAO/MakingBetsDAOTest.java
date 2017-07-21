@@ -36,10 +36,14 @@ public class MakingBetsDAOTest {
     @Autowired
     private MakingBetsDAO daoM;
 
+    @Autowired
+    private TransactionDAO daoT;
+
     @Test
     public void testMakeBet() throws Exception {
+
         User user = daoU.createUser(
-                "root",
+                "userOne",
                 "password",
                 "Ivan",
                 "Vasilevskij",
@@ -49,8 +53,9 @@ public class MakingBetsDAOTest {
 
         user.setBalance(250.0);
 
-        em.persist(user);
         em.getTransaction().commit();
+
+        User root = daoU.ensureRootUser();
 
 
         em.getTransaction().begin();
@@ -82,7 +87,7 @@ public class MakingBetsDAOTest {
                 12.8,
                 21.9);
 
-        daoM.makeBet("root",
+        daoM.makeBet("userOne",
                 "password",
                 "2017.09.15 16:30",
                 "EG",
@@ -92,6 +97,80 @@ public class MakingBetsDAOTest {
 
         assertEquals(1, em.createQuery("from MakingBets ").getResultList().size());
         assertEquals(50.0,user.getBalance(),0.0);
+        assertEquals(200.0,root.getBalance(),0.0);
 
+        daoM.makeBet("userOne",
+                "password",
+                "2017.09.15 16:30",
+                "EG",
+                "VP",
+                "EG",
+                45.0);
+
+        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(5.0,user.getBalance(),0.0);
+        assertEquals(245.0,root.getBalance(),0.0);
+
+    }
+
+    @Test
+    public void testAllMakedBets() throws Exception {
+        assertEquals(daoM.allMakedBets().size(), em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(daoM.allMakedBets().size(), 0);
+
+        User user = daoU.createUser(
+                "userOne",
+                "password",
+                "Ivan",
+                "Vasilevskij",
+                "vasilevskij.ivan@gmail.com");
+
+        em.getTransaction().begin();
+
+        user.setBalance(250.0);
+
+        em.getTransaction().commit();
+
+        User root = daoU.ensureRootUser();
+
+
+        em.getTransaction().begin();
+        ComandOfDota comandOne = daoC.createComand(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
+        em.persist(comandOne);
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        ComandOfDota comandTwo = daoC.createComand(
+                "VP",
+                "No[o]ne",
+                "Ramzes666",
+                "9pasha",
+                "Lil",
+                "Solo");
+        em.persist(comandTwo);
+        em.getTransaction().commit();
+
+        Bets bet = daoB.createBet("EG",
+                "VP",
+                "2017.09.15 16:30",
+                75.3,
+                12.8,
+                21.9);
+
+        daoM.makeBet("userOne",
+                "password",
+                "2017.09.15 16:30",
+                "EG",
+                "VP",
+                "EG",
+                200.0);
+
+        assertEquals(daoM.allMakedBets().size(), 1);
     }
 }

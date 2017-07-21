@@ -82,7 +82,7 @@ public class UserDAO {
 
     public User checkPassword(String login, String password) {
         User user = findUser(login);
-        if (user == null) throw new IllegalArgumentException("User not exist");
+        if (user == null) throw new IllegalArgumentException("User didn't exist");
         return user;
     }
 
