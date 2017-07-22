@@ -4,6 +4,7 @@ package ru.onebet.exampleproject.Model;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -39,7 +40,7 @@ public class User {
 
     @Column(name = "BALANCE")
     @NotNull
-    private double balance;
+    private BigDecimal balance;
 
     @Column(name = "EMAIL")
     @NotNull
@@ -91,11 +92,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

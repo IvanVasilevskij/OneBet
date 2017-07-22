@@ -7,6 +7,7 @@ import ru.onebet.exampleproject.Model.Transaction;
 import ru.onebet.exampleproject.Model.User;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
@@ -21,8 +22,8 @@ public class TransactionDAO {
     @Autowired
     public UserDAO daoU;
 
-    public void emitMoney(double amount) {
-        if (amount < 0) throw new IllegalArgumentException();
+    public void emitMoney(String amount) {
+        if (new BigDecimal(amount).max(new BigDecimal("0.0")) == new BigDecimal("0.0")) throw new IllegalArgumentException();
 
         em.getTransaction().begin();
 
@@ -32,14 +33,14 @@ public class TransactionDAO {
 
             Transaction t = new Transaction();
             t.setDate(new Date());
-            t.setAmount(amount);
+            t.setAmount(new BigDecimal(amount));
             t.setUser(root);
             t.setRoot(root);
 
             em.persist(t);
             em.refresh(root);
 
-            root.setBalance(root.getBalance() + amount);
+            root.setBalance(root.getBalance().add(new BigDecimal(amount)));
 
             em.getTransaction().commit();
 
@@ -49,20 +50,20 @@ public class TransactionDAO {
         }
     }
 
-    public void sendMoney(User user, double amount) {
-        if (amount < 0) throw new IllegalArgumentException();
+    public void sendMoney(User user, String amount) {
+        if (new BigDecimal(amount).max(new BigDecimal("0.0")) == new BigDecimal("0.0")) throw new IllegalArgumentException();
 
         em.getTransaction().begin();
 
         try {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
-            if (amount > user.getBalance()) throw new IllegalArgumentException("No have money on balance");
+            if (user.getBalance().max(new BigDecimal(amount)) == new BigDecimal(amount)) throw new IllegalArgumentException("No have money on balance");
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 
             Transaction t = new Transaction();
             t.setDate(new Date());
-            t.setAmount(amount);
+            t.setAmount(new BigDecimal(amount));
             t.setUser(user);
             t.setRoot(root);
 
@@ -70,8 +71,8 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.setBalance(user.getBalance()-amount);
-            root.setBalance(root.getBalance()+amount);
+            user.setBalance(user.getBalance().subtract(new BigDecimal(amount)));
+            root.setBalance(root.getBalance().add(new BigDecimal(amount)));
 
             em.getTransaction().commit();
 
@@ -80,8 +81,8 @@ public class TransactionDAO {
             throw new IllegalStateException(t);
         }
     }
-    public void reciveMoney (User user, double amount) {
-        if (amount < 0) throw new IllegalArgumentException();
+    public void reciveMoney (User user, String amount) {
+        if (new BigDecimal(amount).max(new BigDecimal("0.0")) == new BigDecimal("0.0")) throw new IllegalArgumentException();
 
         em.getTransaction().begin();
 
@@ -90,13 +91,13 @@ public class TransactionDAO {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
-            if (amount > root.getBalance()) throw new IllegalArgumentException("Please do emitMoney");
+            if (root.getBalance().max(new BigDecimal(amount)) == new BigDecimal(amount)) throw new IllegalArgumentException("Please do emitMoney");
 
 //            if (amount > root.getBalance()) emitMoney(amount);
 
             Transaction t = new Transaction();
             t.setDate(new Date());
-            t.setAmount(amount);
+            t.setAmount(new BigDecimal(amount));
             t.setUser(user);
             t.setRoot(root);
 
@@ -104,8 +105,8 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.setBalance(user.getBalance()+amount);
-            root.setBalance(root.getBalance()-amount);
+            user.setBalance(user.getBalance().add(new BigDecimal(amount)));
+            root.setBalance(root.getBalance().subtract(new BigDecimal(amount)));
 
             em.getTransaction().commit();
 

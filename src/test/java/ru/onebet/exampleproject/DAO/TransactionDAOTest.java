@@ -12,6 +12,8 @@ import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,16 +36,16 @@ public class TransactionDAOTest {
 
         User root = daoU.ensureRootUser();
 
-        daoT.emitMoney(500.0);
+        daoT.emitMoney("500.00");
 
 
-        assertEquals(500.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(500.0,daoU.findUser(User.RootUserName).getTransactions().get(0).getAmount(),0.0);
+        assertEquals(new BigDecimal("500.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("500.00"),daoU.findUser(User.RootUserName).getTransactions().get(0).getAmount());
 
-        daoT.emitMoney(250.0);
+        daoT.emitMoney("250.00");
 
-        assertEquals(750.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(250.0,daoU.findUser(User.RootUserName).getTransactions().get(1).getAmount(),0.0);
+        assertEquals(new BigDecimal("750.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("250.00"),daoU.findUser(User.RootUserName).getTransactions().get(1).getAmount());
     }
 
     @Test
@@ -60,28 +62,28 @@ public class TransactionDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(150.0);
+        user.setBalance(new BigDecimal(150.00));
 
         em.getTransaction().commit();
 
-        daoT.sendMoney(user, 100.0);
+        daoT.sendMoney(user, "100.00");
 
-        assertEquals(50.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
-        assertEquals(100.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(100.0,daoU.findUser(user.getLogin()).getTransactions().get(0).getAmount(),0.0);
+        assertEquals(new BigDecimal("50.00"), daoU.findUser(user.getLogin()).getBalance());
+        assertEquals(new BigDecimal("100.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("100.00"),daoU.findUser(user.getLogin()).getTransactions().get(0).getAmount());
 
-        daoT.sendMoney(user,50.0);
+        daoT.sendMoney(user,"50.00");
 
-        assertEquals(0.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
-        assertEquals(150.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(50.0,daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount(),0.0);
+        assertEquals(new BigDecimal("0.00"), daoU.findUser(user.getLogin()).getBalance());
+        assertEquals(new BigDecimal("150.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("50.00"),daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount());
     }
 
     @Test
     public void testReciveMoney() throws Exception {
         User root = daoU.ensureRootUser();
 
-        daoT.emitMoney(500.0);
+        daoT.emitMoney("500.00");
 
         User user = daoU.createUser(
                 "user",
@@ -91,16 +93,16 @@ public class TransactionDAOTest {
                 "vasilevskij.ivan@gmail.com");
 
 
-        daoT.reciveMoney(user, 100.0);
+        daoT.reciveMoney(user, "100.00");
 
-        assertEquals(100.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
-        assertEquals(400.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(100.0,daoU.findUser(user.getLogin()).getTransactions().get(0).getAmount(),0.0);
+        assertEquals(new BigDecimal("100.00"), daoU.findUser(user.getLogin()).getBalance());
+        assertEquals(new BigDecimal("400.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("100.00"),daoU.findUser(user.getLogin()).getTransactions().get(0).getAmount());
 
-        daoT.reciveMoney(user, 50.0);
+        daoT.reciveMoney(user, "50.00");
 
-        assertEquals(150.0, daoU.findUser(user.getLogin()).getBalance(),0.0);
-        assertEquals(350.0, daoU.findUser(User.RootUserName).getBalance(),0.0);
-        assertEquals(50.0,daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount(),0.0);
+        assertEquals(new BigDecimal("150.00"), daoU.findUser(user.getLogin()).getBalance());
+        assertEquals(new BigDecimal("350.00"), daoU.findUser(User.RootUserName).getBalance());
+        assertEquals(new BigDecimal("50.00"),daoU.findUser(user.getLogin()).getTransactions().get(1).getAmount());
     }
 }

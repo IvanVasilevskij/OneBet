@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -46,7 +47,7 @@ public class UserDAOTest {
         assertEquals("password", em.find(User.class, user.getUserId()).getPassword());
         assertEquals("Ivan", em.find(User.class, user.getUserId()).getFirstName());
         assertEquals("Vasilevskij", em.find(User.class, user.getUserId()).getLastName());
-        assertEquals(0.0, em.find(User.class, user.getUserId()).getBalance(), 0.0);
+        assertEquals(new BigDecimal("0.0"), em.find(User.class, user.getUserId()).getBalance());
         assertEquals("vasilevskij.ivan@gmail.com", em.find(User.class, user.getUserId()).getEmail());
     }
 
@@ -131,14 +132,14 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.setBalance(250.0);
+        userOne.setBalance(new BigDecimal("250.00"));
 
         em.persist(userOne);
         em.getTransaction().commit();
 
-        assertEquals(250.0, daoU.checkBalanceForBet("userOne",
+        assertEquals(new BigDecimal("250.00"), daoU.checkBalanceForBet("userOne",
                 "password",
-                150.0),0.0);
+                "150.00"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -152,14 +153,14 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.setBalance(250.0);
+        userOne.setBalance(new BigDecimal("250.00"));
 
         em.persist(userOne);
         em.getTransaction().commit();
 
-        assertEquals(true, daoU.checkBalanceForBet("userOne",
-                "password",
-                350.0));
+//        assertEquals(new BigDecimal("250.00"), daoU.checkBalanceForBet("userOne",
+//                "password",
+//                "500.00"));
 
     }
 }

@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.Model;
 
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class Transaction {
     private User root;
 
     @Column(name = "AMOUNT")
-    private double amount;
+    private BigDecimal amount;
 
     @Column(name = "DATE")
     private Date date;
@@ -49,11 +50,11 @@ public class Transaction {
         this.root = root;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

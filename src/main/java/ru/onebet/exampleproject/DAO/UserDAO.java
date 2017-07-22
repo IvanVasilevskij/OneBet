@@ -8,6 +8,7 @@ import ru.onebet.exampleproject.Model.User;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -38,7 +39,7 @@ public class UserDAO {
                 user.setPassword(password);
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
-                user.setBalance(0.0);
+                user.setBalance(new BigDecimal("0.0"));
                 user.setEmail(email);
 
                 em.persist(user);
@@ -86,9 +87,9 @@ public class UserDAO {
         return user;
     }
 
-    public double checkBalanceForBet(String login,String password, double amount) {
+    public BigDecimal checkBalanceForBet(String login, String password, String amount) {
         User user = checkPassword(login,password);
-        if (user.getBalance() < amount) throw new IllegalArgumentException("User have no balance for this bet");
+        if (user.getBalance().max(new BigDecimal(amount)) == new BigDecimal(amount)) throw new IllegalArgumentException("User have no balance for this bet");
         return user.getBalance();
     }
 

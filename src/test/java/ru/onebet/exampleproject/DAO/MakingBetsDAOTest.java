@@ -14,6 +14,8 @@ import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,7 +50,7 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(250.0);
+        user.setBalance(new BigDecimal("250.00"));
 
         em.getTransaction().commit();
 
@@ -90,11 +92,11 @@ public class MakingBetsDAOTest {
                 "EG",
                 "VP",
                 "EG",
-                200.0);
+                "200.00");
 
         assertEquals(1, em.createQuery("from MakingBets ").getResultList().size());
-        assertEquals(50.0,user.getBalance(),0.0);
-        assertEquals(200.0,root.getBalance(),0.0);
+        assertEquals(new BigDecimal("50.00"),user.getBalance());
+        assertEquals(new BigDecimal("200.00"),root.getBalance());
 
         daoM.makeBet("userOne",
                 "password",
@@ -102,11 +104,11 @@ public class MakingBetsDAOTest {
                 "EG",
                 "VP",
                 "EG",
-                45.0);
+                "45.00");
 
         assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
-        assertEquals(5.0,user.getBalance(),0.0);
-        assertEquals(245.0,root.getBalance(),0.0);
+        assertEquals(new BigDecimal("5.00"),user.getBalance());
+        assertEquals(new BigDecimal("245.00"),root.getBalance());
 
     }
 
@@ -124,7 +126,7 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(250.0);
+        user.setBalance(new BigDecimal("250.0"));
 
         em.getTransaction().commit();
 
@@ -166,7 +168,7 @@ public class MakingBetsDAOTest {
                 "EG",
                 "VP",
                 "EG",
-                200.0);
+                "200.0");
 
         assertEquals(daoM.allMakedBets().size(), 1);
     }

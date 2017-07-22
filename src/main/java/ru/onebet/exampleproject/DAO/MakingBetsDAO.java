@@ -3,11 +3,11 @@ package ru.onebet.exampleproject.DAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.onebet.exampleproject.Model.Bets;
-import ru.onebet.exampleproject.Model.ComandOfDota;
 import ru.onebet.exampleproject.Model.MakingBets;
 import ru.onebet.exampleproject.Model.User;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -39,12 +39,12 @@ public class MakingBetsDAO {
                         String comandOne,
                         String comandTwo,
                         String plasedComand,
-                        double amount) {
+                        String amount) {
 
         if(comandOne != plasedComand && comandTwo != plasedComand) throw new IllegalArgumentException("Illegal comand for make bet");
 
         User user = daoU.checkPassword(login,password);
-        double balance = daoU.checkBalanceForBet(user.getLogin(),user.getPassword(),amount);
+        BigDecimal balance = daoU.checkBalanceForBet(user.getLogin(),user.getPassword(),amount);
 
         Bets bet = daoB.findBet(comandOne+comandTwo+timeOfTheGame);
 
