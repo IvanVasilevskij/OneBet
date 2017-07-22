@@ -1,20 +1,16 @@
-package ru.onebet.exampleproject.DAO;
+package ru.onebet.exampleproject.dao;
 
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.onebet.exampleproject.Model.User;
+import ru.onebet.exampleproject.model.User;
 import ru.onebet.exampleproject.TestConfiguration;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -158,9 +154,8 @@ public class UserDAOTest {
         em.persist(userOne);
         em.getTransaction().commit();
 
-//        assertEquals(new BigDecimal("250.00"), daoU.checkBalanceForBet("userOne",
-//                "password",
-//                "500.00"));
-
+        BigDecimal bd = daoU.checkBalanceForBet("userOne",
+                "password",
+                "500.00");
     }
 }

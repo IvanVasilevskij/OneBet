@@ -1,8 +1,8 @@
-package ru.onebet.exampleproject.DAO;
+package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.Model.Bets;
+import ru.onebet.exampleproject.model.Bets;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

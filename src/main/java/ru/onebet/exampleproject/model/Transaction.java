@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject.Model;
+package ru.onebet.exampleproject.model;
 
 
 import javax.persistence.*;

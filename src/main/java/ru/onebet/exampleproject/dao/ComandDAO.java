@@ -1,9 +1,9 @@
-package ru.onebet.exampleproject.DAO;
+package ru.onebet.exampleproject.dao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.Model.ComandOfDota;
+import ru.onebet.exampleproject.model.ComandOfDota;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;

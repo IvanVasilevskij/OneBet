@@ -1,10 +1,10 @@
-package ru.onebet.exampleproject.DAO;
+package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.Model.Bets;
-import ru.onebet.exampleproject.Model.MakingBets;
-import ru.onebet.exampleproject.Model.User;
+import ru.onebet.exampleproject.model.Bets;
+import ru.onebet.exampleproject.model.MakingBets;
+import ru.onebet.exampleproject.model.User;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
