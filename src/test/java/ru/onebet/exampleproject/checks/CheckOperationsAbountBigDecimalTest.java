@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.onebet.exampleproject.TestConfiguration;
+import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import java.math.BigDecimal;
 
@@ -46,5 +46,10 @@ public class CheckOperationsAbountBigDecimalTest {
     @Test(expected = IllegalArgumentException.class)
     public void testBeeSureThatAmountMoreThenZeroWithExceprion() {
         BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("-25.00");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryToParseBigDecimalFromStringWithExceprion() {
+        BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("asd");
     }
 }

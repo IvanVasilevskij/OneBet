@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject;
+package ru.onebet.exampleproject.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,17 +10,15 @@ import javax.persistence.Persistence;
 
 @Configuration
 @ComponentScan(basePackages = "ru.onebet.exampleproject")
-public class ProductionConfiguration {
+public class TestConfiguration {
 
     @Bean
     public EntityManagerFactory getEmf() {
-        return Persistence.createEntityManagerFactory("postgres");
+        return Persistence.createEntityManagerFactory("postgresTest");
     }
 
     @Bean
     public EntityManager getEntityManager(EntityManagerFactory emf) {
         return emf.createEntityManager();
     }
-
-
 }

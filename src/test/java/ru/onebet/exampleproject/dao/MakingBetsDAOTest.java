@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.model.Bets;
 import ru.onebet.exampleproject.model.ComandOfDota;
 import ru.onebet.exampleproject.model.User;
-import ru.onebet.exampleproject.TestConfiguration;
+import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import javax.persistence.EntityManager;
 
