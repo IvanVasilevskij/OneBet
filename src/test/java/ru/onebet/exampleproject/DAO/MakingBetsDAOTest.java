@@ -36,9 +36,6 @@ public class MakingBetsDAOTest {
     @Autowired
     private MakingBetsDAO daoM;
 
-    @Autowired
-    private TransactionDAO daoT;
-
     @Test
     public void testMakeBet() throws Exception {
 

@@ -13,24 +13,25 @@ import java.util.List;
 
 @Service
 public class MakingBetsDAO {
+
     private final EntityManager em;
-
-    @Autowired
-    public MakingBetsDAO(EntityManager em) {
-        this.em = em;
-    }
-
-    @Autowired
     private UserDAO daoU;
-
-    @Autowired
     private BetsDAO daoB;
-
-    @Autowired
     private TransactionDAO daoT;
+    private ComandDAO daoC;
 
     @Autowired
-    private ComandDAO daoC;
+    public MakingBetsDAO(EntityManager em,
+                         UserDAO daoU,
+                         BetsDAO daoB,
+                         TransactionDAO daoT,
+                         ComandDAO daoC) {
+        this.em = em;
+        this.daoU = daoU;
+        this.daoB = daoB;
+        this.daoT = daoT;
+        this.daoC = daoC;
+    }
 
     public void makeBet(String login,
                         String password,
@@ -51,12 +52,12 @@ public class MakingBetsDAO {
 
         em.getTransaction().begin();
 
-        MakingBets mBet = new MakingBets();
-
-        mBet.setDate(new Date());
-        mBet.setUser(user);
-        mBet.setTakeOnComand(daoC.findComandByComandName(plasedComand));
-        mBet.setBet(bet);
+        MakingBets mBet = MakingBets.newBuilder()
+                .setDate(new Date())
+                .setUser(user)
+                .setTakeOnComand(daoC.findComandByComandName(plasedComand))
+                .setBet(bet)
+                .build();
 
         em.persist(mBet);
 

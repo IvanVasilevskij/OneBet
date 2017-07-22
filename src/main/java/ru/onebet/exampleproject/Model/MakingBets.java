@@ -30,39 +30,54 @@ public class MakingBets {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Date getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public ComandOfDota getTakeOnComand() {
         return takeOnComand;
     }
 
-    public void setTakeOnComand(ComandOfDota takeOnComand) {
-        this.takeOnComand = takeOnComand;
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Bets getBet() {
         return bet;
     }
 
-    public void setBet(Bets bet) {
-        this.bet = bet;
+    private MakingBets() {}
+
+    public static Builder newBuilder() {
+        return new MakingBets().new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {}
+
+        public Builder setDate(Date date) {
+            MakingBets.this.date = date;
+            return this;
+        }
+
+        public Builder setTakeOnComand(ComandOfDota comandOfDota) {
+            MakingBets.this.takeOnComand = comandOfDota;
+            return this;
+        }
+
+        public Builder setUser(User user) {
+            MakingBets.this.user = user;
+            return this;
+        }
+
+        public Builder setBet(Bets bet) {
+            MakingBets.this.bet = bet;
+            return this;
+        }
+
+        public MakingBets build() {
+            return MakingBets.this;
+        }
     }
 }
