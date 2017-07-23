@@ -32,7 +32,6 @@ public class BetsDAOTest {
 
     @Test
     public void testCreateBet() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -40,10 +39,7 @@ public class BetsDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
         ComandOfDota comandTwo = daoC.createComand(
                 "VP",
                 "No[o]ne",
@@ -51,8 +47,6 @@ public class BetsDAOTest {
                 "9pasha",
                 "Lil",
                 "Solo");
-        em.persist(comandTwo);
-        em.getTransaction().commit();
 
         Bets bet = daoB.createBet("EG",
                 "VP",
@@ -66,7 +60,6 @@ public class BetsDAOTest {
 
     @Test
     public void testFindBet() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -74,10 +67,7 @@ public class BetsDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
         ComandOfDota comandTwo = daoC.createComand(
                 "VP",
                 "No[o]ne",
@@ -85,8 +75,6 @@ public class BetsDAOTest {
                 "9pasha",
                 "Lil",
                 "Solo");
-        em.persist(comandTwo);
-        em.getTransaction().commit();
 
         Bets bet = daoB.createBet("EG",
                 "VP",
@@ -102,7 +90,6 @@ public class BetsDAOTest {
 
     @Test
     public void testAllBets() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -110,10 +97,7 @@ public class BetsDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
         ComandOfDota comandTwo = daoC.createComand(
                 "VP",
                 "No[o]ne",
@@ -121,8 +105,6 @@ public class BetsDAOTest {
                 "9pasha",
                 "Lil",
                 "Solo");
-        em.persist(comandTwo);
-        em.getTransaction().commit();
 
         Bets bet = daoB.createBet("EG",
                 "VP",

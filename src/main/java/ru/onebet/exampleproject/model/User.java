@@ -56,72 +56,95 @@ public class User {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public String getLogin() {
         return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public BigDecimal getBalance() {
         return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public List<MakingBets> getBets() {
         return bets;
-    }
-
-    public void setBets(List<MakingBets> bets) {
-        this.bets = bets;
     }
 
     public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    private User() {}
+
+    public static Builder newBuilder() {
+        return new User().new Builder();
+    }
+
+    public static Builder newBuilder(User user) {
+        return user.new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {}
+
+        public Builder login(String login) {
+            User.this.login = login;
+            return this;
+        }
+
+        public Builder password(String password) {
+            User.this.password = password;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            User.this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            User.this.lastName = lastName;
+            return this;
+        }
+
+        public Builder balance(BigDecimal balance) {
+            User.this.balance = balance;
+            return this;
+        }
+
+        public Builder email(String email) {
+            User.this.email = email;
+            return this;
+        }
+
+        public Builder bets(List<MakingBets> bets) {
+            User.this.bets = bets;
+            return this;
+        }
+
+        public Builder transaction(List<Transaction> transactions) {
+            User.this.transactions = transactions;
+            return this;
+        }
+
+        public User build() {
+            return User.this;
+        }
     }
 }
 

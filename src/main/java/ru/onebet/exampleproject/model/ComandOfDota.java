@@ -79,6 +79,10 @@ public class ComandOfDota {
         return new ComandOfDota().new Builder();
     }
 
+    public static Builder newBuilder(ComandOfDota comandOfDota) {
+        return comandOfDota.new Builder();
+    }
+
     public class Builder {
 
         private Builder() {}

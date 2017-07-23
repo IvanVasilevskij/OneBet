@@ -46,7 +46,9 @@ public class TransactionDAO {
             em.persist(t);
             em.refresh(root);
 
-            root.setBalance(root.getBalance().add(amountBd));
+            root.newBuilder(root)
+                    .balance(root.getBalance().add(amountBd))
+                    .build();
 
             em.getTransaction().commit();
 
@@ -79,8 +81,13 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.setBalance(user.getBalance().subtract(amountBd));
-            root.setBalance(root.getBalance().add(amountBd));
+            user.newBuilder(user)
+                    .balance(user.getBalance().subtract(amountBd))
+                    .build();
+
+            root.newBuilder(root)
+                    .balance(root.getBalance().add(amountBd))
+                    .build();
 
             em.getTransaction().commit();
 
@@ -114,8 +121,13 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.setBalance(user.getBalance().add(amountBd));
-            root.setBalance(root.getBalance().subtract(amountBd));
+            user.newBuilder(user)
+                    .balance(user.getBalance().add(amountBd))
+                    .build();
+
+            root.newBuilder(root)
+                    .balance(root.getBalance().subtract(amountBd))
+                    .build();
 
             em.getTransaction().commit();
 

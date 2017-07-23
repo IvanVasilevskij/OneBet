@@ -42,14 +42,16 @@ public class BetsDAO {
             throw new IllegalArgumentException("Failed date format. Need yyyy.MM.dd hh:mm");
         }
 
-        Bets bet = new Bets();
-        bet.setComandOne(daoC.findComandByComandName(comandOne));
-        bet.setComandTwo(daoC.findComandByComandName(comandTwo));
-        bet.setDate(date);
-        bet.setPersentComandOne(percentForComandOne);
-        bet.setPersentComandTwo(percentForComandTwo);
-        bet.setPersentToDrow(percentForDraw);
-        bet.setSearchingMark(comandOne+comandTwo+timeOfTheGame);
+        Bets bet = Bets.newBuilder()
+                .comandOne(daoC.findComandByComandName(comandOne))
+                .comandTwo(daoC.findComandByComandName(comandTwo))
+                .date(date)
+                .persentComandOne(percentForComandOne)
+                .persentComandTwo(percentForComandTwo)
+                .persentToDrow(percentForDraw)
+                .searchingMark(comandOne+comandTwo+timeOfTheGame)
+                .build();
+
         em.persist(bet);
         em.getTransaction().commit();
 

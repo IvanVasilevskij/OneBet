@@ -128,7 +128,9 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.setBalance(new BigDecimal("250.00"));
+        userOne.newBuilder(userOne)
+                .balance(new BigDecimal("250.00"))
+                .build();
 
         em.persist(userOne);
         em.getTransaction().commit();
@@ -149,7 +151,9 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.setBalance(new BigDecimal("250.00"));
+        userOne.newBuilder(userOne)
+                .balance(new BigDecimal("250.00"))
+                .build();
 
         em.persist(userOne);
         em.getTransaction().commit();

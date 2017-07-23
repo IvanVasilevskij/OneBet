@@ -50,7 +50,9 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(new BigDecimal("250.00"));
+        user.newBuilder(user)
+                .balance(new BigDecimal("250.00"))
+                .build();
 
         em.getTransaction().commit();
 
@@ -119,8 +121,9 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(new BigDecimal("250.0"));
-
+        user.newBuilder(user)
+                .balance(new BigDecimal("250.00"))
+                .build();
         em.getTransaction().commit();
 
         User root = daoU.ensureRootUser();

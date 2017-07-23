@@ -52,6 +52,10 @@ public class Transaction {
         return new Transaction().new Builder();
     }
 
+    public static Builder newBuilder(Transaction transaction) {
+        return transaction.new Builder();
+    }
+
     public class Builder {
 
         private Builder() {}

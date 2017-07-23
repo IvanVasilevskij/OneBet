@@ -62,7 +62,9 @@ public class TransactionDAOTest {
 
         em.getTransaction().begin();
 
-        user.setBalance(new BigDecimal(150.00));
+        user.newBuilder(user)
+                .balance(new BigDecimal("150.00"))
+                .build();
 
         em.getTransaction().commit();
 

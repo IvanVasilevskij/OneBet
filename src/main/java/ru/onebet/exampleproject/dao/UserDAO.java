@@ -38,13 +38,14 @@ public class UserDAO {
         em.getTransaction().begin();
         try {
             if (findUser(login) == null) {
-                User user = new User();
-                user.setLogin(login);
-                user.setPassword(password);
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setBalance(new BigDecimal("0.0"));
-                user.setEmail(email);
+                User user = User.newBuilder()
+                        .login(login)
+                        .password(password)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .balance(new BigDecimal("0.0"))
+                        .email(email)
+                        .build();
 
                 em.persist(user);
                 em.getTransaction().commit();

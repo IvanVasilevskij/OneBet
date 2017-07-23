@@ -55,63 +55,85 @@ public class Bets {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Date getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public ComandOfDota getComandOne() {
         return comandOne;
     }
 
-    public void setComandOne(ComandOfDota comandOne) {
-        this.comandOne = comandOne;
-    }
-
     public ComandOfDota getComandTwo() {
         return comandTwo;
-    }
-
-    public void setComandTwo(ComandOfDota comandTwo) {
-        this.comandTwo = comandTwo;
     }
 
     public double getPersentComandOne() {
         return persentComandOne;
     }
 
-    public void setPersentComandOne(double persentComandOne) {
-        this.persentComandOne = persentComandOne;
-    }
-
     public double getPersentToDrow() {
         return persentToDrow;
-    }
-
-    public void setPersentToDrow(double persentToDrow) {
-        this.persentToDrow = persentToDrow;
     }
 
     public double getPersentComandTwo() {
         return persentComandTwo;
     }
 
-    public void setPersentComandTwo(double persentComandTwo) {
-        this.persentComandTwo = persentComandTwo;
-    }
-
     public String getSearchingMark() {
         return searchingMark;
     }
 
-    public void setSearchingMark(String searcingMark) {
-        this.searchingMark = searcingMark;
+    private Bets() {}
+
+    public static Builder newBuilder() {
+        return new Bets().new Builder();
+    }
+
+    public static Builder newBuilder(Bets bet) {
+        return bet.new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {}
+
+        public Builder date(Date date) {
+            Bets.this.date = date;
+            return this;
+        }
+
+        public Builder comandOne(ComandOfDota comandOne) {
+            Bets.this.comandOne = comandOne;
+            return this;
+        }
+
+        public Builder comandTwo(ComandOfDota comandTwo) {
+            Bets.this.comandTwo = comandTwo;
+            return this;
+        }
+
+        public Builder persentComandOne(double persentComandOne) {
+            Bets.this.persentComandOne = persentComandOne;
+            return this;
+        }
+
+        public Builder persentToDrow(double persentToDrow) {
+            Bets.this.persentToDrow = persentToDrow;
+            return this;
+        }
+
+        public Builder persentComandTwo(double persentComandTwo) {
+            Bets.this.persentComandTwo = persentComandTwo;
+            return this;
+        }
+
+        public Builder searchingMark(String searchingMark) {
+            Bets.this.searchingMark = searchingMark;
+            return this;
+        }
+
+        public Bets build() {
+            return Bets.this;
+        }
     }
 }

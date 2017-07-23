@@ -52,6 +52,11 @@ public class MakingBets {
         return new MakingBets().new Builder();
     }
 
+    public static Builder newBuilder(MakingBets makingBets) {
+        return makingBets.new Builder();
+    }
+
+
     public class Builder {
 
         private Builder() {}
