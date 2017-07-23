@@ -30,39 +30,54 @@ public class Transaction {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public User getRoot() {
         return root;
     }
 
-    public void setRoot(User root) {
-        this.root = root;
-    }
-
     public BigDecimal getAmount() {
         return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    private Transaction() {}
+
+    public static Builder newBuilder() {
+        return new Transaction().new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {}
+
+        public Builder user(User user) {
+            Transaction.this.user = user;
+            return this;
+        }
+
+        public Builder root(User root) {
+            Transaction.this.root = root;
+            return this;
+        }
+
+        public Builder amount(BigDecimal amount) {
+            Transaction.this.amount = amount;
+            return this;
+        }
+
+        public Builder date(Date date) {
+            Transaction.this.date = date;
+            return this;
+        }
+
+        public Transaction build() {
+            return Transaction.this;
+        }
     }
 }

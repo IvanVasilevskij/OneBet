@@ -36,11 +36,12 @@ public class TransactionDAO {
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 
-            Transaction t = new Transaction();
-            t.setDate(new Date());
-            t.setAmount(amountBd);
-            t.setUser(root);
-            t.setRoot(root);
+            Transaction t = Transaction.newBuilder()
+                    .date(new Date())
+                    .amount(amountBd)
+                    .user(root)
+                    .root(root)
+                    .build();
 
             em.persist(t);
             em.refresh(root);
@@ -67,11 +68,12 @@ public class TransactionDAO {
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 
-            Transaction t = new Transaction();
-            t.setDate(new Date());
-            t.setAmount(amountBd);
-            t.setUser(user);
-            t.setRoot(root);
+            Transaction t = Transaction.newBuilder()
+                    .date(new Date())
+                    .amount(amountBd)
+                    .user(user)
+                    .root(root)
+                    .build();
 
             em.persist(t);
             em.refresh(user);
@@ -101,11 +103,12 @@ public class TransactionDAO {
 
 //            if (amount > root.getBalance()) emitMoney(amount);
 
-            Transaction t = new Transaction();
-            t.setDate(new Date());
-            t.setAmount(amountBd);
-            t.setUser(user);
-            t.setRoot(root);
+            Transaction t = Transaction.newBuilder()
+                    .date(new Date())
+                    .amount(amountBd)
+                    .user(user)
+                    .root(root)
+                    .build();
 
             em.persist(t);
             em.refresh(user);
