@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
@@ -55,8 +56,6 @@ public class MakingBetsDAOTest {
 
         User root = daoU.ensureRootUser();
 
-
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -64,10 +63,7 @@ public class MakingBetsDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
         ComandOfDota comandTwo = daoC.createComand(
                 "VP",
                 "No[o]ne",
@@ -75,8 +71,6 @@ public class MakingBetsDAOTest {
                 "9pasha",
                 "Lil",
                 "Solo");
-        em.persist(comandTwo);
-        em.getTransaction().commit();
 
         Bets bet = daoB.createBet("EG",
                 "VP",
@@ -131,8 +125,6 @@ public class MakingBetsDAOTest {
 
         User root = daoU.ensureRootUser();
 
-
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -140,10 +132,7 @@ public class MakingBetsDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
         ComandOfDota comandTwo = daoC.createComand(
                 "VP",
                 "No[o]ne",
@@ -151,8 +140,6 @@ public class MakingBetsDAOTest {
                 "9pasha",
                 "Lil",
                 "Solo");
-        em.persist(comandTwo);
-        em.getTransaction().commit();
 
         Bets bet = daoB.createBet("EG",
                 "VP",
@@ -170,5 +157,16 @@ public class MakingBetsDAOTest {
                 "200.0");
 
         assertEquals(daoM.allMakedBets().size(), 1);
+        assertEquals(user.getBets().size(),1);
+//
+//        daoM.makeBet("userOne",
+//                "123456",
+//                "2017.09.15 16:30",
+//                "EG",
+//                "VP",
+//                "EG",
+//                "20.0");
+//
+//        assertEquals(daoM.allMakedBets().size(), 2);
     }
 }

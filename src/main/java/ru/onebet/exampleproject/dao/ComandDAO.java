@@ -29,18 +29,20 @@ public class ComandDAO {
     }
 
     public ComandOfDota createComand(String conamdName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
+        em.getTransaction().begin();
         try {
             if (findComandByComandName(conamdName) == null) {
-                ComandOfDota comandOne = new ComandOfDota();
-                comandOne.setComandName(conamdName);
-                comandOne.setRoleMid(roleMid);
-                comandOne.setRoleCarry(roleCarry);
-                comandOne.setRoleHard(roleHard);
-                comandOne.setRoleSupFour(roleSupFour);
-                comandOne.setRoleSupFive(roleSupFive);
+                ComandOfDota comandOne = ComandOfDota.newBuilder()
+                        .comandName(conamdName)
+                        .roleMid(roleMid)
+                        .roleCarry(roleCarry)
+                        .roleHard(roleHard)
+                        .roleSupFour(roleSupFour)
+                        .roleSupFive(roleSupFive)
+                        .build();
 
                 em.persist(comandOne);
-
+                em.getTransaction().commit();
                 return comandOne;
             } else return findComandByComandName(conamdName);
         } catch (Throwable t) {

@@ -49,55 +49,72 @@ public class ComandOfDota {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getComandName() {
         return comandName;
-    }
-
-    public void setComandName(String comandName) {
-        this.comandName = comandName;
     }
 
     public String getRoleMid() {
         return roleMid;
     }
 
-    public void setRoleMid(String roleMid) {
-        this.roleMid = roleMid;
-    }
-
     public String getRoleCarry() {
         return roleCarry;
-    }
-
-    public void setRoleCarry(String roleCarry) {
-        this.roleCarry = roleCarry;
     }
 
     public String getRoleHard() {
         return roleHard;
     }
 
-    public void setRoleHard(String roleHard) {
-        this.roleHard = roleHard;
-    }
-
     public String getRoleSupFour() {
         return roleSupFour;
-    }
-
-    public void setRoleSupFour(String roleSupFour) {
-        this.roleSupFour = roleSupFour;
     }
 
     public String getRoleSupFive() {
         return roleSupFive;
     }
 
-    public void setRoleSupFive(String roleSupFive) {
-        this.roleSupFive = roleSupFive;
+    private ComandOfDota() {}
+
+    public static Builder newBuilder() {
+        return new ComandOfDota().new Builder();
+    }
+
+    public class Builder {
+
+        private Builder() {}
+
+        public Builder comandName(String comandName) {
+            ComandOfDota.this.comandName = comandName;
+            return this;
+        }
+
+        public Builder roleMid(String roleMid) {
+            ComandOfDota.this.roleMid = roleMid;
+            return this;
+        }
+
+        public Builder roleCarry(String roleCarry) {
+            ComandOfDota.this.roleCarry = roleCarry;
+            return this;
+        }
+
+        public Builder roleHard(String roleHard){
+            ComandOfDota.this.roleHard = roleHard;
+            return this;
+        }
+
+        public Builder roleSupFour(String roleSupFour) {
+            ComandOfDota.this.roleSupFour = roleSupFour;
+            return this;
+        }
+
+        public Builder roleSupFive(String roleSupFive){
+            ComandOfDota.this.roleSupFive = roleSupFive;
+            return this;
+        }
+
+        public ComandOfDota build() {
+            return ComandOfDota.this;
+        }
     }
 }

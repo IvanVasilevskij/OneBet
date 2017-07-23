@@ -44,6 +44,7 @@ public class MakingBetsDAO {
         if(comandOne != plasedComand && comandTwo != plasedComand) throw new IllegalArgumentException("Illegal comand for make bet");
 
         User user = daoU.findUser(login);
+
         BigDecimal balance = daoU.checkBalanceForBet(login,password,amount);
 
         Bets bet = daoB.findBet(comandOne+comandTwo+timeOfTheGame);

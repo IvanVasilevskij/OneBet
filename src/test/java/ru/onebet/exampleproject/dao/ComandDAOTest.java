@@ -30,7 +30,6 @@ public class ComandDAOTest {
 
     @Test
     public void testCreateComand() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -38,8 +37,6 @@ public class ComandDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
-        em.getTransaction().commit();
 
         assertEquals("EG", em.find(ComandOfDota.class, comandOne.getId()).getComandName());
         assertEquals("Sumail", em.find(ComandOfDota.class, comandOne.getId()).getRoleMid());
@@ -51,7 +48,6 @@ public class ComandDAOTest {
 
     @Test
     public void testFindComandByComandName() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -59,16 +55,13 @@ public class ComandDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
         ComandOfDota comandFinded = daoC.findComandByComandName("EG");
-        em.getTransaction().commit();
 
         assertEquals(comandOne, comandFinded);
     }
 
     @Test
     public void testDeleteComandByComandName() throws Exception {
-        em.getTransaction().begin();
         ComandOfDota comandOne = daoC.createComand(
                 "EG",
                 "Sumail",
@@ -76,8 +69,11 @@ public class ComandDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        em.persist(comandOne);
+
+        em.getTransaction().begin();
+
         daoC.deleteComandByComandName("EG");
+
         em.getTransaction().commit();
 
         assertEquals(null, daoC.findComandByComandName("EG"));

@@ -15,12 +15,14 @@ import java.util.List;
 public class BetsDAO {
 
     private EntityManager em;
+    private ComandDAO daoC;
 
     @Autowired
-    public  BetsDAO(EntityManager em) {this.em = em;}
-
-    @Autowired
-    public ComandDAO daoC;
+    public  BetsDAO(EntityManager em,
+                    ComandDAO daoC) {
+        this.em = em;
+        this.daoC = daoC;
+    }
 
     public Bets createBet(
             String comandOne,
