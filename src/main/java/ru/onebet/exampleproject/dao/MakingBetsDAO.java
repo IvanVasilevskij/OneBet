@@ -43,8 +43,8 @@ public class MakingBetsDAO {
 
         if(comandOne != plasedComand && comandTwo != plasedComand) throw new IllegalArgumentException("Illegal comand for make bet");
 
-        User user = daoU.checkPassword(login,password);
-        BigDecimal balance = daoU.checkBalanceForBet(user.getLogin(),user.getPassword(),amount);
+        User user = daoU.findUser(login);
+        BigDecimal balance = daoU.checkBalanceForBet(login,password,amount);
 
         Bets bet = daoB.findBet(comandOne+comandTwo+timeOfTheGame);
 
@@ -53,10 +53,10 @@ public class MakingBetsDAO {
         em.getTransaction().begin();
 
         MakingBets mBet = MakingBets.newBuilder()
-                .setDate(new Date())
-                .setUser(user)
-                .setTakeOnComand(daoC.findComandByComandName(plasedComand))
-                .setBet(bet)
+                .date(new Date())
+                .user(user)
+                .takeOnComand(daoC.findComandByComandName(plasedComand))
+                .bet(bet)
                 .build();
 
         em.persist(mBet);

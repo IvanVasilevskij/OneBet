@@ -19,8 +19,7 @@ public class CheckOperationsAboutBigDecimal {
 
     public BigDecimal beeSureThatAmountMoreThenZero(String amount) {
         BigDecimal amountBd = tryToParseBigDecimalFromString(amount);
-        BigDecimal zero = new BigDecimal("0.00");
-        if (zero.max(amountBd) == zero) throw new IllegalArgumentException("amount can't be less thar 0");
+        if (BigDecimal.ZERO.max(amountBd) == BigDecimal.ZERO) throw new IllegalArgumentException("amount can't be less thar 0");
         return amountBd;
     }
 }

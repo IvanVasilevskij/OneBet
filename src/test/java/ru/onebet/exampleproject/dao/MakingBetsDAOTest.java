@@ -42,7 +42,7 @@ public class MakingBetsDAOTest {
 
         User user = daoU.createUser(
                 "userOne",
-                "password",
+                "123456",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
@@ -86,7 +86,7 @@ public class MakingBetsDAOTest {
                 21.9);
 
         daoM.makeBet("userOne",
-                "password",
+                "123456",
                 "2017.09.15 16:30",
                 "EG",
                 "VP",
@@ -97,17 +97,17 @@ public class MakingBetsDAOTest {
         assertEquals(new BigDecimal("50.00"),user.getBalance());
         assertEquals(new BigDecimal("200.00"),root.getBalance());
 
-        daoM.makeBet("userOne",
-                "password",
-                "2017.09.15 16:30",
-                "EG",
-                "VP",
-                "EG",
-                "45.00");
-
-        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
-        assertEquals(new BigDecimal("5.00"),user.getBalance());
-        assertEquals(new BigDecimal("245.00"),root.getBalance());
+//        daoM.makeBet("userOne",
+//                "123456",
+//                "2017.09.15 16:30",
+//                "EG",
+//                "VP",
+//                "VP",
+//                "45.00");
+//
+//        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
+//        assertEquals(new BigDecimal("5.00"),user.getBalance());
+//        assertEquals(new BigDecimal("245.00"),root.getBalance());
 
     }
 
@@ -118,7 +118,7 @@ public class MakingBetsDAOTest {
 
         User user = daoU.createUser(
                 "userOne",
-                "password",
+                "123456",
                 "Ivan",
                 "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
@@ -162,7 +162,7 @@ public class MakingBetsDAOTest {
                 21.9);
 
         daoM.makeBet("userOne",
-                "password",
+                "123456",
                 "2017.09.15 16:30",
                 "EG",
                 "VP",

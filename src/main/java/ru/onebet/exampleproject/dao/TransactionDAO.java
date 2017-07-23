@@ -63,7 +63,7 @@ public class TransactionDAO {
 
         try {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
-            if (user.getBalance().max(new BigDecimal(amount)) == new BigDecimal(amount)) throw new IllegalArgumentException("No have money on balance");
+            if (user.getBalance().max(amountBd) == amountBd) throw new IllegalArgumentException("No have money on balance");
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 

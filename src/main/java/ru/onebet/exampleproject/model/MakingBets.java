@@ -56,22 +56,22 @@ public class MakingBets {
 
         private Builder() {}
 
-        public Builder setDate(Date date) {
+        public Builder date(Date date) {
             MakingBets.this.date = date;
             return this;
         }
 
-        public Builder setTakeOnComand(ComandOfDota comandOfDota) {
+        public Builder takeOnComand(ComandOfDota comandOfDota) {
             MakingBets.this.takeOnComand = comandOfDota;
             return this;
         }
 
-        public Builder setUser(User user) {
+        public Builder user(User user) {
             MakingBets.this.user = user;
             return this;
         }
 
-        public Builder setBet(Bets bet) {
+        public Builder bet(Bets bet) {
             MakingBets.this.bet = bet;
             return this;
         }
