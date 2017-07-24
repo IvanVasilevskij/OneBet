@@ -7,9 +7,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.checks.CheckOperations;
-import ru.onebet.exampleproject.model.DotaBets;
+import ru.onebet.exampleproject.dao.betsdao.DotaEventsDAO;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
+import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
-import ru.onebet.exampleproject.model.DotaTeam;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import java.util.Date;
 import java.util.List;
@@ -20,10 +22,10 @@ import static org.junit.Assert.assertSame;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class DotaBetsDAOTest {
+public class DotaEventsDAOTest {
 
     @Autowired
-    private DotaBetsDAO daoB;
+    private DotaEventsDAO daoB;
 
     @Autowired
     private DotaTeamDAO daoC;
@@ -53,19 +55,19 @@ public class DotaBetsDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        DotaBets bet = daoB.createBet(teamOne,
-                teamTwo,
+        DotaEvent event = daoB.createEvent("EG",
+                "VP",
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        assertEquals("Arteezy", bet.getTeamOne().getRoleCarry());
+        assertEquals("Arteezy", event.getTeamOne().getRoleCarry());
     }
 
     @Test
     public void testFindBet() throws Exception {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamOne = daoC.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -73,7 +75,7 @@ public class DotaBetsDAOTest {
                 "Zai",
                 "Crit");
 
-        DotaTeam comandTwo = daoC.createTeam(
+        DotaTeam teamTwo = daoC.createTeam(
                 "VP",
                 "No[o]ne",
                 "Ramzes666",
@@ -83,21 +85,21 @@ public class DotaBetsDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        DotaBets bet = daoB.createBet(comandOne,
-                comandTwo,
+        DotaEvent event = daoB.createEvent("EG",
+                "VP",
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        DotaBets findedBet = daoB.findBet("EG VP 25.05.2015 16:30");
+        DotaEvent findedEvent = daoB.findEvent("EG VP 25.05.2015 16:30");
 
-        assertEquals(bet,findedBet);
+        assertEquals(event,findedEvent);
     }
 
     @Test
     public void testAllBets() throws Exception {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamOne = daoC.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -105,7 +107,7 @@ public class DotaBetsDAOTest {
                 "Zai",
                 "Crit");
 
-        DotaTeam comandTwo = daoC.createTeam(
+        DotaTeam teamTwo = daoC.createTeam(
                 "VP",
                 "No[o]ne",
                 "Ramzes666",
@@ -115,34 +117,34 @@ public class DotaBetsDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        DotaBets bet = daoB.createBet(comandOne,
-                comandTwo,
+        DotaEvent event = daoB.createEvent("EG",
+                "VP",
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        List<DotaBets> result = daoB.allBets();
+        List<DotaEvent> result = daoB.allEvents();
 
         assertEquals(1,result.size());
 
         Date timeOfTheGameTwo = sCheck.tryToParseDateFromString("25.05.2015 19:30");
 
-        DotaBets betTwo = daoB.createBet(comandOne,
-                comandTwo,
+        DotaEvent eventTwo = daoB.createEvent("EG",
+                "VP",
                 timeOfTheGameTwo,
                 75.3,
                 12.8,
                 21.9);
 
-        List<DotaBets> result2 = daoB.allBets();
+        List<DotaEvent> result2 = daoB.allEvents();
 
         assertEquals(2,result2.size());
     }
 
     @Test
     public void testMakeSearchingMarkOfDotaBet() {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamOne = daoC.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -150,7 +152,7 @@ public class DotaBetsDAOTest {
                 "Zai",
                 "Crit");
 
-        DotaTeam comandTwo = daoC.createTeam(
+        DotaTeam teamTwo = daoC.createTeam(
                 "VP",
                 "No[o]ne",
                 "Ramzes666",
@@ -160,14 +162,16 @@ public class DotaBetsDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        DotaBets bet = daoB.createBet(comandOne,
-                comandTwo,
+        DotaEvent event = daoB.createEvent("EG",
+                "VP",
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        String searchMark = daoB.makeSearchingMarkOfDotaBet(comandOne, comandTwo, timeOfTheGame);
+        String searchMark = daoB.createSearchingMark(event.getTeamOne().getTeamName(),
+                event.getTeamTwo().getTeamName(),
+                timeOfTheGame);
 
         assertEquals("EG VP 25.05.2015 16:30", searchMark);
     }

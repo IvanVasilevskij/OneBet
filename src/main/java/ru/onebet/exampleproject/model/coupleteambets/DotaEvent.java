@@ -1,7 +1,8 @@
-package ru.onebet.exampleproject.model;
+package ru.onebet.exampleproject.model.coupleteambets;
 
 
 import com.sun.istack.internal.NotNull;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,12 +10,12 @@ import java.util.Date;
 @Entity
 @NamedQueries(
         @NamedQuery(
-                name = DotaBets.FindBySearchingMark,
-                query = "select b from DotaBets b where b.searchingMark = :searchingMark"
+                name = DotaEvent.FindBySearchingMark,
+                query = "select b from DotaEvent b where b.searchingMark = :searchingMark"
         )
 )
 @Table(name = "BETS")
-public class DotaBets {
+public class DotaEvent implements EventBetweenCoupleTeam {
 
     public static final String FindBySearchingMark = "BetsDota.findBySearchingMark";
 
@@ -33,7 +34,7 @@ public class DotaBets {
 
     @ManyToOne(optional = false)
     @NotNull
-    private DotaTeam temaTwo;
+    private DotaTeam teamTwo;
 
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
@@ -51,45 +52,53 @@ public class DotaBets {
     @NotNull
     private String searchingMark;
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
 
+    @Override
     public DotaTeam getTeamOne() {
         return teamOne;
     }
 
-    public DotaTeam getTemaTwo() {
-        return temaTwo;
+    @Override
+    public DotaTeam getTeamTwo() {
+        return teamTwo;
     }
 
+    @Override
     public double getPercentForTeamOne() {
         return percentForTeamOne;
     }
 
+    @Override
     public double getPersentForDrow() {
         return persentForDrow;
     }
 
+    @Override
     public double getPercentForTeamTwo() {
         return percentForTeamTwo;
     }
 
+    @Override
     public String getSearchingMark() {
         return searchingMark;
     }
 
-    private DotaBets() {}
+    private DotaEvent() {}
 
     public static Builder newBuilder() {
-        return new DotaBets().new Builder();
+        return new DotaEvent().new Builder();
     }
 
-    public static Builder mutate(DotaBets bet) {
+    public static Builder mutate(DotaEvent bet) {
         return bet.new Builder();
     }
 
@@ -98,42 +107,42 @@ public class DotaBets {
         private Builder() {}
 
         public Builder date(Date date) {
-            DotaBets.this.date = date;
+            DotaEvent.this.date = date;
             return this;
         }
 
-        public Builder comandOne(DotaTeam comandOne) {
-            DotaBets.this.teamOne = comandOne;
+        public Builder comandOne(DotaTeam teamOne) {
+            DotaEvent.this.teamOne = teamOne;
             return this;
         }
 
-        public Builder comandTwo(DotaTeam comandTwo) {
-            DotaBets.this.temaTwo = comandTwo;
+        public Builder comandTwo(DotaTeam teamTwo) {
+            DotaEvent.this.teamTwo = teamTwo;
             return this;
         }
 
-        public Builder persentComandOne(double persentComandOne) {
-            DotaBets.this.percentForTeamOne = persentComandOne;
+        public Builder persentComandOne(double percentForTeamOne) {
+            DotaEvent.this.percentForTeamOne = percentForTeamOne;
             return this;
         }
 
-        public Builder persentToDrow(double persentToDrow) {
-            DotaBets.this.persentForDrow = persentToDrow;
+        public Builder persentToDrow(double persentForDrow) {
+            DotaEvent.this.persentForDrow = persentForDrow;
             return this;
         }
 
-        public Builder persentComandTwo(double persentComandTwo) {
-            DotaBets.this.percentForTeamTwo = persentComandTwo;
+        public Builder persentComandTwo(double percentForTeamTwo) {
+            DotaEvent.this.percentForTeamTwo = percentForTeamTwo;
             return this;
         }
 
         public Builder searchingMark(String searchingMark) {
-            DotaBets.this.searchingMark = searchingMark;
+            DotaEvent.this.searchingMark = searchingMark;
             return this;
         }
 
-        public DotaBets build() {
-            return DotaBets.this;
+        public DotaEvent build() {
+            return DotaEvent.this;
         }
     }
 }

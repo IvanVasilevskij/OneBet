@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject.model;
+package ru.onebet.exampleproject.model.team;
 
 
 import com.sun.istack.internal.NotNull;
@@ -45,10 +45,12 @@ public class DotaTeam implements Team {
     @NotNull
     private String roleSupFive;
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public String getTeamName() {
         return teamName;
     }

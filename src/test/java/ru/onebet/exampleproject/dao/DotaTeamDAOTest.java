@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.onebet.exampleproject.model.DotaTeam;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import javax.persistence.EntityManager;
@@ -52,7 +53,7 @@ public class DotaTeamDAOTest {
                 "Universe",
                 "Zai",
                 "Crit");
-        DotaTeam comandFinded = daoC.findComandByTeamName("EG");
+        DotaTeam comandFinded = daoC.findTeamByTeamName("EG");
 
         assertEquals(comandOne, comandFinded);
     }
@@ -69,10 +70,10 @@ public class DotaTeamDAOTest {
 
         em.getTransaction().begin();
 
-        daoC.deleteComandByComandName("EG");
+        daoC.deleteTeamByTeamName("EG");
 
         em.getTransaction().commit();
 
-        assertEquals(null, daoC.findComandByTeamName("EG"));
+        assertEquals(null, daoC.findTeamByTeamName("EG"));
     }
 }

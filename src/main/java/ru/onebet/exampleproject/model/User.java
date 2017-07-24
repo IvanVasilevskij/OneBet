@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.model;
 
 
 import com.sun.istack.internal.NotNull;
+import ru.onebet.exampleproject.model.betsmaked.MakedBetsOfDota;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -47,7 +48,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<DotaBetsMaked> bets;
+    private List<MakedBetsOfDota> bets;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
@@ -80,7 +81,7 @@ public class User {
         return email;
     }
 
-    public List<DotaBetsMaked> getBets() {
+    public List<MakedBetsOfDota> getBets() {
         return bets;
     }
 
@@ -132,7 +133,7 @@ public class User {
             return this;
         }
 
-        public Builder bets(List<DotaBetsMaked> bets) {
+        public Builder bets(List<MakedBetsOfDota> bets) {
             User.this.bets = bets;
             return this;
         }

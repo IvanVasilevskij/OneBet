@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject.model;
+package ru.onebet.exampleproject.model.team;
 
 public interface Team {
 

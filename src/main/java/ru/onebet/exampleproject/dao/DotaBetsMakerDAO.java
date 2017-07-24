@@ -3,9 +3,11 @@ package ru.onebet.exampleproject.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.onebet.exampleproject.checks.CheckOperations;
-import ru.onebet.exampleproject.model.DotaBets;
-import ru.onebet.exampleproject.model.DotaTeam;
-import ru.onebet.exampleproject.model.DotaBetsMaked;
+import ru.onebet.exampleproject.dao.betsdao.DotaEventsDAO;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
+import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
+import ru.onebet.exampleproject.model.team.DotaTeam;
+import ru.onebet.exampleproject.model.betsmaked.MakedBetsOfDota;
 import ru.onebet.exampleproject.model.User;
 
 import javax.persistence.EntityManager;
@@ -18,7 +20,7 @@ public class DotaBetsMakerDAO {
 
     private final EntityManager em;
     private UserDAO daoU;
-    private DotaBetsDAO daoB;
+    private DotaEventsDAO daoB;
     private TransactionDAO daoT;
     private DotaTeamDAO daoC;
     private CheckOperations sCheck;
@@ -27,7 +29,7 @@ public class DotaBetsMakerDAO {
     @Autowired
     public DotaBetsMakerDAO(EntityManager em,
                             UserDAO daoU,
-                            DotaBetsDAO daoB,
+                            DotaEventsDAO daoB,
                             TransactionDAO daoT,
                             DotaTeamDAO daoC,
                             CheckOperations sCheck) {
@@ -40,39 +42,35 @@ public class DotaBetsMakerDAO {
     }
 
     public void makeBet(User User,
-                        DotaBets betsDota,
+                        DotaEvent dotaEvent,
                         DotaTeam plasedComand,
                         BigDecimal amount) {
 
-        if(betsDota.getTeamOne() != plasedComand && betsDota.getTemaTwo() != plasedComand) throw new IllegalArgumentException("Illegal comand for make bet");
+        if(dotaEvent.getTeamOne() != plasedComand && dotaEvent.getTeamTwo() != plasedComand) throw new IllegalArgumentException("Illegal comand for make bet");
 
         User user = daoU.findUser(User.getLogin());
 
         BigDecimal balance = daoU.checkBalanceForBet(User, amount);
 
-        DotaBets bet = daoB.findBet(daoB.makeSearchingMarkOfDotaBet(betsDota.getTeamOne(), betsDota.getTemaTwo(), betsDota.getDate()));
-
         daoT.sendMoney(user,amount);
 
         em.getTransaction().begin();
 
-        DotaBetsMaked mBet = DotaBetsMaked.newBuilder()
+        MakedBetsOfDota mBet = MakedBetsOfDota.newBuilder()
                 .date(new Date())
                 .user(user)
                 .takeOnComand(plasedComand)
-                .bet(bet)
+                .bet(dotaEvent)
                 .build();
 
         em.persist(mBet);
 
         em.getTransaction().commit();
-
-
     }
 
-    public List<DotaBets> allMakedBets() {
+    public List<DotaEvent> allMakedBets() {
         try {
-            List<DotaBets> makedBets = em.createQuery("from DotaBetsMaked ").getResultList();
+            List<DotaEvent> makedBets = em.createQuery("from MakedBetsOfDota ").getResultList();
             return makedBets;
         } catch (Throwable t) {
             em.getTransaction().rollback();

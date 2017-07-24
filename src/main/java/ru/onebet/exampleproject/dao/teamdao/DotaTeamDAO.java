@@ -1,16 +1,16 @@
-package ru.onebet.exampleproject.dao;
+package ru.onebet.exampleproject.dao.teamdao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.model.DotaTeam;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 @Service
-public class DotaTeamDAO {
+public class DotaTeamDAO implements TeamDAO{
     private final EntityManager em;
 
     @Autowired
@@ -18,7 +18,7 @@ public class DotaTeamDAO {
         this.em = em;
     }
 
-    public DotaTeam findComandByTeamName(String teamName) {
+    public DotaTeam findTeamByTeamName(String teamName) {
         try {
             return em.createNamedQuery(DotaTeam.FindByLogin, DotaTeam.class)
                     .setParameter("teamName", teamName)
@@ -31,7 +31,7 @@ public class DotaTeamDAO {
     public DotaTeam createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
         em.getTransaction().begin();
         try {
-            if (findComandByTeamName(teamName) == null) {
+            if (findTeamByTeamName(teamName) == null) {
                 DotaTeam comandOne = DotaTeam.newBuilder()
                         .comandName(teamName)
                         .roleMid(roleMid)
@@ -44,22 +44,21 @@ public class DotaTeamDAO {
                 em.persist(comandOne);
                 em.getTransaction().commit();
                 return comandOne;
-            } else return findComandByTeamName(teamName);
+            } else return findTeamByTeamName(teamName);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
 
-    public void deleteComandByComandName(String comandName) {
+    public void deleteTeamByTeamName(String teamName) {
         try {
-            if (findComandByTeamName(comandName) != null) {
-                em.remove(findComandByTeamName(comandName));
+            if (findTeamByTeamName(teamName) != null) {
+                em.remove(findTeamByTeamName(teamName));
             }
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
-
 }

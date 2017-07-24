@@ -1,13 +1,16 @@
-package ru.onebet.exampleproject.model;
+package ru.onebet.exampleproject.model.betsmaked;
 
 import com.sun.istack.internal.NotNull;
+import ru.onebet.exampleproject.model.User;
+import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "MAKING_BETS")
-public class DotaBetsMaked {
+public class MakedBetsOfDota implements MakedBets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRANSCTION_ID", insertable = false, updatable = false)
@@ -24,7 +27,7 @@ public class DotaBetsMaked {
     private User user;
 
     @ManyToOne(optional = false)
-    private DotaBets bet;
+    private DotaEvent bet;
 
     public int getId() {
         return id;
@@ -42,17 +45,17 @@ public class DotaBetsMaked {
         return user;
     }
 
-    public DotaBets getBet() {
+    public DotaEvent getBet() {
         return bet;
     }
 
-    private DotaBetsMaked() {}
+    private MakedBetsOfDota() {}
 
     public static Builder newBuilder() {
-        return new DotaBetsMaked().new Builder();
+        return new MakedBetsOfDota().new Builder();
     }
 
-    public static Builder mutate(DotaBetsMaked dotaBetsMaked) {
+    public static Builder mutate(MakedBetsOfDota dotaBetsMaked) {
         return dotaBetsMaked.new Builder();
     }
 
@@ -62,27 +65,27 @@ public class DotaBetsMaked {
         private Builder() {}
 
         public Builder date(Date date) {
-            DotaBetsMaked.this.date = date;
+            MakedBetsOfDota.this.date = date;
             return this;
         }
 
         public Builder takeOnComand(DotaTeam comandOfDotaImpl) {
-            DotaBetsMaked.this.takeOfTeam = comandOfDotaImpl;
+            MakedBetsOfDota.this.takeOfTeam = comandOfDotaImpl;
             return this;
         }
 
         public Builder user(User user) {
-            DotaBetsMaked.this.user = user;
+            MakedBetsOfDota.this.user = user;
             return this;
         }
 
-        public Builder bet(DotaBets bet) {
-            DotaBetsMaked.this.bet = bet;
+        public Builder bet(DotaEvent bet) {
+            MakedBetsOfDota.this.bet = bet;
             return this;
         }
 
-        public DotaBetsMaked build() {
-            return DotaBetsMaked.this;
+        public MakedBetsOfDota build() {
+            return MakedBetsOfDota.this;
         }
     }
 }
