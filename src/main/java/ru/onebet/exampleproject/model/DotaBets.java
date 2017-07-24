@@ -9,12 +9,12 @@ import java.util.Date;
 @Entity
 @NamedQueries(
         @NamedQuery(
-                name = BetsDota.FindBySearchingMark,
-                query = "select b from BetsDota b where b.searchingMark = :searchingMark"
+                name = DotaBets.FindBySearchingMark,
+                query = "select b from DotaBets b where b.searchingMark = :searchingMark"
         )
 )
 @Table(name = "BETS")
-public class BetsDota {
+public class DotaBets {
 
     public static final String FindBySearchingMark = "BetsDota.findBySearchingMark";
 
@@ -29,23 +29,23 @@ public class BetsDota {
 
     @ManyToOne(optional = false)
     @NotNull
-    private ComandOfDota comandOne;
+    private DotaTeam teamOne;
 
     @ManyToOne(optional = false)
     @NotNull
-    private ComandOfDota comandTwo;
+    private DotaTeam temaTwo;
 
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
-    private double persentComandOne;
+    private double percentForTeamOne;
 
     @Column(name = "PERSENT_TO_DROW")
     @NotNull
-    private double persentToDrow;
+    private double persentForDrow;
 
     @Column(name = "PERSENT_TO_COMAND_TWO")
     @NotNull
-    private double persentComandTwo;
+    private double percentForTeamTwo;
 
     @Column(name = "SEARCHING_MARK")
     @NotNull
@@ -59,37 +59,37 @@ public class BetsDota {
         return date;
     }
 
-    public ComandOfDota getComandOne() {
-        return comandOne;
+    public DotaTeam getTeamOne() {
+        return teamOne;
     }
 
-    public ComandOfDota getComandTwo() {
-        return comandTwo;
+    public DotaTeam getTemaTwo() {
+        return temaTwo;
     }
 
-    public double getPersentComandOne() {
-        return persentComandOne;
+    public double getPercentForTeamOne() {
+        return percentForTeamOne;
     }
 
-    public double getPersentToDrow() {
-        return persentToDrow;
+    public double getPersentForDrow() {
+        return persentForDrow;
     }
 
-    public double getPersentComandTwo() {
-        return persentComandTwo;
+    public double getPercentForTeamTwo() {
+        return percentForTeamTwo;
     }
 
     public String getSearchingMark() {
         return searchingMark;
     }
 
-    private BetsDota() {}
+    private DotaBets() {}
 
     public static Builder newBuilder() {
-        return new BetsDota().new Builder();
+        return new DotaBets().new Builder();
     }
 
-    public static Builder mutate(BetsDota bet) {
+    public static Builder mutate(DotaBets bet) {
         return bet.new Builder();
     }
 
@@ -98,42 +98,42 @@ public class BetsDota {
         private Builder() {}
 
         public Builder date(Date date) {
-            BetsDota.this.date = date;
+            DotaBets.this.date = date;
             return this;
         }
 
-        public Builder comandOne(ComandOfDota comandOne) {
-            BetsDota.this.comandOne = comandOne;
+        public Builder comandOne(DotaTeam comandOne) {
+            DotaBets.this.teamOne = comandOne;
             return this;
         }
 
-        public Builder comandTwo(ComandOfDota comandTwo) {
-            BetsDota.this.comandTwo = comandTwo;
+        public Builder comandTwo(DotaTeam comandTwo) {
+            DotaBets.this.temaTwo = comandTwo;
             return this;
         }
 
         public Builder persentComandOne(double persentComandOne) {
-            BetsDota.this.persentComandOne = persentComandOne;
+            DotaBets.this.percentForTeamOne = persentComandOne;
             return this;
         }
 
         public Builder persentToDrow(double persentToDrow) {
-            BetsDota.this.persentToDrow = persentToDrow;
+            DotaBets.this.persentForDrow = persentToDrow;
             return this;
         }
 
         public Builder persentComandTwo(double persentComandTwo) {
-            BetsDota.this.persentComandTwo = persentComandTwo;
+            DotaBets.this.percentForTeamTwo = persentComandTwo;
             return this;
         }
 
         public Builder searchingMark(String searchingMark) {
-            BetsDota.this.searchingMark = searchingMark;
+            DotaBets.this.searchingMark = searchingMark;
             return this;
         }
 
-        public BetsDota build() {
-            return BetsDota.this;
+        public DotaBets build() {
+            return DotaBets.this;
         }
     }
 }

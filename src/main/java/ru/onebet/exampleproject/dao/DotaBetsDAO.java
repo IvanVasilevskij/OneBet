@@ -2,8 +2,8 @@ package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.model.BetsDota;
-import ru.onebet.exampleproject.model.ComandOfDota;
+import ru.onebet.exampleproject.model.DotaBets;
+import ru.onebet.exampleproject.model.DotaTeam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,20 +12,18 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BetsDotaDAO {
+public class DotaBetsDAO {
 
     private EntityManager em;
 
-
-
     @Autowired
-    public BetsDotaDAO(EntityManager em) {
+    public DotaBetsDAO(EntityManager em) {
         this.em = em;
     }
 
-    public BetsDota createBet(
-            ComandOfDota comandOne,
-            ComandOfDota comandTwo,
+    public DotaBets createBet(
+            DotaTeam comandOne,
+            DotaTeam comandTwo,
             Date timeOfTheGame,
             double percentForComandOne,
             double percentForDraw,
@@ -33,7 +31,7 @@ public class BetsDotaDAO {
 
         em.getTransaction().begin();
 
-        BetsDota bet = BetsDota.newBuilder()
+        DotaBets bet = DotaBets.newBuilder()
                 .comandOne(comandOne)
                 .comandTwo(comandTwo)
                 .date(timeOfTheGame)
@@ -49,9 +47,9 @@ public class BetsDotaDAO {
         return bet;
     }
 
-    public BetsDota findBet(String searchingMark) {
+    public DotaBets findBet(String searchingMark) {
         try {
-            return em.createNamedQuery(BetsDota.FindBySearchingMark, BetsDota.class)
+            return em.createNamedQuery(DotaBets.FindBySearchingMark, DotaBets.class)
                     .setParameter("searchingMark", searchingMark)
                     .getSingleResult();
         } catch (NoResultException notFound) {
@@ -59,9 +57,9 @@ public class BetsDotaDAO {
         }
     }
 
-    public List<BetsDota> allBets() {
+    public List<DotaBets> allBets() {
         try {
-            List<BetsDota> bets = em.createQuery("from BetsDota").getResultList();
+            List<DotaBets> bets = em.createQuery("from DotaBets").getResultList();
             return bets;
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -69,14 +67,14 @@ public class BetsDotaDAO {
         }
     }
 
-    public String makeSearchingMarkOfDotaBet(ComandOfDota comandOne,
-                                             ComandOfDota comandTwo,
+    public String makeSearchingMarkOfDotaBet(DotaTeam comandOne,
+                                             DotaTeam comandTwo,
                                              Date timeOfTheGame) {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT);
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
-        return comandOne.getComandName() + " " +
-                comandTwo.getComandName() + " " +
+        return comandOne.getTeamName() + " " +
+                comandTwo.getTeamName() + " " +
                 dateFormat.format(timeOfTheGame) + " " +
                 timeFormat.format(timeOfTheGame);
     }

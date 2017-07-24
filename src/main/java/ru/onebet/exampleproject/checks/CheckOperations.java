@@ -1,10 +1,8 @@
 package ru.onebet.exampleproject.checks;
 
 import org.springframework.stereotype.Component;
-import ru.onebet.exampleproject.model.ComandOfDota;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

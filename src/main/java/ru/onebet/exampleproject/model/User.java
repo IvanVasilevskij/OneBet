@@ -47,7 +47,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<MakingBets> bets;
+    private List<DotaBetsMaked> bets;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
@@ -80,7 +80,7 @@ public class User {
         return email;
     }
 
-    public List<MakingBets> getBets() {
+    public List<DotaBetsMaked> getBets() {
         return bets;
     }
 
@@ -132,7 +132,7 @@ public class User {
             return this;
         }
 
-        public Builder bets(List<MakingBets> bets) {
+        public Builder bets(List<DotaBetsMaked> bets) {
             User.this.bets = bets;
             return this;
         }

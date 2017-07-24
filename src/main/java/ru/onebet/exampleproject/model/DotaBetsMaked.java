@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "MAKING_BETS")
-public class MakingBets {
+public class DotaBetsMaked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRANSCTION_ID", insertable = false, updatable = false)
@@ -18,13 +18,13 @@ public class MakingBets {
     private Date date;
 
     @OneToOne
-    private ComandOfDota takeOnComand;
+    private DotaTeam takeOfTeam;
 
     @ManyToOne(optional = false)
     private User user;
 
     @ManyToOne(optional = false)
-    private BetsDota bet;
+    private DotaBets bet;
 
     public int getId() {
         return id;
@@ -34,26 +34,26 @@ public class MakingBets {
         return date;
     }
 
-    public ComandOfDota getTakeOnComand() {
-        return takeOnComand;
+    public DotaTeam getTakeOfTeam() {
+        return takeOfTeam;
     }
 
     public User getUser() {
         return user;
     }
 
-    public BetsDota getBet() {
+    public DotaBets getBet() {
         return bet;
     }
 
-    private MakingBets() {}
+    private DotaBetsMaked() {}
 
     public static Builder newBuilder() {
-        return new MakingBets().new Builder();
+        return new DotaBetsMaked().new Builder();
     }
 
-    public static Builder mutate(MakingBets makingBets) {
-        return makingBets.new Builder();
+    public static Builder mutate(DotaBetsMaked dotaBetsMaked) {
+        return dotaBetsMaked.new Builder();
     }
 
 
@@ -62,27 +62,27 @@ public class MakingBets {
         private Builder() {}
 
         public Builder date(Date date) {
-            MakingBets.this.date = date;
+            DotaBetsMaked.this.date = date;
             return this;
         }
 
-        public Builder takeOnComand(ComandOfDota comandOfDota) {
-            MakingBets.this.takeOnComand = comandOfDota;
+        public Builder takeOnComand(DotaTeam comandOfDotaImpl) {
+            DotaBetsMaked.this.takeOfTeam = comandOfDotaImpl;
             return this;
         }
 
         public Builder user(User user) {
-            MakingBets.this.user = user;
+            DotaBetsMaked.this.user = user;
             return this;
         }
 
-        public Builder bet(BetsDota bet) {
-            MakingBets.this.bet = bet;
+        public Builder bet(DotaBets bet) {
+            DotaBetsMaked.this.bet = bet;
             return this;
         }
 
-        public MakingBets build() {
-            return MakingBets.this;
+        public DotaBetsMaked build() {
+            return DotaBetsMaked.this;
         }
     }
 }

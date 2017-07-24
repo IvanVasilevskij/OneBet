@@ -8,13 +8,13 @@ import javax.persistence.*;
 @Entity
 @NamedQueries(
         @NamedQuery(
-                name = ComandOfDota.FindByLogin,
-                query = "select u from ComandOfDota u where u.comandName = :comandName"
+                name = DotaTeam.FindByLogin,
+                query = "select u from DotaTeam u where u.teamName = :teamName"
         )
 )
 @Table(name = "COMADS")
-public class ComandOfDota {
-    public static final String FindByLogin = "ComandOfDotaImpl.findByLogin";
+public class DotaTeam implements Team {
+    public static final String FindByLogin = "DotaTeam.FindByLogin";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class ComandOfDota {
 
     @Column(name = "COMAND_NAME")
     @NotNull
-    private String comandName;
+    private String teamName;
 
     @Column(name = "ROLE_MID")
     @NotNull
@@ -49,8 +49,8 @@ public class ComandOfDota {
         return id;
     }
 
-    public String getComandName() {
-        return comandName;
+    public String getTeamName() {
+        return teamName;
     }
 
     public String getRoleMid() {
@@ -73,14 +73,14 @@ public class ComandOfDota {
         return roleSupFive;
     }
 
-    private ComandOfDota() {}
+    private DotaTeam() {}
 
     public static Builder newBuilder() {
-        return new ComandOfDota().new Builder();
+        return new DotaTeam().new Builder();
     }
 
-    public static Builder mutate(ComandOfDota comandOfDota) {
-        return comandOfDota.new Builder();
+    public static Builder mutate(DotaTeam comandOfDotaImpl) {
+        return comandOfDotaImpl.new Builder();
     }
 
     public class Builder {
@@ -88,37 +88,37 @@ public class ComandOfDota {
         private Builder() {}
 
         public Builder comandName(String comandName) {
-            ComandOfDota.this.comandName = comandName;
+            DotaTeam.this.teamName = comandName;
             return this;
         }
 
         public Builder roleMid(String roleMid) {
-            ComandOfDota.this.roleMid = roleMid;
+            DotaTeam.this.roleMid = roleMid;
             return this;
         }
 
         public Builder roleCarry(String roleCarry) {
-            ComandOfDota.this.roleCarry = roleCarry;
+            DotaTeam.this.roleCarry = roleCarry;
             return this;
         }
 
         public Builder roleHard(String roleHard){
-            ComandOfDota.this.roleHard = roleHard;
+            DotaTeam.this.roleHard = roleHard;
             return this;
         }
 
         public Builder roleSupFour(String roleSupFour) {
-            ComandOfDota.this.roleSupFour = roleSupFour;
+            DotaTeam.this.roleSupFour = roleSupFour;
             return this;
         }
 
         public Builder roleSupFive(String roleSupFive){
-            ComandOfDota.this.roleSupFive = roleSupFive;
+            DotaTeam.this.roleSupFive = roleSupFive;
             return this;
         }
 
-        public ComandOfDota build() {
-            return ComandOfDota.this;
+        public DotaTeam build() {
+            return DotaTeam.this;
         }
     }
 }

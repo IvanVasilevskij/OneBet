@@ -3,37 +3,37 @@ package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.model.ComandOfDota;
+import ru.onebet.exampleproject.model.DotaTeam;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 @Service
-public class ComandDotaDAO {
+public class DotaTeamDAO {
     private final EntityManager em;
 
     @Autowired
-    public ComandDotaDAO(EntityManager em) {
+    public DotaTeamDAO(EntityManager em) {
         this.em = em;
     }
 
-    public ComandOfDota findComandByComandName(String comandName) {
+    public DotaTeam findComandByTeamName(String teamName) {
         try {
-            return em.createNamedQuery(ComandOfDota.FindByLogin, ComandOfDota.class)
-                    .setParameter("comandName", comandName)
+            return em.createNamedQuery(DotaTeam.FindByLogin, DotaTeam.class)
+                    .setParameter("teamName", teamName)
                     .getSingleResult();
         } catch (NoResultException notFound) {
             return null;
         }
     }
 
-    public ComandOfDota createComand(String conamdName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
+    public DotaTeam createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
         em.getTransaction().begin();
         try {
-            if (findComandByComandName(conamdName) == null) {
-                ComandOfDota comandOne = ComandOfDota.newBuilder()
-                        .comandName(conamdName)
+            if (findComandByTeamName(teamName) == null) {
+                DotaTeam comandOne = DotaTeam.newBuilder()
+                        .comandName(teamName)
                         .roleMid(roleMid)
                         .roleCarry(roleCarry)
                         .roleHard(roleHard)
@@ -44,7 +44,7 @@ public class ComandDotaDAO {
                 em.persist(comandOne);
                 em.getTransaction().commit();
                 return comandOne;
-            } else return findComandByComandName(conamdName);
+            } else return findComandByTeamName(teamName);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -53,8 +53,8 @@ public class ComandDotaDAO {
 
     public void deleteComandByComandName(String comandName) {
         try {
-            if (findComandByComandName(comandName) != null) {
-                em.remove(findComandByComandName(comandName));
+            if (findComandByTeamName(comandName) != null) {
+                em.remove(findComandByTeamName(comandName));
             }
         } catch (Throwable t) {
             em.getTransaction().rollback();

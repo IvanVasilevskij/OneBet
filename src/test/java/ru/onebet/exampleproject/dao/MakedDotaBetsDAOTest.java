@@ -7,8 +7,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.checks.CheckOperations;
-import ru.onebet.exampleproject.model.BetsDota;
-import ru.onebet.exampleproject.model.ComandOfDota;
+import ru.onebet.exampleproject.model.DotaBets;
+import ru.onebet.exampleproject.model.DotaTeam;
 import ru.onebet.exampleproject.model.User;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
@@ -23,22 +23,22 @@ import static org.junit.Assert.assertSame;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class MakingBetsDotaDAOTest {
+public class MakedDotaBetsDAOTest {
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private ComandDotaDAO daoC;
+    private DotaTeamDAO daoC;
 
     @Autowired
-    private BetsDotaDAO daoB;
+    private DotaBetsDAO daoB;
 
     @Autowired
     private UserDAO daoU;
 
     @Autowired
-    private MakingBetsDotaDAO daoM;
+    private DotaBetsMakerDAO daoM;
 
     @Autowired
     private CheckOperations sCheck;
@@ -63,7 +63,7 @@ public class MakingBetsDotaDAOTest {
 
         User root = daoU.ensureRootUser();
 
-        ComandOfDota comandOne = daoC.createComand(
+        DotaTeam comandOne = daoC.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -71,7 +71,7 @@ public class MakingBetsDotaDAOTest {
                 "Zai",
                 "Crit");
 
-        ComandOfDota comandTwo = daoC.createComand(
+        DotaTeam comandTwo = daoC.createTeam(
                 "VP",
                 "No[o]ne",
                 "Ramzes666",
@@ -81,7 +81,7 @@ public class MakingBetsDotaDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        BetsDota bet = daoB.createBet(comandOne,
+        DotaBets bet = daoB.createBet(comandOne,
                 comandTwo,
                 timeOfTheGame,
                 75.3,
@@ -89,24 +89,20 @@ public class MakingBetsDotaDAOTest {
                 21.9);
 
         daoM.makeBet(user,
-                timeOfTheGame,
-                comandOne,
-                comandTwo,
+                bet,
                 comandOne,
                 new BigDecimal("200.00"));
 
-        assertEquals(1, em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(1, em.createQuery("from DotaBetsMaked ").getResultList().size());
         assertEquals(new BigDecimal("50.00"),user.getBalance());
         assertEquals(new BigDecimal("200.00"),root.getBalance());
 
         daoM.makeBet(user,
-                timeOfTheGame,
-                comandOne,
-                comandTwo,
+                bet,
                 comandOne,
                 new BigDecimal("45.00"));
 
-        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(2, em.createQuery("from DotaBetsMaked ").getResultList().size());
         assertEquals(new BigDecimal("5.00"),user.getBalance());
         assertEquals(new BigDecimal("245.00"),root.getBalance());
 
@@ -114,7 +110,7 @@ public class MakingBetsDotaDAOTest {
 
     @Test
     public void testAllMakedBets() throws Exception {
-        assertEquals(daoM.allMakedBets().size(), em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(daoM.allMakedBets().size(), em.createQuery("from DotaBetsMaked ").getResultList().size());
         assertEquals(daoM.allMakedBets().size(), 0);
 
         User user = daoU.createUser(
@@ -133,7 +129,7 @@ public class MakingBetsDotaDAOTest {
 
         User root = daoU.ensureRootUser();
 
-        ComandOfDota comandOne = daoC.createComand(
+        DotaTeam comandOne = daoC.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -141,7 +137,7 @@ public class MakingBetsDotaDAOTest {
                 "Zai",
                 "Crit");
 
-        ComandOfDota comandTwo = daoC.createComand(
+        DotaTeam comandTwo = daoC.createTeam(
                 "VP",
                 "No[o]ne",
                 "Ramzes666",
@@ -151,7 +147,7 @@ public class MakingBetsDotaDAOTest {
 
         Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        BetsDota bet = daoB.createBet(comandOne,
+        DotaBets bet = daoB.createBet(comandOne,
                 comandTwo,
                 timeOfTheGame,
                 75.3,
@@ -159,9 +155,7 @@ public class MakingBetsDotaDAOTest {
                 21.9);
 
         daoM.makeBet(user,
-                timeOfTheGame,
-                comandOne,
-                comandTwo,
+                bet,
                 comandOne,
                 new BigDecimal("200.00"));
 
@@ -169,12 +163,9 @@ public class MakingBetsDotaDAOTest {
         assertEquals(user.getBets().size(),1);
 
         daoM.makeBet(user,
-                timeOfTheGame,
-                comandOne,
-                comandTwo,
+                bet,
                 comandOne,
                 new BigDecimal("20.00"));
-
         assertEquals(daoM.allMakedBets().size(), 2);
     }
 }
