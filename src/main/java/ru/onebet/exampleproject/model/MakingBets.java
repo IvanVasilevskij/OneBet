@@ -24,7 +24,7 @@ public class MakingBets {
     private User user;
 
     @ManyToOne(optional = false)
-    private Bets bet;
+    private BetsDota bet;
 
     public int getId() {
         return id;
@@ -42,7 +42,7 @@ public class MakingBets {
         return user;
     }
 
-    public Bets getBet() {
+    public BetsDota getBet() {
         return bet;
     }
 
@@ -52,7 +52,7 @@ public class MakingBets {
         return new MakingBets().new Builder();
     }
 
-    public static Builder newBuilder(MakingBets makingBets) {
+    public static Builder mutate(MakingBets makingBets) {
         return makingBets.new Builder();
     }
 
@@ -76,7 +76,7 @@ public class MakingBets {
             return this;
         }
 
-        public Builder bet(Bets bet) {
+        public Builder bet(BetsDota bet) {
             MakingBets.this.bet = bet;
             return this;
         }

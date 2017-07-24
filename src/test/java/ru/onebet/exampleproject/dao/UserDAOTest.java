@@ -128,16 +128,15 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.newBuilder(userOne)
+        userOne.mutate(userOne)
                 .balance(new BigDecimal("250.00"))
                 .build();
 
         em.persist(userOne);
         em.getTransaction().commit();
 
-        assertEquals(new BigDecimal("250.00"), daoU.checkBalanceForBet("userOne",
-                "password",
-                "150.00"));
+        assertEquals(new BigDecimal("250.00"), daoU.checkBalanceForBet(userOne,
+                new BigDecimal("150.00")));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -151,15 +150,14 @@ public class UserDAOTest {
 
         em.getTransaction().begin();
 
-        userOne.newBuilder(userOne)
+        userOne.mutate(userOne)
                 .balance(new BigDecimal("250.00"))
                 .build();
 
         em.persist(userOne);
         em.getTransaction().commit();
 
-        BigDecimal bd = daoU.checkBalanceForBet("userOne",
-                "password",
-                "500.00");
+        BigDecimal bd = daoU.checkBalanceForBet(userOne,
+                new BigDecimal("500.00"));
     }
 }

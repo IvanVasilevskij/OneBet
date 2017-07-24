@@ -17,16 +17,13 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class ComandDAOTest {
+public class ComandDotaDAOTest {
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private UserDAO daoU;
-
-    @Autowired
-    private ComandDAO daoC;
+    private ComandDotaDAO daoC;
 
     @Test
     public void testCreateComand() throws Exception {

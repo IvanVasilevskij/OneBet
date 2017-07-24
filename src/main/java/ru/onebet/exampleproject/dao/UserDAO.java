@@ -3,7 +3,7 @@ package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.checks.CheckOperationsAboutBigDecimal;
+import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.model.User;
 
 import javax.persistence.EntityExistsException;
@@ -15,13 +15,10 @@ import java.util.List;
 @Service
 public class UserDAO {
     private final EntityManager em;
-    private CheckOperationsAboutBigDecimal sCheck;
 
     @Autowired
-    public UserDAO(EntityManager em,
-                   CheckOperationsAboutBigDecimal sCheck) {
+    public UserDAO(EntityManager em) {
         this.em = em;
-        this.sCheck = sCheck;
     }
 
     public User findUser(String login) {
@@ -34,7 +31,7 @@ public class UserDAO {
         }
     }
 
-    public User createUser(String login,String password, String firstName, String lastName, String email) throws EntityExistsException {
+    public User createUser(String login, String password, String firstName, String lastName, String email) throws EntityExistsException {
         em.getTransaction().begin();
         try {
             if (findUser(login) == null) {
@@ -93,11 +90,9 @@ public class UserDAO {
         return user;
     }
 
-    public BigDecimal checkBalanceForBet(String login, String password, String amount) {
-        User user = checkPassword(login,password);
+    public BigDecimal checkBalanceForBet(User user, BigDecimal amount) {
 
-        BigDecimal amountBd = sCheck.beeSureThatAmountMoreThenZero(amount);
-        if (user.getBalance().max(amountBd) == amountBd) throw new IllegalArgumentException("User have no balance for this bet");
+        if (user.getBalance().max(amount) == amount) throw new IllegalArgumentException("User have no balance for this bet");
 
         return user.getBalance();
     }

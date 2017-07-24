@@ -94,7 +94,7 @@ public class User {
         return new User().new Builder();
     }
 
-    public static Builder newBuilder(User user) {
+    public static Builder mutate(User user) {
         return user.new Builder();
     }
 

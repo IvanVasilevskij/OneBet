@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.onebet.exampleproject.model.Bets;
+import ru.onebet.exampleproject.checks.CheckOperations;
+import ru.onebet.exampleproject.model.BetsDota;
 import ru.onebet.exampleproject.model.ComandOfDota;
 import ru.onebet.exampleproject.model.User;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
@@ -14,6 +15,7 @@ import ru.onebet.exampleproject.configurations.TestConfiguration;
 import javax.persistence.EntityManager;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -21,22 +23,25 @@ import static org.junit.Assert.assertSame;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class MakingBetsDAOTest {
+public class MakingBetsDotaDAOTest {
 
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private ComandDAO daoC;
+    private ComandDotaDAO daoC;
 
     @Autowired
-    private BetsDAO daoB;
+    private BetsDotaDAO daoB;
 
     @Autowired
     private UserDAO daoU;
 
     @Autowired
-    private MakingBetsDAO daoM;
+    private MakingBetsDotaDAO daoM;
+
+    @Autowired
+    private CheckOperations sCheck;
 
     @Test
     public void testMakeBet() throws Exception {
@@ -50,7 +55,7 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.newBuilder(user)
+        user.mutate(user)
                 .balance(new BigDecimal("250.00"))
                 .build();
 
@@ -74,36 +79,36 @@ public class MakingBetsDAOTest {
                 "Lil",
                 "Solo");
 
-        Bets bet = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 16:30",
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        daoM.makeBet("userOne",
-                "123456",
-                "2017.09.15 16:30",
-                "EG",
-                "VP",
-                "EG",
-                "200.00");
+        daoM.makeBet(user,
+                timeOfTheGame,
+                comandOne,
+                comandTwo,
+                comandOne,
+                new BigDecimal("200.00"));
 
         assertEquals(1, em.createQuery("from MakingBets ").getResultList().size());
         assertEquals(new BigDecimal("50.00"),user.getBalance());
         assertEquals(new BigDecimal("200.00"),root.getBalance());
 
-//        daoM.makeBet("userOne",
-//                "123456",
-//                "2017.09.15 16:30",
-//                "EG",
-//                "VP",
-//                "VP",
-//                "45.00");
-//
-//        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
-//        assertEquals(new BigDecimal("5.00"),user.getBalance());
-//        assertEquals(new BigDecimal("245.00"),root.getBalance());
+        daoM.makeBet(user,
+                timeOfTheGame,
+                comandOne,
+                comandTwo,
+                comandOne,
+                new BigDecimal("45.00"));
+
+        assertEquals(2, em.createQuery("from MakingBets ").getResultList().size());
+        assertEquals(new BigDecimal("5.00"),user.getBalance());
+        assertEquals(new BigDecimal("245.00"),root.getBalance());
 
     }
 
@@ -121,7 +126,7 @@ public class MakingBetsDAOTest {
 
         em.getTransaction().begin();
 
-        user.newBuilder(user)
+        user.mutate(user)
                 .balance(new BigDecimal("250.00"))
                 .build();
         em.getTransaction().commit();
@@ -144,32 +149,32 @@ public class MakingBetsDAOTest {
                 "Lil",
                 "Solo");
 
-        Bets bet = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 16:30",
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        daoM.makeBet("userOne",
-                "123456",
-                "2017.09.15 16:30",
-                "EG",
-                "VP",
-                "EG",
-                "200.0");
+        daoM.makeBet(user,
+                timeOfTheGame,
+                comandOne,
+                comandTwo,
+                comandOne,
+                new BigDecimal("200.00"));
 
         assertEquals(daoM.allMakedBets().size(), 1);
         assertEquals(user.getBets().size(),1);
-//
-//        daoM.makeBet("userOne",
-//                "123456",
-//                "2017.09.15 16:30",
-//                "EG",
-//                "VP",
-//                "EG",
-//                "20.0");
-//
-//        assertEquals(daoM.allMakedBets().size(), 2);
+
+        daoM.makeBet(user,
+                timeOfTheGame,
+                comandOne,
+                comandTwo,
+                comandOne,
+                new BigDecimal("20.00"));
+
+        assertEquals(daoM.allMakedBets().size(), 2);
     }
 }

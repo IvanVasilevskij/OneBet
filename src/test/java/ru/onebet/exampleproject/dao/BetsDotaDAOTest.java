@@ -6,29 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.onebet.exampleproject.model.Bets;
-import ru.onebet.exampleproject.model.ComandOfDota;
+import ru.onebet.exampleproject.checks.CheckOperations;
+import ru.onebet.exampleproject.model.BetsDota;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
+import ru.onebet.exampleproject.model.ComandOfDota;
 
-import javax.persistence.EntityManager;
-
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class BetsDAOTest {
+public class BetsDotaDAOTest {
 
     @Autowired
-    private EntityManager em;
+    private BetsDotaDAO daoB;
 
     @Autowired
-    private BetsDAO daoB;
+    private ComandDotaDAO daoC;
 
     @Autowired
-    private ComandDAO daoC;
+    private CheckOperations sCheck;
+
 
     @Test
     public void testCreateBet() throws Exception {
@@ -48,9 +50,12 @@ public class BetsDAOTest {
                 "Lil",
                 "Solo");
 
-        Bets bet = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 16:30",
+
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
@@ -76,14 +81,16 @@ public class BetsDAOTest {
                 "Lil",
                 "Solo");
 
-        Bets bet = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 16:30",
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        Bets findedBet = daoB.findBet("EGVP2017.09.15 16:30");
+        BetsDota findedBet = daoB.findBet("EG VP 25.05.2015 16:30");
 
         assertEquals(bet,findedBet);
     }
@@ -106,26 +113,62 @@ public class BetsDAOTest {
                 "Lil",
                 "Solo");
 
-        Bets bet = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 16:30",
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
-        List<Bets> result = daoB.allBets();
+
+        List<BetsDota> result = daoB.allBets();
 
         assertEquals(1,result.size());
 
-        Bets bet2 = daoB.createBet("EG",
-                "VP",
-                "2017.09.15 19:30",
+        Date timeOfTheGameTwo = sCheck.tryToParseDateFromString("25.05.2015 19:30");
+
+        BetsDota betTwo = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGameTwo,
                 75.3,
                 12.8,
                 21.9);
-        List<Bets> result2 = daoB.allBets();
+
+        List<BetsDota> result2 = daoB.allBets();
 
         assertEquals(2,result2.size());
+    }
 
+    @Test
+    public void testMakeSearchingMarkOfDotaBet() {
+        ComandOfDota comandOne = daoC.createComand(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
 
+        ComandOfDota comandTwo = daoC.createComand(
+                "VP",
+                "No[o]ne",
+                "Ramzes666",
+                "9pasha",
+                "Lil",
+                "Solo");
+
+        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        BetsDota bet = daoB.createBet(comandOne,
+                comandTwo,
+                timeOfTheGame,
+                75.3,
+                12.8,
+                21.9);
+
+        String searchMark = daoB.makeSearchingMarkOfDotaBet(comandOne, comandTwo, timeOfTheGame);
+
+        assertEquals("EG VP 25.05.2015 16:30", searchMark);
     }
 }

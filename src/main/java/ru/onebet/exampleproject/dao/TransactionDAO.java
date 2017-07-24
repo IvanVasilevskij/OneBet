@@ -3,7 +3,7 @@ package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.checks.CheckOperationsAboutBigDecimal;
+import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.User;
 
@@ -15,20 +15,15 @@ import java.util.Date;
 public class TransactionDAO {
     private final EntityManager em;
     private UserDAO daoU;
-    private CheckOperationsAboutBigDecimal sCheck;
 
     @Autowired
     public TransactionDAO(EntityManager em,
-                          UserDAO daoU,
-                          CheckOperationsAboutBigDecimal sCheck) {
+                          UserDAO daoU) {
         this.em = em;
         this.daoU = daoU;
-        this.sCheck = sCheck;
     }
 
-    public void emitMoney(String amount) {
-
-        BigDecimal amountBd = sCheck.beeSureThatAmountMoreThenZero(amount);
+    public void emitMoney(BigDecimal amount) {
 
         em.getTransaction().begin();
 
@@ -38,7 +33,7 @@ public class TransactionDAO {
 
             Transaction t = Transaction.newBuilder()
                     .date(new Date())
-                    .amount(amountBd)
+                    .amount(amount)
                     .user(root)
                     .root(root)
                     .build();
@@ -46,8 +41,8 @@ public class TransactionDAO {
             em.persist(t);
             em.refresh(root);
 
-            root.newBuilder(root)
-                    .balance(root.getBalance().add(amountBd))
+            root.mutate(root)
+                    .balance(root.getBalance().add(amount))
                     .build();
 
             em.getTransaction().commit();
@@ -58,21 +53,19 @@ public class TransactionDAO {
         }
     }
 
-    public void sendMoney(User user, String amount) {
-
-        BigDecimal amountBd = sCheck.beeSureThatAmountMoreThenZero(amount);
+    public void sendMoney(User user, BigDecimal amount) {
 
         em.getTransaction().begin();
 
         try {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
-            if (user.getBalance().max(amountBd) == amountBd) throw new IllegalArgumentException("No have money on balance");
+            if (user.getBalance().max(amount) == amount) throw new IllegalArgumentException("No have money on balance");
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
 
             Transaction t = Transaction.newBuilder()
                     .date(new Date())
-                    .amount(amountBd)
+                    .amount(amount)
                     .user(user)
                     .root(root)
                     .build();
@@ -81,12 +74,12 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.newBuilder(user)
-                    .balance(user.getBalance().subtract(amountBd))
+            user.mutate(user)
+                    .balance(user.getBalance().subtract(amount))
                     .build();
 
-            root.newBuilder(root)
-                    .balance(root.getBalance().add(amountBd))
+            root.mutate(root)
+                    .balance(root.getBalance().add(amount))
                     .build();
 
             em.getTransaction().commit();
@@ -96,9 +89,7 @@ public class TransactionDAO {
             throw new IllegalStateException(t);
         }
     }
-    public void reciveMoney (User user, String amount) {
-
-        BigDecimal amountBd = sCheck.beeSureThatAmountMoreThenZero(amount);
+    public void reciveMoney (User user, BigDecimal amount) {
 
         em.getTransaction().begin();
 
@@ -106,13 +97,13 @@ public class TransactionDAO {
             if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
             User root = daoU.findUser(User.RootUserName);
             if (root == null) throw new IllegalStateException("No root user");
-            if (root.getBalance().max(new BigDecimal(amount)) == new BigDecimal(amount)) throw new IllegalArgumentException("Please do emitMoney");
+            if (root.getBalance().max(amount) == amount) throw new IllegalArgumentException("Please do emitMoney");
 
 //            if (amount > root.getBalance()) emitMoney(amount);
 
             Transaction t = Transaction.newBuilder()
                     .date(new Date())
-                    .amount(amountBd)
+                    .amount(amount)
                     .user(user)
                     .root(root)
                     .build();
@@ -121,12 +112,12 @@ public class TransactionDAO {
             em.refresh(user);
             em.refresh(root);
 
-            user.newBuilder(user)
-                    .balance(user.getBalance().add(amountBd))
+            user.mutate(user)
+                    .balance(user.getBalance().add(amount))
                     .build();
 
-            root.newBuilder(root)
-                    .balance(root.getBalance().subtract(amountBd))
+            root.mutate(root)
+                    .balance(root.getBalance().subtract(amount))
                     .build();
 
             em.getTransaction().commit();

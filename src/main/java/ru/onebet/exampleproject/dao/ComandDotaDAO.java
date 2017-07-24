@@ -10,11 +10,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 @Service
-public class ComandDAO {
+public class ComandDotaDAO {
     private final EntityManager em;
 
     @Autowired
-    public ComandDAO(EntityManager em) {
+    public ComandDotaDAO(EntityManager em) {
         this.em = em;
     }
 

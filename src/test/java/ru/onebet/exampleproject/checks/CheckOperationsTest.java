@@ -9,16 +9,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CheckOperationsAbountBigDecimalTest {
+public class CheckOperationsTest {
 
     @Autowired
-    private CheckOperationsAboutBigDecimal sCheck;
+    private CheckOperations sCheck;
 
     @Test
     public void testTryToParseBigDecimalFromString() throws Exception {
@@ -51,5 +53,10 @@ public class CheckOperationsAbountBigDecimalTest {
     @Test(expected = IllegalArgumentException.class)
     public void testTryToParseBigDecimalFromStringWithExceprion() {
         BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("asd");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryToParseDateFromString() {
+        Date date = sCheck.tryToParseDateFromString("asd");
     }
 }

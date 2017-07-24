@@ -14,7 +14,7 @@ import javax.persistence.*;
 )
 @Table(name = "COMADS")
 public class ComandOfDota {
-    public static final String FindByLogin = "ComandOfDota.findByLogin";
+    public static final String FindByLogin = "ComandOfDotaImpl.findByLogin";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,7 +79,7 @@ public class ComandOfDota {
         return new ComandOfDota().new Builder();
     }
 
-    public static Builder newBuilder(ComandOfDota comandOfDota) {
+    public static Builder mutate(ComandOfDota comandOfDota) {
         return comandOfDota.new Builder();
     }
 

@@ -9,14 +9,14 @@ import java.util.Date;
 @Entity
 @NamedQueries(
         @NamedQuery(
-                name = Bets.FindBySearchingMark,
-                query = "select b from Bets b where b.searchingMark = :searchingMark"
+                name = BetsDota.FindBySearchingMark,
+                query = "select b from BetsDota b where b.searchingMark = :searchingMark"
         )
 )
 @Table(name = "BETS")
-public class Bets {
+public class BetsDota {
 
-    public static final String FindBySearchingMark = "Bets.findBySearchingMark";
+    public static final String FindBySearchingMark = "BetsDota.findBySearchingMark";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,13 +83,13 @@ public class Bets {
         return searchingMark;
     }
 
-    private Bets() {}
+    private BetsDota() {}
 
     public static Builder newBuilder() {
-        return new Bets().new Builder();
+        return new BetsDota().new Builder();
     }
 
-    public static Builder newBuilder(Bets bet) {
+    public static Builder mutate(BetsDota bet) {
         return bet.new Builder();
     }
 
@@ -98,42 +98,42 @@ public class Bets {
         private Builder() {}
 
         public Builder date(Date date) {
-            Bets.this.date = date;
+            BetsDota.this.date = date;
             return this;
         }
 
         public Builder comandOne(ComandOfDota comandOne) {
-            Bets.this.comandOne = comandOne;
+            BetsDota.this.comandOne = comandOne;
             return this;
         }
 
         public Builder comandTwo(ComandOfDota comandTwo) {
-            Bets.this.comandTwo = comandTwo;
+            BetsDota.this.comandTwo = comandTwo;
             return this;
         }
 
         public Builder persentComandOne(double persentComandOne) {
-            Bets.this.persentComandOne = persentComandOne;
+            BetsDota.this.persentComandOne = persentComandOne;
             return this;
         }
 
         public Builder persentToDrow(double persentToDrow) {
-            Bets.this.persentToDrow = persentToDrow;
+            BetsDota.this.persentToDrow = persentToDrow;
             return this;
         }
 
         public Builder persentComandTwo(double persentComandTwo) {
-            Bets.this.persentComandTwo = persentComandTwo;
+            BetsDota.this.persentComandTwo = persentComandTwo;
             return this;
         }
 
         public Builder searchingMark(String searchingMark) {
-            Bets.this.searchingMark = searchingMark;
+            BetsDota.this.searchingMark = searchingMark;
             return this;
         }
 
-        public Bets build() {
-            return Bets.this;
+        public BetsDota build() {
+            return BetsDota.this;
         }
     }
 }
