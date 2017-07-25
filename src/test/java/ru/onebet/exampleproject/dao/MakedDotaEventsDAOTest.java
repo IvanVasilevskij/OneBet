@@ -7,11 +7,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.checks.CheckOperations;
+import ru.onebet.exampleproject.dao.betmakerdao.DotaBetsMakerDAO;
 import ru.onebet.exampleproject.dao.betsdao.DotaEventsDAO;
 import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
+import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
-import ru.onebet.exampleproject.model.User;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import javax.persistence.EntityManager;
@@ -37,7 +39,7 @@ public class MakedDotaEventsDAOTest {
     private DotaEventsDAO daoB;
 
     @Autowired
-    private UserDAO daoU;
+    private UserDAOImpl daoU;
 
     @Autowired
     private DotaBetsMakerDAO daoM;
@@ -48,7 +50,7 @@ public class MakedDotaEventsDAOTest {
     @Test
     public void testMakeBet() throws Exception {
 
-        User user = daoU.createUser(
+        ClientImpl clientImpl = daoU.createClient(
                 "userOne",
                 "123456",
                 "Ivan",
@@ -57,13 +59,13 @@ public class MakedDotaEventsDAOTest {
 
         em.getTransaction().begin();
 
-        user.mutate(user)
+        clientImpl.Mutate(clientImpl)
                 .balance(new BigDecimal("250.00"))
                 .build();
 
         em.getTransaction().commit();
 
-        User root = daoU.ensureRootUser();
+        ClientImpl root = daoU.ensureRootUser();
 
         DotaTeam teamOne = daoC.createTeam(
                 "EG",
@@ -90,22 +92,22 @@ public class MakedDotaEventsDAOTest {
                 12.8,
                 21.9);
 
-        daoM.makeBet(user,
+        daoM.makeBet(clientImpl,
                 event,
                 teamOne,
                 new BigDecimal("200.00"));
 
         assertEquals(1, em.createQuery("from MakedBetsOfDota ").getResultList().size());
-        assertEquals(new BigDecimal("50.00"),user.getBalance());
+        assertEquals(new BigDecimal("50.00"), clientImpl.getBalance());
         assertEquals(new BigDecimal("200.00"),root.getBalance());
 
-        daoM.makeBet(user,
+        daoM.makeBet(clientImpl,
                 event,
                 teamOne,
                 new BigDecimal("45.00"));
 
         assertEquals(2, em.createQuery("from MakedBetsOfDota ").getResultList().size());
-        assertEquals(new BigDecimal("5.00"),user.getBalance());
+        assertEquals(new BigDecimal("5.00"), clientImpl.getBalance());
         assertEquals(new BigDecimal("245.00"),root.getBalance());
 
     }
@@ -115,7 +117,7 @@ public class MakedDotaEventsDAOTest {
         assertEquals(daoM.allMakedBets().size(), em.createQuery("from MakedBetsOfDota ").getResultList().size());
         assertEquals(daoM.allMakedBets().size(), 0);
 
-        User user = daoU.createUser(
+        ClientImpl clientImpl = daoU.createClient(
                 "userOne",
                 "123456",
                 "Ivan",
@@ -124,12 +126,12 @@ public class MakedDotaEventsDAOTest {
 
         em.getTransaction().begin();
 
-        user.mutate(user)
+        clientImpl.Mutate(clientImpl)
                 .balance(new BigDecimal("250.00"))
                 .build();
         em.getTransaction().commit();
 
-        User root = daoU.ensureRootUser();
+        ClientImpl root = daoU.ensureRootUser();
 
         DotaTeam teamOne = daoC.createTeam(
                 "EG",
@@ -156,15 +158,15 @@ public class MakedDotaEventsDAOTest {
                 12.8,
                 21.9);
 
-        daoM.makeBet(user,
+        daoM.makeBet(clientImpl,
                 bet,
                 teamOne,
                 new BigDecimal("200.00"));
 
         assertEquals(daoM.allMakedBets().size(), 1);
-        assertEquals(user.getBets().size(),1);
+        assertEquals(clientImpl.getBets().size(),1);
 
-        daoM.makeBet(user,
+        daoM.makeBet(clientImpl,
                 bet,
                 teamOne,
                 new BigDecimal("20.00"));

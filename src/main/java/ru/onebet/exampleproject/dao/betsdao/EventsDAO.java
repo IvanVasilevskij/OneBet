@@ -1,27 +1,24 @@
 package ru.onebet.exampleproject.dao.betsdao;
 
 import ru.onebet.exampleproject.model.coupleteambets.EventBetweenCoupleTeam;
+import ru.onebet.exampleproject.model.team.Team;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface EventsDAO {
+public interface EventsDAO<T extends Team,E extends EventBetweenCoupleTeam> {
 
-    public <B extends EventBetweenCoupleTeam> B createEvent(
-            String teamOne,
-            String teamTwo,
-            Date timeOfTheGame,
-            double percentForComandOne,
+    E createEvent(
+            T teamFirst,
+            T teamSecond,
+            LocalDateTime timeOfTheGame,
+            double percentForTeamFirst,
             double percentForDraw,
-            double percentForComandTwo);
+            double percentForTeamSecond);
 
-    public <B extends EventBetweenCoupleTeam> B findEvent(String searchingMark);
+    List<E> allEvents();
 
-    public <B extends EventBetweenCoupleTeam> List<B> allEvents();
+    List<E> allEventsWithThisTeam(T teamName);
 
-    public <B extends EventBetweenCoupleTeam> List<B> allEventsWithThisTeam(String teamName);
-
-    public String createSearchingMark(String teamOneName,
-                                      String teamTwoName,
-                                      Date timeOfTheGame);
+    void checkThatThisEventHaveTheTeam (E event, T team);
 }

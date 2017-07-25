@@ -9,8 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,43 +19,50 @@ import static org.junit.Assert.assertEquals;
 public class CheckOperationsTest {
 
     @Autowired
-    private CheckOperations sCheck;
+    private CheckOperations checkOperations;
 
     @Test
     public void testTryToParseBigDecimalFromString() throws Exception {
-        BigDecimal bdOne = sCheck.tryToParseBigDecimalFromString("250.0");
-        BigDecimal bdTwo = sCheck.tryToParseBigDecimalFromString("350.000");
-        BigDecimal bdThree = sCheck.tryToParseBigDecimalFromString("200");
-        BigDecimal bdFour = sCheck.tryToParseBigDecimalFromString("50.00");
+        BigDecimal bdOne = checkOperations.tryToParseBigDecimalFromString("250.0");
+        BigDecimal bdTwo = checkOperations.tryToParseBigDecimalFromString("350.000");
+        BigDecimal bdThree = checkOperations.tryToParseBigDecimalFromString("200");
+        BigDecimal bdFour = checkOperations.tryToParseBigDecimalFromString("50.00");
 
-        assertEquals(new BigDecimal("250.00"),bdOne);
-        assertEquals(new BigDecimal("350.00"),bdTwo);
-        assertEquals(new BigDecimal("200.00"),bdThree);
-        assertEquals(new BigDecimal("50.00"),bdFour);
+        assertEquals(new BigDecimal("250.00"), bdOne);
+        assertEquals(new BigDecimal("350.00"), bdTwo);
+        assertEquals(new BigDecimal("200.00"), bdThree);
+        assertEquals(new BigDecimal("50.00"), bdFour);
 
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryToParseBigDecimalFromStringWithIllegalErgument() {
+        BigDecimal bdOne = checkOperations.tryToParseBigDecimalFromString("asd");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testTryToParseBigDecimalFromStringWithNegativeArgument() {
+        BigDecimal bdOne = checkOperations.tryToParseBigDecimalFromString("-50.00");
     }
 
     @Test
-    public void testBeeSureThatAmountMoreThenZero() throws Exception {
-        BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("25.00");
-        BigDecimal bdTwo = sCheck.beeSureThatAmountMoreThenZero("50.0");
+    public void testTryToParseDateFromString() throws Exception {
+        LocalDateTime neededDate = checkOperations.tryToParseDateFromString("25.5.2015 16:30");
 
-        assertEquals(new BigDecimal("25.00"),bdOne);
-        assertEquals(new BigDecimal("50.00"),bdTwo);
+        assertEquals(2015, neededDate.getYear());
+        assertEquals(5, neededDate.getMonth().getValue());
+        assertEquals(25, neededDate.getDayOfMonth());
+        assertEquals(16, neededDate.getHour());
+        assertEquals(30, neededDate.getMinute());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBeeSureThatAmountMoreThenZeroWithExceprion() {
-        BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("-25.00");
+    public void testTryToParseDateFromStringWithIllegalArgument() {
+        LocalDateTime neededDate = checkOperations.tryToParseDateFromString("asd");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testTryToParseBigDecimalFromStringWithExceprion() {
-        BigDecimal bdOne = sCheck.beeSureThatAmountMoreThenZero("asd");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testTryToParseDateFromString() {
-        Date date = sCheck.tryToParseDateFromString("asd");
+    public void testTryToParseDateFromStringWithIllegalPattern() {
+        LocalDateTime neededDate = checkOperations.tryToParseDateFromString("25.05.15 16:30");
     }
 }

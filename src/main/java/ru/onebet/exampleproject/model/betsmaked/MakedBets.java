@@ -1,20 +1,20 @@
 package ru.onebet.exampleproject.model.betsmaked;
 
-import ru.onebet.exampleproject.model.User;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.model.coupleteambets.EventBetweenCoupleTeam;
 import ru.onebet.exampleproject.model.team.Team;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public interface MakedBets {
+public interface MakedBets <T extends Team, E extends EventBetweenCoupleTeam> {
 
-    public int getId();
+    int getId();
 
-    public Date getDate();
+    LocalDateTime getDate();
 
-    public <T extends Team> T getTakeOfTeam();
+    T getBettingTeam();
 
-    public User getUser();
+    ClientImpl getClientImpl();
 
-    public <B extends EventBetweenCoupleTeam> B getBet();
+    E getEvent();
 }

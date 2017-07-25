@@ -14,6 +14,7 @@ import ru.onebet.exampleproject.configurations.TestConfiguration;
 import javax.persistence.EntityManager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
@@ -24,11 +25,11 @@ public class DotaTeamDAOTest {
     private EntityManager em;
 
     @Autowired
-    private DotaTeamDAO daoC;
+    private DotaTeamDAO daoTeam;
 
     @Test
     public void testCreateComand() throws Exception {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamFirst = daoTeam.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -36,31 +37,32 @@ public class DotaTeamDAOTest {
                 "Zai",
                 "Crit");
 
-        assertEquals("EG", em.find(DotaTeam.class, comandOne.getId()).getTeamName());
-        assertEquals("Sumail", em.find(DotaTeam.class, comandOne.getId()).getRoleMid());
-        assertEquals("Arteezy", em.find(DotaTeam.class, comandOne.getId()).getRoleCarry());
-        assertEquals("Universe", em.find(DotaTeam.class, comandOne.getId()).getRoleHard());
-        assertEquals("Zai", em.find(DotaTeam.class, comandOne.getId()).getRoleSupFour());
-        assertEquals("Crit", em.find(DotaTeam.class, comandOne.getId()).getRoleSupFive());
+        assertEquals("EG", em.find(DotaTeam.class, teamFirst.getId()).getTeamName());
+        assertEquals("Sumail", em.find(DotaTeam.class, teamFirst.getId()).getRoleMid());
+        assertEquals("Arteezy", em.find(DotaTeam.class, teamFirst.getId()).getRoleCarry());
+        assertEquals("Universe", em.find(DotaTeam.class, teamFirst.getId()).getRoleHard());
+        assertEquals("Zai", em.find(DotaTeam.class, teamFirst.getId()).getRoleSupFour());
+        assertEquals("Crit", em.find(DotaTeam.class, teamFirst.getId()).getRoleSupFive());
     }
 
     @Test
     public void testFindComandByComandName() throws Exception {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamFirst = daoTeam.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
                 "Universe",
                 "Zai",
                 "Crit");
-        DotaTeam comandFinded = daoC.findTeamByTeamName("EG");
 
-        assertEquals(comandOne, comandFinded);
+        DotaTeam teamFinded = daoTeam.findTeamByTeamName("EG");
+
+        assertEquals(teamFirst, teamFinded);
     }
 
     @Test
     public void testDeleteComandByComandName() throws Exception {
-        DotaTeam comandOne = daoC.createTeam(
+        DotaTeam teamFirst = daoTeam.createTeam(
                 "EG",
                 "Sumail",
                 "Arteezy",
@@ -70,10 +72,34 @@ public class DotaTeamDAOTest {
 
         em.getTransaction().begin();
 
-        daoC.deleteTeamByTeamName("EG");
+        daoTeam.deleteTeamByTeamName("EG");
 
         em.getTransaction().commit();
 
-        assertEquals(null, daoC.findTeamByTeamName("EG"));
+        assertEquals(null, daoTeam.findTeamByTeamName("EG"));
+    }
+
+    @Test
+    public void testGetAllTeams() throws Exception {
+        DotaTeam teamFirst = daoTeam.createTeam(
+                "EG",
+                "Sumail",
+                "Arteezy",
+                "Universe",
+                "Zai",
+                "Crit");
+
+        assertSame(1, daoTeam.getAllTeams().size());
+
+        DotaTeam teamSecond = daoTeam.createTeam(
+                "VP",
+                "No[o]ne",
+                "Ramzes666",
+                "9pasha",
+                "Lil",
+                "Solo");
+
+        assertSame(2, daoTeam.getAllTeams().size());
+
     }
 }

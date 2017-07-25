@@ -18,7 +18,7 @@ public class DotaTeam implements Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ID", insertable = false, updatable = false)
     private int id;
 
     @Column(name = "COMAND_NAME")
@@ -27,23 +27,23 @@ public class DotaTeam implements Team {
 
     @Column(name = "ROLE_MID")
     @NotNull
-    private String roleMid;
+    private String roleMid = "unknown";
 
     @Column(name = "ROLE_CARRY")
     @NotNull
-    private String roleCarry;
+    private String roleCarry = "unknown";
 
     @Column(name = "ROLE_HARD")
     @NotNull
-    private String roleHard;
+    private String roleHard = "unknown";
 
     @Column(name = "ROLE_SUP_FOUR")
     @NotNull
-    private String roleSupFour;
+    private String roleSupFour = "unknown";
 
     @Column(name = "ROLE_SUP_FIVE")
     @NotNull
-    private String roleSupFive;
+    private String roleSupFive = "unknown";
 
     @Override
     public int getId() {
@@ -77,12 +77,12 @@ public class DotaTeam implements Team {
 
     private DotaTeam() {}
 
-    public static Builder newBuilder() {
+    public static Builder Builder() {
         return new DotaTeam().new Builder();
     }
 
-    public static Builder mutate(DotaTeam comandOfDotaImpl) {
-        return comandOfDotaImpl.new Builder();
+    public static Mutate Mutate(DotaTeam comandOfDotaImpl) {
+        return comandOfDotaImpl.new Mutate();
     }
 
     public class Builder {
@@ -120,6 +120,45 @@ public class DotaTeam implements Team {
         }
 
         public DotaTeam build() {
+            return DotaTeam.this;
+        }
+    }
+
+    public class Mutate {
+
+        private Mutate() {}
+
+        public Mutate comandName(String comandName) {
+            DotaTeam.this.teamName = comandName;
+            return this;
+        }
+
+        public Mutate roleMid(String roleMid) {
+            DotaTeam.this.roleMid = roleMid;
+            return this;
+        }
+
+        public Mutate roleCarry(String roleCarry) {
+            DotaTeam.this.roleCarry = roleCarry;
+            return this;
+        }
+
+        public Mutate roleHard(String roleHard){
+            DotaTeam.this.roleHard = roleHard;
+            return this;
+        }
+
+        public Mutate roleSupFour(String roleSupFour) {
+            DotaTeam.this.roleSupFour = roleSupFour;
+            return this;
+        }
+
+        public Mutate roleSupFive(String roleSupFive){
+            DotaTeam.this.roleSupFive = roleSupFive;
+            return this;
+        }
+
+        public DotaTeam mutate() {
             return DotaTeam.this;
         }
     }

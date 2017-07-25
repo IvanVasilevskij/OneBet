@@ -2,75 +2,53 @@ package ru.onebet.exampleproject.dao.betsdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class DotaEventsDAO implements EventsDAO {
+public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
-    private EntityManager em;
-    private DotaTeamDAO daoC;
+    private final EntityManager em;
 
 
     @Autowired
-    public DotaEventsDAO(EntityManager em,
-                         DotaTeamDAO daoC) {
+    public DotaEventsDAO(EntityManager em) {
         this.em = em;
-        this.daoC = daoC;
     }
 
 
-
+    @Override
     public DotaEvent createEvent(
-            String nameOfTeamOne,
-            String nameOfTeamTwo,
-            Date timeOfTheGame,
-            double percentForTeamOne,
+            DotaTeam teamFirst,
+            DotaTeam teamSecond,
+            LocalDateTime timeOfTheGame,
+            double percentForTeamFirst,
             double percentForDraw,
-            double percentForTeamTwo) {
+            double percentForTeamSecond) {
 
         em.getTransaction().begin();
 
-        DotaTeam teamOne = daoC.findTeamByTeamName(nameOfTeamOne);
-        DotaTeam teamTwo = daoC.findTeamByTeamName(nameOfTeamTwo);
-        String searchingMark = createSearchingMark(teamOne.getTeamName(),
-                teamTwo.getTeamName(),
-                timeOfTheGame);
-
-        DotaEvent bet = DotaEvent.newBuilder()
-                .comandOne(teamOne)
-                .comandTwo(teamTwo)
+        DotaEvent event = DotaEvent.Builder()
+                .teamFirst(teamFirst)
+                .teamSecond(teamSecond)
                 .date(timeOfTheGame)
-                .persentComandOne(percentForTeamOne)
-                .persentComandTwo(percentForTeamTwo)
+                .percentForTeamFirst(percentForTeamFirst)
                 .persentToDrow(percentForDraw)
-                .searchingMark(searchingMark)
+                .persentForTeamSecond(percentForTeamSecond)
                 .build();
 
-        em.persist(bet);
+        em.persist(event);
         em.getTransaction().commit();
 
-        return bet;
+        return event;
     }
 
-    public DotaEvent findEvent(String searchingMark) {
-        try {
-            return em.createNamedQuery(DotaEvent.FindBySearchingMark, DotaEvent.class)
-                    .setParameter("searchingMark", searchingMark)
-                    .getSingleResult();
-        } catch (NoResultException notFound) {
-            return null;
-        }
-    }
-
+    @Override
     public List<DotaEvent> allEvents() {
         try {
             List<DotaEvent> events = em.createQuery("from DotaEvent").getResultList();
@@ -81,16 +59,13 @@ public class DotaEventsDAO implements EventsDAO {
         }
     }
 
-    public List<DotaEvent> allEventsWithThisTeam(String teamName) { //NEED ADD TEST
+    @Override
+    public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) { //NEED ADD TEST
         try {
-            List<DotaEvent> resultListEventsWithThisTeam = new ArrayList<>();
-            DotaTeam team = daoC.findTeamByTeamName(teamName);
             List<DotaEvent> events = em.createQuery("from DotaEvent").getResultList();
-            for (DotaEvent betsWithThisComand : events) {
-                if (betsWithThisComand.getTeamOne() == team || betsWithThisComand.getTeamTwo() == team) {
-                    resultListEventsWithThisTeam.add(betsWithThisComand);
-                }
-            }
+            List<DotaEvent> resultListEventsWithThisTeam = events.stream()
+                    .filter(c -> c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team))
+                    .collect(Collectors.toList());
             return resultListEventsWithThisTeam;
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -98,19 +73,12 @@ public class DotaEventsDAO implements EventsDAO {
         }
     }
 
-    public String createSearchingMark(String teamOneName,
-                                      String teamTwoName,
-                                      Date timeOfTheGame) { //NEED ADD TEST
-
-        DotaTeam teamOne = daoC.findTeamByTeamName(teamOneName);
-        DotaTeam teamTwo = daoC.findTeamByTeamName(teamTwoName);
-
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT);
-        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-
-        return teamOne.getTeamName() + " " +
-                teamTwo.getTeamName() + " " +
-                dateFormat.format(timeOfTheGame) + " " +
-                timeFormat.format(timeOfTheGame);
+    @Override
+    public void checkThatThisEventHaveTheTeam (DotaEvent event, DotaTeam team) {
+        if (!event.getTeamFirst().equals(team) && !event.getTeamSecond().equals(team)) {
+            throw new IllegalArgumentException("This comand doesen't paricipating at this event");
+        }
     }
+
+    //добавить выборку event'ов по дате без времени. только день недели!!!
 }

@@ -3,47 +3,44 @@ package ru.onebet.exampleproject.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.checks.CheckOperations;
+import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.Transaction;
-import ru.onebet.exampleproject.model.User;
+import ru.onebet.exampleproject.model.users.Admin;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class TransactionDAO {
     private final EntityManager em;
-    private UserDAO daoU;
+    private UserDAOImpl daoUser;
 
     @Autowired
     public TransactionDAO(EntityManager em,
-                          UserDAO daoU) {
+                          UserDAOImpl daoUser) {
         this.em = em;
-        this.daoU = daoU;
+        this.daoUser = daoUser;
     }
 
-    public void emitMoney(BigDecimal amount) {
+    public void emitMoney(Admin admin, BigDecimal amount) {
 
         em.getTransaction().begin();
 
         try {
-            User root = daoU.findUser(User.RootUserName);
-            if (root == null) throw new IllegalStateException("No root user");
-
-            Transaction t = Transaction.newBuilder()
-                    .date(new Date())
+            Transaction t = Transaction.Builder()
+                    .date(LocalDateTime.now())
                     .amount(amount)
-                    .user(root)
-                    .root(root)
+                    .admin(admin)
                     .build();
 
             em.persist(t);
-            em.refresh(root);
+            em.refresh(admin);
 
-            root.mutate(root)
-                    .balance(root.getBalance().add(amount))
-                    .build();
+            admin.Mutate(admin)
+                    .balance(admin.getBalance().add(amount))
+                    .mutate();
 
             em.getTransaction().commit();
 
@@ -53,34 +50,33 @@ public class TransactionDAO {
         }
     }
 
-    public void sendMoney(User user, BigDecimal amount) {
+    public void sendMoney(ClientImpl client, BigDecimal amount) {
 
         em.getTransaction().begin();
 
         try {
-            if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
-            if (user.getBalance().max(amount) == amount) throw new IllegalArgumentException("No have money on balance");
-            User root = daoU.findUser(User.RootUserName);
-            if (root == null) throw new IllegalStateException("No root user");
+            daoUser.checkBalanceForBet(client, amount);
 
-            Transaction t = Transaction.newBuilder()
-                    .date(new Date())
+            Admin root = daoUser.ensureRootUser();
+
+            Transaction t = Transaction.Builder()
+                    .date(LocalDateTime.now())
                     .amount(amount)
-                    .user(user)
-                    .root(root)
+                    .client(client)
+                    .admin(root)
                     .build();
 
             em.persist(t);
-            em.refresh(user);
+            em.refresh(client);
             em.refresh(root);
 
-            user.mutate(user)
-                    .balance(user.getBalance().subtract(amount))
-                    .build();
+            client.Mutate(client)
+                    .balance(client.getBalance().subtract(amount))
+                    .mutate();
 
-            root.mutate(root)
+            root.Mutate(root)
                     .balance(root.getBalance().add(amount))
-                    .build();
+                    .mutate();
 
             em.getTransaction().commit();
 
@@ -89,36 +85,37 @@ public class TransactionDAO {
             throw new IllegalStateException(t);
         }
     }
-    public void reciveMoney (User user, BigDecimal amount) {
+    public void reciveMoney (ClientImpl client, Admin admin, BigDecimal amount) {
 
         em.getTransaction().begin();
 
         try {
-            if (daoU.findUser(user.getLogin()) == null) throw new IllegalStateException("No  user");
-            User root = daoU.findUser(User.RootUserName);
-            if (root == null) throw new IllegalStateException("No root user");
-            if (root.getBalance().max(amount) == amount) throw new IllegalArgumentException("Please do emitMoney");
+            daoUser.checkBalanceForPayoutPrize(admin, amount);
 
-//            if (amount > root.getBalance()) emitMoney(amount);
+            Admin root = daoUser.ensureRootUser();
 
-            Transaction t = Transaction.newBuilder()
-                    .date(new Date())
+            Transaction t = Transaction.Builder()
+                    .date(LocalDateTime.now())
                     .amount(amount)
-                    .user(user)
-                    .root(root)
+                    .client(client)
+                    .admin(admin)
                     .build();
 
             em.persist(t);
-            em.refresh(user);
-            em.refresh(root);
+            em.refresh(client);
+            em.refresh(admin);
 
-            user.mutate(user)
-                    .balance(user.getBalance().add(amount))
-                    .build();
+            client.Mutate(client)
+                    .balance(client.getBalance().add(amount))
+                    .mutate();
 
-            root.mutate(root)
+            admin.Mutate(admin)
+                    .balance(admin.getBalance().subtract(amount))
+                    .mutate();
+
+            root.Mutate(root)
                     .balance(root.getBalance().subtract(amount))
-                    .build();
+                    .mutate();
 
             em.getTransaction().commit();
 

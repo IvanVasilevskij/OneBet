@@ -2,12 +2,16 @@ package ru.onebet.exampleproject.dao.teamdao;
 
 import ru.onebet.exampleproject.model.team.Team;
 
-public interface TeamDAO {
+import java.util.List;
 
-    public <T extends Team> T createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive);
+public interface TeamDAO <T extends Team> {
 
-    public <T extends Team> T findTeamByTeamName(String teamName);
+    T createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive);
 
-    public void deleteTeamByTeamName(String teamName);
+    T findTeamByTeamName(String teamName);
+
+    void deleteTeamByTeamName(String teamName);
+
+    List<T> getAllTeams();
 
     }

@@ -1,72 +1,71 @@
 package ru.onebet.exampleproject.model;
 
 
+import ru.onebet.exampleproject.model.users.Admin;
+import ru.onebet.exampleproject.model.users.ClientImpl;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TRANSACTIONS")
 public class Transaction {
 
     @Id
-    @Column(name = "TRANSACTION_ID", updatable = false, insertable = false)
+    @Column(name = "ID", updatable = false, insertable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne(optional = false)
-    private User user;
+    private ClientImpl client;
 
     @ManyToOne(optional = false)
-    private User root;
+    private Admin admin;
 
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
     @Column(name = "DATE")
-    private Date date;
+    private LocalDateTime date;
 
     public int getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public ClientImpl getClient() {
+        return client;
     }
 
-    public User getRoot() {
-        return root;
+    public Admin getAdmin() {
+        return admin;
     }
 
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
     private Transaction() {}
 
-    public static Builder newBuilder() {
+    public static Builder Builder() {
         return new Transaction().new Builder();
-    }
-
-    public static Builder mutate(Transaction transaction) {
-        return transaction.new Builder();
     }
 
     public class Builder {
 
         private Builder() {}
 
-        public Builder user(User user) {
-            Transaction.this.user = user;
+        public Builder client(ClientImpl client) {
+            Transaction.this.client = client;
             return this;
         }
 
-        public Builder root(User root) {
-            Transaction.this.root = root;
+        public Builder admin(Admin admin) {
+            Transaction.this.admin = admin;
             return this;
         }
 
@@ -75,7 +74,7 @@ public class Transaction {
             return this;
         }
 
-        public Builder date(Date date) {
+        public Builder date(LocalDateTime date) {
             Transaction.this.date = date;
             return this;
         }

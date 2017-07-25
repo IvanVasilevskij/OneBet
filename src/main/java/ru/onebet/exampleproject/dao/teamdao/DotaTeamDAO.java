@@ -8,9 +8,10 @@ import ru.onebet.exampleproject.model.team.DotaTeam;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 @Service
-public class DotaTeamDAO implements TeamDAO{
+public class DotaTeamDAO implements TeamDAO <DotaTeam>{
     private final EntityManager em;
 
     @Autowired
@@ -32,7 +33,7 @@ public class DotaTeamDAO implements TeamDAO{
         em.getTransaction().begin();
         try {
             if (findTeamByTeamName(teamName) == null) {
-                DotaTeam comandOne = DotaTeam.newBuilder()
+                DotaTeam team = DotaTeam.Builder()
                         .comandName(teamName)
                         .roleMid(roleMid)
                         .roleCarry(roleCarry)
@@ -41,9 +42,10 @@ public class DotaTeamDAO implements TeamDAO{
                         .roleSupFive(roleSupFive)
                         .build();
 
-                em.persist(comandOne);
+
+                em.persist(team);
                 em.getTransaction().commit();
-                return comandOne;
+                return team;
             } else return findTeamByTeamName(teamName);
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -53,9 +55,18 @@ public class DotaTeamDAO implements TeamDAO{
 
     public void deleteTeamByTeamName(String teamName) {
         try {
-            if (findTeamByTeamName(teamName) != null) {
                 em.remove(findTeamByTeamName(teamName));
-            }
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
+
+    @Override
+    public List<DotaTeam> getAllTeams() {
+        try {
+            List<DotaTeam> teams = em.createQuery("from DotaTeam ").getResultList();
+            return teams;
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

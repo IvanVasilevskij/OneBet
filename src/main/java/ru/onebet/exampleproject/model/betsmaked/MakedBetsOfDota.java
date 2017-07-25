@@ -1,86 +1,90 @@
 package ru.onebet.exampleproject.model.betsmaked;
 
 import com.sun.istack.internal.NotNull;
-import ru.onebet.exampleproject.model.User;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "MAKING_BETS")
-public class MakedBetsOfDota implements MakedBets {
+public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TRANSCTION_ID", insertable = false, updatable = false)
+    @Column(name = "ID", insertable = false, updatable = false)
     private int id;
 
     @Column(name = "DATE_OF_BET")
     @NotNull
-    private Date date;
+    private LocalDateTime date;
 
     @OneToOne
-    private DotaTeam takeOfTeam;
+    private DotaTeam bettingTeam;
 
     @ManyToOne(optional = false)
-    private User user;
+    private ClientImpl clientImpl;
 
     @ManyToOne(optional = false)
-    private DotaEvent bet;
+    private DotaEvent event;
 
+    @Override
     public int getId() {
         return id;
     }
 
-    public Date getDate() {
+    @Override
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public DotaTeam getTakeOfTeam() {
-        return takeOfTeam;
+    @Override
+    public DotaTeam getBettingTeam() {
+        return bettingTeam;
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public ClientImpl getClientImpl() {
+        return clientImpl;
     }
 
-    public DotaEvent getBet() {
-        return bet;
+    @Override
+    public DotaEvent getEvent() {
+        return event;
     }
 
     private MakedBetsOfDota() {}
 
-    public static Builder newBuilder() {
+    public static Builder Builder() {
         return new MakedBetsOfDota().new Builder();
     }
 
-    public static Builder mutate(MakedBetsOfDota dotaBetsMaked) {
-        return dotaBetsMaked.new Builder();
+    public static Mutator Mutate(MakedBetsOfDota makedBet) {
+        return makedBet.new Mutator();
     }
-
 
     public class Builder {
 
         private Builder() {}
 
-        public Builder date(Date date) {
+        public Builder date(LocalDateTime date) {
             MakedBetsOfDota.this.date = date;
             return this;
         }
 
-        public Builder takeOnComand(DotaTeam comandOfDotaImpl) {
-            MakedBetsOfDota.this.takeOfTeam = comandOfDotaImpl;
+        public Builder bettingTeam(DotaTeam bettingTeam) {
+            MakedBetsOfDota.this.bettingTeam = bettingTeam;
             return this;
         }
 
-        public Builder user(User user) {
-            MakedBetsOfDota.this.user = user;
+        public Builder client(ClientImpl clientImpl) {
+            MakedBetsOfDota.this.clientImpl = clientImpl;
             return this;
         }
 
-        public Builder bet(DotaEvent bet) {
-            MakedBetsOfDota.this.bet = bet;
+        public Builder event(DotaEvent event) {
+            MakedBetsOfDota.this.event = event;
             return this;
         }
 
@@ -88,4 +92,34 @@ public class MakedBetsOfDota implements MakedBets {
             return MakedBetsOfDota.this;
         }
     }
+
+    public class Mutator {
+
+        private Mutator() {}
+
+        public Mutator date(LocalDateTime date) {
+            MakedBetsOfDota.this.date = date;
+            return this;
+        }
+
+        public Mutator bettingTeam(DotaTeam bettingTeam) {
+            MakedBetsOfDota.this.bettingTeam = bettingTeam;
+            return this;
+        }
+
+        public Mutator client(ClientImpl client) {
+            MakedBetsOfDota.this.clientImpl = client;
+            return this;
+        }
+
+        public Mutator event(DotaEvent event) {
+            MakedBetsOfDota.this.event = event;
+            return this;
+        }
+
+        public MakedBetsOfDota mutate() {
+            return MakedBetsOfDota.this;
+        }
+    }
+
 }

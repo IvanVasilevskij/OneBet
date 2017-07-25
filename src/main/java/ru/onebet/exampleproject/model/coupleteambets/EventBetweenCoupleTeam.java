@@ -2,24 +2,22 @@ package ru.onebet.exampleproject.model.coupleteambets;
 
 import ru.onebet.exampleproject.model.team.Team;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-public interface EventBetweenCoupleTeam {
+public interface EventBetweenCoupleTeam<T extends Team> {
 
-    public int getId();
+    int getId();
 
-    public Date getDate();
+    LocalDateTime getDate();
 
-    public <T extends Team> T getTeamOne();
+    T getTeamFirst();
 
-    public <T extends Team> T getTeamTwo();
+    T getTeamSecond();
 
-    public double getPercentForTeamOne();
+    double getPercentForTeamFirst();
 
-    public double getPersentForDrow();
+    double getPersentForDrow();
 
-    public double getPercentForTeamTwo();
+    double getPercentForTeamSecond();
 
-    public String getSearchingMark();
-
-    }
+}
