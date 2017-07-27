@@ -19,5 +19,4 @@ public interface EventBetweenCoupleTeam<T extends Team> {
     double getPersentForDrow();
 
     double getPercentForTeamSecond();
-
 }

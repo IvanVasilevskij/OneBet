@@ -55,14 +55,13 @@ public class TransactionDAOTest {
         Admin root = daoUser.ensureRootUser();
 
         ClientImpl client = daoUser.createClient(
-                "client",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "password");
 
         em.getTransaction().begin();
 
-        client.Mutate(client)
-                .balance(client.getBalance().add(new BigDecimal("150.00")))
+        client.mutator(client)
+                .withBalance(client.getBalance().add(new BigDecimal("150.00")))
                 .mutate();
 
         em.getTransaction().commit();
@@ -87,13 +86,11 @@ public class TransactionDAOTest {
 
         Admin admin = daoUser.createAdmin(
                 "admin",
-                "654321",
-                "vasilevskij.ivan@gmail.com");
+                "654321");
 
         ClientImpl client = daoUser.createClient(
-                "client",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "password");
 
 
         daoTransaction.reciveMoney(client, admin, new BigDecimal("100.00"));
@@ -116,13 +113,12 @@ public class TransactionDAOTest {
     public void testCheckBalanceForPayoutPrize() throws Exception {
         Admin admin = daoUser.createAdmin(
                 "admin",
-                "654321",
-                "vasilevskij.ivan@gmail.com");
+                "654321");
 
         em.getTransaction().begin();
 
-        admin.Mutate(admin)
-                .balance(new BigDecimal("150.00"))
+        admin.mutator(admin)
+                .withBalance(new BigDecimal("150.00"))
                 .mutate();
 
         em.persist(admin);

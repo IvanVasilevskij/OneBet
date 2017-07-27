@@ -15,30 +15,24 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", insertable = false, updatable = false)
     private int id;
-
     @Column(name = "DATE_OF_BET")
     @NotNull
-    private LocalDateTime date;
-
+    private final LocalDateTime date;
     @ManyToOne(optional = false)
     @NotNull
-    private DotaTeam teamFirst;
-
+    private final DotaTeam teamFirst;
     @ManyToOne(optional = false)
     @NotNull
-    private DotaTeam teamSecond;
-
+    private final DotaTeam teamSecond;
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
-    private double percentForTeamFirst;
-
+    private final double percentForTeamFirst;
     @Column(name = "PERSENT_TO_DROW")
     @NotNull
-    private double persentForDrow;
-
+    private final double persentForDrow;
     @Column(name = "PERSENT_TO_COMAND_TWO")
     @NotNull
-    private double percentForTeamSecond;
+    private final double percentForTeamSecond;
 
     @Override
     public int getId() {
@@ -75,91 +69,61 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
         return percentForTeamSecond;
     }
 
-    private DotaEvent() {}
+    private DotaEvent(final Builder builder) {
+        this.teamFirst = builder.teamFirst;
+        this.teamSecond = builder.teamSecond;
+        this.date = builder.date;
+        this.percentForTeamFirst = builder.percentForTeamFirst;
+        this.persentForDrow = builder.persentForDrow;
+        this.percentForTeamSecond = builder.percentForTeamSecond;
+    }
 
     public static Builder Builder() {
-        return new DotaEvent().new Builder();
+        return new Builder();
     }
 
-    public static Mutator Mutate(DotaEvent event) {
-        return event.new Mutator();
-    }
+    public static class Builder {
+        private LocalDateTime date;
+        private DotaTeam teamFirst;
+        private DotaTeam teamSecond;
+        private double percentForTeamFirst;
+        private double persentForDrow;
+        private double percentForTeamSecond;
 
-    public class Builder {
+        public Builder() {}
 
-        private Builder() {}
-
-        public Builder date(LocalDateTime date) {
-            DotaEvent.this.date = date;
+        public Builder withDate(final LocalDateTime date) {
+            this.date = date;
             return this;
         }
 
-        public Builder teamFirst(DotaTeam teamFirst) {
-            DotaEvent.this.teamFirst = teamFirst;
+        public Builder withTeamFirst(final DotaTeam teamFirst) {
+            this.teamFirst = teamFirst;
             return this;
         }
 
-        public Builder teamSecond(DotaTeam teamSecond) {
-            DotaEvent.this.teamSecond = teamSecond;
+        public Builder withTeamSecond(final DotaTeam teamSecond) {
+            this.teamSecond = teamSecond;
             return this;
         }
 
-        public Builder percentForTeamFirst(double percentForTeamFirst) {
-            DotaEvent.this.percentForTeamFirst = percentForTeamFirst;
+        public Builder withPercentForTeamFirst(final double percentForTeamFirst) {
+            this.percentForTeamFirst = percentForTeamFirst;
             return this;
         }
 
-        public Builder persentToDrow(double persentForDrow) {
-            DotaEvent.this.persentForDrow = persentForDrow;
+        public Builder withPersentToDrow(final double persentForDrow) {
+            this.persentForDrow = persentForDrow;
             return this;
         }
 
-        public Builder persentForTeamSecond(double percentForTeamSecond) {
-            DotaEvent.this.percentForTeamSecond = percentForTeamSecond;
+        public Builder withPersentForTeamSecond(final double percentForTeamSecond) {
+            this.percentForTeamSecond = percentForTeamSecond;
             return this;
         }
 
         public DotaEvent build() {
-            return DotaEvent.this;
-        }
-    }
-
-    public class Mutator {
-
-        private Mutator() {}
-
-        public Mutator date(LocalDateTime date) {
-            DotaEvent.this.date = date;
-            return this;
-        }
-
-        public Mutator teamFirst(DotaTeam teamFirst) {
-            DotaEvent.this.teamFirst = teamFirst;
-            return this;
-        }
-
-        public Mutator teamSecond(DotaTeam teamSecond) {
-            DotaEvent.this.teamSecond = teamSecond;
-            return this;
-        }
-
-        public Mutator percentForTeamFirst(double percentForTeamFirst) {
-            DotaEvent.this.percentForTeamFirst = percentForTeamFirst;
-            return this;
-        }
-
-        public Mutator persentToDrow(double persentForDrow) {
-            DotaEvent.this.persentForDrow = persentForDrow;
-            return this;
-        }
-
-        public Mutator persentForTeamSecond(double percentForTeamSecond) {
-            DotaEvent.this.percentForTeamSecond = percentForTeamSecond;
-            return this;
-        }
-
-        public DotaEvent mutate() {
-            return DotaEvent.this;
+            return new DotaEvent(this);
         }
     }
 }

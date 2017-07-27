@@ -47,7 +47,7 @@ public class CheckOperationsTest {
 
     @Test
     public void testTryToParseDateFromString() throws Exception {
-        LocalDateTime neededDate = checkOperations.tryToParseDateFromString("25.5.2015 16:30");
+        LocalDateTime neededDate = checkOperations.tryToParseDateFromString("25.05.2015 16:30");
 
         assertEquals(2015, neededDate.getYear());
         assertEquals(5, neededDate.getMonth().getValue());

@@ -34,42 +34,36 @@ public class UserDAOImplTest {
     public void testCreateClientOrAdmin() throws Exception {
 
         ClientImpl client = daoUser.createClient(
-                "client",
-                "123456",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "123456");
 
-        assertEquals("client", em.find(ClientImpl.class, client.getId()).getLogin());
+        assertEquals("withClient", em.find(ClientImpl.class, client.getId()).getLogin());
         assertEquals("123456", em.find(ClientImpl.class, client.getId()).getPassword());
         assertEquals(new BigDecimal("0.00"), em.find(ClientImpl.class, client.getId()).getBalance());
-        assertEquals("vasilevskij.ivan@gmail.com", em.find(ClientImpl.class, client.getId()).getEmail());
 
         Admin admin = daoUser.createAdmin(
                 "admin",
-                "654321",
-                "vasilevskij.ivan@gmail.com");
+                "654321");
 
         assertEquals("admin", em.find(Admin.class, admin.getId()).getLogin());
         assertEquals("654321", em.find(Admin.class, admin.getId()).getPassword());
         assertEquals(new BigDecimal("0.00"), em.find(Admin.class, admin.getId()).getBalance());
-        assertEquals("vasilevskij.ivan@gmail.com", em.find(Admin.class, admin.getId()).getEmail());
     }
 
     @Test
     public void testFindClientOrAdmin() throws Exception {
 
         ClientImpl client = daoUser.createClient(
-                "client",
-                "123456",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "123456");
 
-        ClientImpl clientFinded = daoUser.findClient("client");
+        ClientImpl clientFinded = daoUser.findClient("withClient");
 
         assertEquals(client, clientFinded);
 
         Admin admin = daoUser.createAdmin(
                 "admin",
-                "654321",
-                "vasilevskij.ivan@gmail.com");
+                "654321");
 
         Admin adminFinded = daoUser.findAdmin("admin");
 
@@ -80,22 +74,20 @@ public class UserDAOImplTest {
     public void testDeleteUserByLogin() throws Exception {
 
         ClientImpl client = daoUser.createClient(
-                "client",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "password");
 
-        assertEquals(1,em.createQuery("from ClientImpl").getResultList().size());
+        assertEquals(1,em.createQuery("from ClientImpl", ClientImpl.class).getResultList().size());
 
-        daoUser.deleteUserByLogin("client");
+        daoUser.deleteUserByLogin("withClient");
 
-        assertEquals(null, daoUser.findClient("client"));
+        assertEquals(null, daoUser.findClient("withClient"));
 
         Admin admin = daoUser.createAdmin(
                 "admin",
-                "654321",
-                "vasilevskij.ivan@gmail.com");
+                "654321");
 
-        assertEquals(1,em.createQuery("from Admin ").getResultList().size());
+        assertEquals(1,em.createQuery("from Admin ", Admin.class).getResultList().size());
 
         daoUser.deleteUserByLogin("admin");
 
@@ -123,25 +115,23 @@ public class UserDAOImplTest {
     @Test
     public void testCheckPassword() throws Exception {
         ClientImpl client = daoUser.createClient(
-                "client",
-                "123456",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "123456");
 
-        assertEquals(client, daoUser.checkPassword("client", "123456"));
+        assertEquals(client, daoUser.checkPassword(client, "123456"));
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCheckBalanceForBet() {
         ClientImpl client = daoUser.createClient(
-                "client",
-                "123456",
-                "vasilevskij.ivan@gmail.com");
+                "withClient",
+                "123456");
 
         em.getTransaction().begin();
 
-        client.Mutate(client)
-                .balance(new BigDecimal("250.00"))
+        client.mutator(client)
+                .withBalance(new BigDecimal("250.00"))
                 .mutate();
 
         em.persist(client);
@@ -154,29 +144,25 @@ public class UserDAOImplTest {
     public void testGetAllUsers() throws Exception {
         ClientImpl clientFirst = daoUser.createClient(
                 "clientFirst",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "password");
 
         assertEquals(1, daoUser.getAllClients().size());
 
         ClientImpl clientSecond = daoUser.createClient(
                 "clientSecond",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "password");
 
         assertEquals(2, daoUser.getAllClients().size());
 
         Admin adminFirst = daoUser.createAdmin(
                 "aminFirst",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "password");
 
         assertEquals(1, daoUser.getAllAdmins().size());
 
         Admin adminSecond = daoUser.createAdmin(
                 "adminSecond",
-                "password",
-                "vasilevskij.ivan@gmail.com");
+                "password");
 
         assertEquals(2, daoUser.getAllAdmins().size());
     }

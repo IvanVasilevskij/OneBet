@@ -34,16 +34,12 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
     public DotaTeam createTeam(String teamName) throws EntityExistsException {
         em.getTransaction().begin();
         try {
-            if (findTeamByTeamName(teamName) == null) {
                 DotaTeam team = DotaTeam.Builder()
-                        .comandName(teamName)
+                        .withTeamName(teamName)
                         .build();
-
-
                 em.persist(team);
                 em.getTransaction().commit();
                 return team;
-            } else return findTeamByTeamName(teamName);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -62,8 +58,7 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
     @Override
     public List<DotaTeam> getAllTeams() {
         try {
-            List<DotaTeam> teams = em.createQuery("from DotaTeam ").getResultList();
-            return teams;
+            return em.createQuery("from DotaTeam", DotaTeam.class).getResultList();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

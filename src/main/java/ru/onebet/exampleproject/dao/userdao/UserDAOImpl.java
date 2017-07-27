@@ -4,8 +4,8 @@ package ru.onebet.exampleproject.dao.userdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.model.users.Admin;
-import ru.onebet.exampleproject.model.users.Client;
 import ru.onebet.exampleproject.model.users.ClientImpl;
+import ru.onebet.exampleproject.model.users.User;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -24,25 +24,17 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public ClientImpl createClient(String login, String password, String email) throws EntityExistsException {
+    public ClientImpl createClient(String login, String password) throws EntityExistsException {
         em.getTransaction().begin();
-
         try {
-            if (findAdmin(login) == null && findClient(login) == null) {
-
-
-                ClientImpl client = ClientImpl.Builder()
-                        .login(login)
-                        .password(password)
-                        .balance(new BigDecimal("0.00"))
-                        .email(email)
+                ClientImpl client = ClientImpl.builder()
+                        .withLogin(login)
+                        .withPassword(password)
+                        .withBalance(new BigDecimal("0.00"))
                         .build();
-
                 em.persist(client);
                 em.getTransaction().commit();
-
                 return client;
-            } else return findClient(login);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -61,23 +53,19 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public Admin createAdmin(String login, String password, String email) throws EntityExistsException {
+    public Admin createAdmin(String login, String password) throws EntityExistsException {
         em.getTransaction().begin();
         try {
-            if (findAdmin(login) == null && findClient(login) == null) {
-
-                Admin admin = Admin.Builder()
-                        .login(login)
-                        .password(password)
-                        .balance(new BigDecimal("0.00"))
-                        .email(email)
+                Admin admin = Admin.builder()
+                        .withLogin(login)
+                        .withPassword(password)
+                        .withBalance(new BigDecimal("0.00"))
                         .build();
 
                 em.persist(admin);
                 em.getTransaction().commit();
 
                 return admin;
-            } else return findAdmin(login);
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -118,7 +106,6 @@ public class UserDAOImpl implements UserDAO{
             ClientImpl clientForEmitMoneyOperations = findClient(ClientImpl.ClientForEmitMoneyOperations);
             if (clientForEmitMoneyOperations == null) {
                 clientForEmitMoneyOperations = createClient(ClientImpl.ClientForEmitMoneyOperations,
-                        "null",
                         "null");
             }
             return clientForEmitMoneyOperations;
@@ -134,8 +121,7 @@ public class UserDAOImpl implements UserDAO{
             Admin root = findAdmin(Admin.RootAdminName);
             if (root == null) {
                 root =  createAdmin(Admin.RootAdminName,
-                        "4012659172",
-                        "vasilevskij.ivan@gmail.com");
+                        "4012659172");
             }
             return root;
         } catch (Throwable t) {
@@ -145,27 +131,22 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public ClientImpl checkPassword(String login, String password) {
+    public User checkPassword(User user, String password) {
         em.getTransaction().begin();
-
-        ClientImpl client = findClient(login);
-        if (client == null) throw new IllegalArgumentException("Client didn't exist");
-        if (!client.getPassword().equals(password)) throw new IllegalArgumentException("Incorrect password");
-
+        if (!user.getPassword().equals(password)) throw new IllegalArgumentException("Incorrect password");
         em.getTransaction().commit();
-        return client;
+        return user;
     }
 
     @Override
     public void checkBalanceForBet(ClientImpl client, BigDecimal amount) {
-        if (client.getBalance().compareTo(amount) < 0) throw new IllegalArgumentException("Client have no balance for this event");
+        if (client.getBalance().compareTo(amount) < 0) throw new IllegalArgumentException("Client have no balance for this withEvent");
     }
 
     @Override
     public List<ClientImpl> getAllClients() {
         try {
-            List<ClientImpl> clients = em.createQuery("from ClientImpl").getResultList();
-            return clients;
+            return em.createQuery("from ClientImpl", ClientImpl.class).getResultList();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -175,8 +156,7 @@ public class UserDAOImpl implements UserDAO{
     @Override
     public List<Admin> getAllAdmins() {
         try {
-            List<Admin> admin = em.createQuery("from Admin ").getResultList();
-            return admin;
+            return em.createQuery("from Admin" , Admin.class).getResultList();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

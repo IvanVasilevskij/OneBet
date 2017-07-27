@@ -2,17 +2,18 @@ package ru.onebet.exampleproject.dao.userdao;
 
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
+import ru.onebet.exampleproject.model.users.User;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface UserDAO {
 
-    ClientImpl createClient(String login, String password, String email);
+    ClientImpl createClient(String login, String password);
 
     ClientImpl findClient(String login);
 
-    Admin createAdmin(String login, String password, String email);
+    Admin createAdmin(String login, String password);
 
     Admin findAdmin(String login);
 
@@ -22,7 +23,7 @@ public interface UserDAO {
 
     ClientImpl ensureClientForEmitMoneyOperation();
 
-    ClientImpl checkPassword(String login, String password);
+    User checkPassword(User user, String password);
 
     void checkBalanceForBet(ClientImpl client, BigDecimal amount);
 

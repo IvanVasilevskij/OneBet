@@ -25,47 +25,47 @@ public class DotaTeamDAOTest {
     private EntityManager em;
 
     @Autowired
-    private DotaTeamDAO daoTeam;
+    private DotaTeamDAO dotaTeamDAO;
 
     @Test
     public void testCreateTeam() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam("EG");
+        DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
 
         assertEquals("EG", em.find(DotaTeam.class, teamFirst.getId()).getTeamName());
 }
 
     @Test
     public void testFindTeamByTeamName() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
+        DotaTeam teamFirst = dotaTeamDAO.createTeam(
                 "EG");
 
-        DotaTeam teamFinded = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamFinded = dotaTeamDAO.findTeamByTeamName("EG");
 
         assertEquals(teamFirst, teamFinded);
     }
 
     @Test
     public void testDeleteTeamByTeamName() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam("EG");
+        DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
 
         em.getTransaction().begin();
 
-        daoTeam.deleteTeamByTeamName("EG");
+        dotaTeamDAO.deleteTeamByTeamName("EG");
 
         em.getTransaction().commit();
 
-        assertEquals(null, daoTeam.findTeamByTeamName("EG"));
+        assertEquals(null, dotaTeamDAO.findTeamByTeamName("EG"));
     }
 
     @Test
     public void testGetAllTeams() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam("EG");
+        DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
 
-        assertSame(1, daoTeam.getAllTeams().size());
+        assertSame(1, dotaTeamDAO.getAllTeams().size());
 
-        DotaTeam teamSecond = daoTeam.createTeam("VP");
+        DotaTeam teamSecond = dotaTeamDAO.createTeam("VP");
 
-        assertSame(2, daoTeam.getAllTeams().size());
+        assertSame(2, dotaTeamDAO.getAllTeams().size());
 
     }
 }

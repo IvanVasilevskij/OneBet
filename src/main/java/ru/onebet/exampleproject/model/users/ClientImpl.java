@@ -98,113 +98,104 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
         return transactions;
     }
 
-    private ClientImpl() {}
-
-    public static Builder Builder() {
-        return new ClientImpl().new Builder();
+    private ClientImpl(final Builder builder) {
+        this.login = builder.login;
+        this.password = builder.password;
+        this.balance = builder.balance;
     }
 
-    public static Mutator Mutate(ClientImpl clientImpl) {
-        return clientImpl.new Mutator();
+    private ClientImpl(Mutator mutator) {
+        this.password = mutator.client.password;
+        this.firstName = mutator.client.firstName;
+        this.lastName = mutator.client.lastName;
+        this.balance = mutator.client.balance;
+        this.email = mutator.client.email;
+        this.bets = mutator.client.bets;
+        this.transactions = mutator.client.transactions;
     }
 
-    public class Builder {
+    public static Builder builder() {
+        return new Builder();
+    }
 
-        private Builder() {}
+    public static Mutator mutator(ClientImpl client) {
+        return new Mutator(client);
+    }
 
-        public Builder login(String login) {
-            ClientImpl.this.login = login;
+    public static class Builder {
+        private String login;
+        private String password;
+        private BigDecimal balance;
+
+        public Builder() {}
+
+        public Builder withLogin(String login) {
+            this.login = login;
             return this;
         }
 
-        public Builder password(String password) {
-            ClientImpl.this.password = password;
+        public Builder withPassword(String password) {
+            this.password = password;
             return this;
         }
 
-        public Builder firstName(String firstName) {
-            ClientImpl.this.firstName = firstName;
-            return this;
-        }
-
-        public Builder lastName(String lastName) {
-            ClientImpl.this.lastName = lastName;
-            return this;
-        }
-
-        public Builder balance(BigDecimal balance) {
-            ClientImpl.this.balance = balance;
-            return this;
-        }
-
-        public Builder email(String email) {
-            ClientImpl.this.email = email;
-            return this;
-        }
-
-        public Builder bets(List<MakedBetsOfDota> bets) {
-            ClientImpl.this.bets = bets;
-            return this;
-        }
-
-        public Builder transaction(List<Transaction> transactions) {
-            ClientImpl.this.transactions = transactions;
+        public Builder withBalance(BigDecimal balance) {
+            this.balance = balance;
             return this;
         }
 
         public ClientImpl build() {
-            return ClientImpl.this;
+            return new ClientImpl(this);
         }
     }
 
-    public class Mutator {
+    public static class Mutator {
+        private ClientImpl client;
 
-        private Mutator() {}
+        public Mutator(ClientImpl client) {
+            this.client = client;
+        }
 
-        public Mutator login(String login) {
-            ClientImpl.this.login = login;
+        public Mutator withPassword(String password) {
+            this.client.password = password;
             return this;
         }
 
-        public Mutator password(String password) {
-            ClientImpl.this.password = password;
+        public Mutator withFirstName(String firstName) {
+            this.client.firstName = firstName;
             return this;
         }
 
-        public Mutator firstName(String firstName) {
-            ClientImpl.this.firstName = firstName;
+        public Mutator withLastName(String lastName) {
+            this.client.lastName = lastName;
             return this;
         }
 
-        public Mutator lastName(String lastName) {
-            ClientImpl.this.lastName = lastName;
+        public Mutator withBalance(BigDecimal balance) {
+            this.client.balance = balance;
             return this;
         }
 
-        public Mutator balance(BigDecimal balance) {
-            ClientImpl.this.balance = balance;
+        public Mutator withEmail(String email) {
+            this.client.email = email;
             return this;
         }
 
-        public Mutator email(String email) {
-            ClientImpl.this.email = email;
+        public Mutator withBets(List<MakedBetsOfDota> bets) {
+            this.client.bets = bets;
             return this;
         }
 
-        public Mutator bets(List<MakedBetsOfDota> bets) {
-            ClientImpl.this.bets = bets;
-            return this;
-        }
-
-        public Mutator transaction(List<Transaction> transactions) {
-            ClientImpl.this.transactions = transactions;
+        public Mutator withTransactions(List<Transaction> transactions) {
+            this.client.transactions = transactions;
             return this;
         }
 
         public ClientImpl mutate() {
-            return ClientImpl.this;
+            return client;
         }
     }
+
 
     @Override
     public boolean equals(Object o) {

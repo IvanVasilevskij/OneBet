@@ -1,6 +1,5 @@
 package ru.onebet.exampleproject.model.users;
 
-import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.betsmaked.MakedBets;
 
 import java.util.List;

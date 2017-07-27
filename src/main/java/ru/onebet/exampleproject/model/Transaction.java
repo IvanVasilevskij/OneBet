@@ -19,13 +19,10 @@ public class Transaction {
 
     @ManyToOne(optional = false)
     private ClientImpl client;
-
     @ManyToOne(optional = false)
     private Admin admin;
-
     @Column(name = "AMOUNT")
     private BigDecimal amount;
-
     @Column(name = "DATE")
     private LocalDateTime date;
 
@@ -49,38 +46,48 @@ public class Transaction {
         return date;
     }
 
-    private Transaction() {}
-
-    public static Builder Builder() {
-        return new Transaction().new Builder();
+    private Transaction(Builder builder) {
+        this.client = builder.client;
+        this.admin = builder.admin;
+        this.date = builder.date;
+        this.amount = builder.amount;
     }
 
-    public class Builder {
+    public static Builder Builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private ClientImpl client;
+        private Admin admin;
+        private BigDecimal amount;
+        private LocalDateTime date;
 
         private Builder() {}
 
-        public Builder client(ClientImpl client) {
-            Transaction.this.client = client;
+        public Builder withClient(ClientImpl client) {
+            this.client = client;
             return this;
         }
 
-        public Builder admin(Admin admin) {
-            Transaction.this.admin = admin;
+        public Builder withAdmin(Admin admin) {
+            this.admin = admin;
             return this;
         }
 
-        public Builder amount(BigDecimal amount) {
-            Transaction.this.amount = amount;
+        public Builder withAmount(BigDecimal amount) {
+            this.amount = amount;
             return this;
         }
 
-        public Builder date(LocalDateTime date) {
-            Transaction.this.date = date;
+        public Builder withDate(LocalDateTime date) {
+            this.date = date;
             return this;
         }
 
         public Transaction build() {
-            return Transaction.this;
+            return new Transaction(this);
         }
     }
 }

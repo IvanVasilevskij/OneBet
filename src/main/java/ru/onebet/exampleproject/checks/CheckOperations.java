@@ -24,18 +24,17 @@ public class CheckOperations {
 
     public LocalDateTime tryToParseDateFromString(String time) {
         try {
-            DateTimeFormatter formatterForCreate = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-            DateTimeFormatter formatterForFind = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.MM.yyyy HH:mm");
             try {
-                LocalDateTime dateTimeTryOne = LocalDateTime.parse(time, formatterForCreate);
+                LocalDateTime dateTimeTryOne = LocalDateTime.parse(time, formatter);
                 return  dateTimeTryOne;
-            } catch (DateTimeParseException p) {
-                LocalDateTime dateTimeTryTwo = LocalDateTime.parse(time, formatterForFind);
+            } catch (DateTimeParseException x) {
+                LocalDateTime dateTimeTryTwo = LocalDateTime.parse(time + " 00:00", formatter);
                 return dateTimeTryTwo;
             }
         } catch (DateTimeParseException p) {
-            throw new IllegalArgumentException("Failed date format. Please enter *dd.MM.yyyy HH:mm* if you want create Event." +
-                    " Please enter *dd.MM.yyyy* if you want create Event.");
+            throw new IllegalArgumentException("Failed withDate format. Please enter *d.MM.yyyy HH:mm* if you want create Event." +
+                    " Please enter *d.MM.yyyy* if you want create Event.");
         }
     }
 }

@@ -49,10 +49,10 @@ public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent>{
         em.getTransaction().begin();
 
         MakedBetsOfDota mBet = MakedBetsOfDota.Builder()
-                .date(LocalDateTime.now())
-                .client(client)
-                .bettingTeam(bettingTeam)
-                .event(event)
+                .withDate(LocalDateTime.now())
+                .withClient(client)
+                .withBettingTeam(bettingTeam)
+                .withEvent(event)
                 .build();
 
         em.persist(mBet);
@@ -62,8 +62,7 @@ public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent>{
 
     public List<DotaEvent> allMakedBets() {
         try {
-            List<DotaEvent> makedBets = em.createQuery("from MakedBetsOfDota ").getResultList();
-            return makedBets;
+            return (List<DotaEvent>) em.createQuery("from MakedBetsOfDota ").getResultList();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

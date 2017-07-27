@@ -34,12 +34,12 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
         em.getTransaction().begin();
 
         DotaEvent event = DotaEvent.Builder()
-                .teamFirst(teamFirst)
-                .teamSecond(teamSecond)
-                .date(timeOfTheGame)
-                .percentForTeamFirst(percentForTeamFirst)
-                .persentToDrow(percentForDraw)
-                .persentForTeamSecond(percentForTeamSecond)
+                .withTeamFirst(teamFirst)
+                .withTeamSecond(teamSecond)
+                .withDate(timeOfTheGame)
+                .withPercentForTeamFirst(percentForTeamFirst)
+                .withPersentToDrow(percentForDraw)
+                .withPersentForTeamSecond(percentForTeamSecond)
                 .build();
 
         em.persist(event);
@@ -51,8 +51,7 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     @Override
     public List<DotaEvent> allEvents() {
         try {
-            List<DotaEvent> events = em.createQuery("from DotaEvent").getResultList();
-            return events;
+            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -62,11 +61,9 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     @Override
     public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
         try {
-            List<DotaEvent> events = em.createQuery("from DotaEvent").getResultList();
-            List<DotaEvent> resultListEventsWithThisTeam = events.stream()
+            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
                     .filter(c -> (c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team)))
                     .collect(Collectors.toList());
-            return resultListEventsWithThisTeam;
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -76,7 +73,7 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     @Override
     public void checkThatThisEventHaveTheTeam (DotaEvent event, DotaTeam team) {
         if (!event.getTeamFirst().equals(team) && !event.getTeamSecond().equals(team)) {
-            throw new IllegalArgumentException("This comand doesen't paricipating at this event");
+            throw new IllegalArgumentException("This comand doesen't paricipating at this withEvent");
         }
     }
 
@@ -85,11 +82,9 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
         try {
             LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
             LocalDateTime endOfDayAtEnteredDate = date.withHour(23).withMinute(59);
-            List<DotaEvent> allEvents = em.createQuery("from DotaEvent").getResultList();
-            List<DotaEvent> choosedEvents = allEvents.stream()
+            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
                     .filter(c -> (c.getDate().compareTo(startOfDayAtEnteredDate) >= 0 && c.getDate().compareTo(endOfDayAtEnteredDate) <= 0))
                     .collect(Collectors.toList());
-            return choosedEvents;
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);

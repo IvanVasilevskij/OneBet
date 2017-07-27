@@ -25,7 +25,7 @@ public class TransactionDAO {
         this.daoUser = daoUser;
     }
 
-    public void emitMoney(Admin admin, BigDecimal amount) {
+    void emitMoney(Admin admin, BigDecimal amount) {
 
         ClientImpl client = daoUser.ensureClientForEmitMoneyOperation();
 
@@ -33,17 +33,17 @@ public class TransactionDAO {
 
         try {
             Transaction t = Transaction.Builder()
-                    .date(LocalDateTime.now())
-                    .amount(amount)
-                    .client(client)
-                    .admin(admin)
+                    .withDate(LocalDateTime.now())
+                    .withAmount(amount)
+                    .withClient(client)
+                    .withAdmin(admin)
                     .build();
 
             em.persist(t);
             em.refresh(admin);
 
-            admin.Mutate(admin)
-                    .balance(admin.getBalance().add(amount))
+            admin.mutator(admin)
+                    .withBalance(admin.getBalance().add(amount))
                     .mutate();
 
             em.getTransaction().commit();
@@ -63,22 +63,22 @@ public class TransactionDAO {
             daoUser.checkBalanceForBet(client, amount);
 
             Transaction t = Transaction.Builder()
-                    .date(LocalDateTime.now())
-                    .amount(amount)
-                    .client(client)
-                    .admin(root)
+                    .withDate(LocalDateTime.now())
+                    .withAmount(amount)
+                    .withClient(client)
+                    .withAdmin(root)
                     .build();
 
             em.persist(t);
             em.refresh(client);
             em.refresh(root);
 
-            client.Mutate(client)
-                    .balance(client.getBalance().subtract(amount))
+            client.mutator(client)
+                    .withBalance(client.getBalance().subtract(amount))
                     .mutate();
 
-            root.Mutate(root)
-                    .balance(root.getBalance().add(amount))
+            root.mutator(root)
+                    .withBalance(root.getBalance().add(amount))
                     .mutate();
 
             em.getTransaction().commit();
@@ -95,34 +95,24 @@ public class TransactionDAO {
         em.getTransaction().begin();
 
         try {
-            checkBalanceForPayoutPrize(admin, amount);
-
             Transaction t = Transaction.Builder()
-                    .date(LocalDateTime.now())
-                    .amount(amount)
-                    .client(client)
-                    .admin(admin)
+                    .withDate(LocalDateTime.now())
+                    .withAmount(amount)
+                    .withClient(client)
+                    .withAdmin(admin)
                     .build();
 
             em.persist(t);
             em.refresh(client);
             em.refresh(admin);
 
-            client.Mutate(client)
-                    .balance(client.getBalance().add(amount))
+            client.mutator(client)
+                    .withBalance(client.getBalance().add(amount))
                     .mutate();
 
-            admin.Mutate(admin)
-                    .balance(admin.getBalance().subtract(amount))
+            root.mutator(root)
+                    .withBalance(root.getBalance().subtract(amount))
                     .mutate();
-
-            root.Mutate(root)
-                    .balance(root.getBalance().subtract(amount))
-                    .mutate();
-
-            em.refresh(client);
-            em.refresh(admin);
-            em.refresh(root);
 
             em.getTransaction().commit();
 
@@ -132,7 +122,7 @@ public class TransactionDAO {
         }
     }
 
-    public void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
+    void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
         if (admin.getBalance().compareTo(amount) < 0) {
             BigDecimal shortage = amount.subtract(admin.getBalance());
             emitMoney(admin, shortage);

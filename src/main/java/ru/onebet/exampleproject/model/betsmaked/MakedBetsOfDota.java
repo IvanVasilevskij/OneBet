@@ -18,16 +18,16 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
 
     @Column(name = "DATE_OF_BET")
     @NotNull
-    private LocalDateTime date;
+    private final LocalDateTime date;
 
     @OneToOne
-    private DotaTeam bettingTeam;
+    private final DotaTeam bettingTeam;
 
     @ManyToOne(optional = false)
-    private ClientImpl client;
+    private final ClientImpl client;
 
     @ManyToOne(optional = false)
-    private DotaEvent event;
+    private final DotaEvent event;
 
     @Override
     public int getId() {
@@ -53,72 +53,47 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         return event;
     }
 
-    private MakedBetsOfDota() {}
+    private MakedBetsOfDota(final Builder builder) {
+        this.event = builder.event;
+        this.date = builder.date;
+        this.bettingTeam = builder.bettingTeam;
+        this.client = builder.client;
+    }
 
     public static Builder Builder() {
-        return new MakedBetsOfDota().new Builder();
+        return new Builder();
     }
 
-    public static Mutator Mutate(MakedBetsOfDota makedBet) {
-        return makedBet.new Mutator();
-    }
+    public static class Builder {
+        private LocalDateTime date;
+        private DotaTeam bettingTeam;
+        private ClientImpl client;
+        private DotaEvent event;
 
-    public class Builder {
+        public Builder() {}
 
-        private Builder() {}
-
-        public Builder date(LocalDateTime date) {
-            MakedBetsOfDota.this.date = date;
+        public Builder withDate(final LocalDateTime date) {
+            this.date = date;
             return this;
         }
 
-        public Builder bettingTeam(DotaTeam bettingTeam) {
-            MakedBetsOfDota.this.bettingTeam = bettingTeam;
+        public Builder withBettingTeam(final DotaTeam bettingTeam) {
+            this.bettingTeam = bettingTeam;
             return this;
         }
 
-        public Builder client(ClientImpl clientImpl) {
-            MakedBetsOfDota.this.client = clientImpl;
+        public Builder withClient(final ClientImpl clientImpl) {
+            this.client = clientImpl;
             return this;
         }
 
-        public Builder event(DotaEvent event) {
-            MakedBetsOfDota.this.event = event;
+        public Builder withEvent(final DotaEvent event) {
+            this.event = event;
             return this;
         }
 
         public MakedBetsOfDota build() {
-            return MakedBetsOfDota.this;
+            return new MakedBetsOfDota(this);
         }
     }
-
-    public class Mutator {
-
-        private Mutator() {}
-
-        public Mutator date(LocalDateTime date) {
-            MakedBetsOfDota.this.date = date;
-            return this;
-        }
-
-        public Mutator bettingTeam(DotaTeam bettingTeam) {
-            MakedBetsOfDota.this.bettingTeam = bettingTeam;
-            return this;
-        }
-
-        public Mutator client(ClientImpl client) {
-            MakedBetsOfDota.this.client = client;
-            return this;
-        }
-
-        public Mutator event(DotaEvent event) {
-            MakedBetsOfDota.this.event = event;
-            return this;
-        }
-
-        public MakedBetsOfDota mutate() {
-            return MakedBetsOfDota.this;
-        }
-    }
-
 }

@@ -89,101 +89,95 @@ public class Admin implements User{
         return transactions;
     }
 
-    private Admin() {}
-
-    public static Builder Builder() {
-        return new Admin().new Builder();
+    private Admin(final Builder builder) {
+        this.login = builder.login;
+        this.password = builder.password;
+        this.balance = builder.balance;
     }
 
-    public static Mutator Mutate(Admin admin) {
-        return admin.new Mutator();
+    private Admin(Mutator mutator) {
+        this.password = mutator.admin.password;
+        this.firstName = mutator.admin.firstName;
+        this.lastName = mutator.admin.lastName;
+        this.balance = mutator.admin.balance;
+        this.email = mutator.admin.email;
+        this.transactions = mutator.admin.transactions;
     }
 
-    public class Builder {
+    public static Builder builder() {
+        return new Builder();
+    }
 
-        private Builder() {}
+    public static Mutator mutator(Admin admin) {
+        return new Mutator(admin);
+    }
 
-        public Builder login(String login) {
-            Admin.this.login = login;
+    public static class Builder {
+        private String login;
+        private String password;
+        private BigDecimal balance;
+
+        public Builder() {}
+
+        public Builder withLogin(String login) {
+            this.login = login;
             return this;
         }
 
-        public Builder password(String password) {
-            Admin.this.password = password;
+        public Builder withPassword(String password) {
+            this.password = password;
             return this;
         }
 
-        public Builder firstName(String firstName) {
-            Admin.this.firstName = firstName;
-            return this;
-        }
-
-        public Builder lastName(String lastName) {
-            Admin.this.lastName = lastName;
-            return this;
-        }
-
-        public Builder balance(BigDecimal balance) {
-            Admin.this.balance = balance;
-            return this;
-        }
-
-        public Builder email(String email) {
-            Admin.this.email = email;
-            return this;
-        }
-
-        public Builder transaction(List<Transaction> transactions) {
-            Admin.this.transactions = transactions;
+        public Builder withBalance(BigDecimal balance) {
+            this.balance = balance;
             return this;
         }
 
         public Admin build() {
-            return Admin.this;
+            return new Admin(this);
         }
     }
 
-    public class Mutator {
+    public static class Mutator {
+        private Admin admin;
 
-        private Mutator() {}
+        public Mutator(Admin admin) {
+            this.admin = admin;
+        }
 
-        public Mutator login(String login) {
-            Admin.this.login = login;
+        public Mutator withPassword(String password) {
+            this.admin.password = password;
             return this;
         }
 
-        public Mutator password(String password) {
-            Admin.this.password = password;
+        public Mutator withFirstName(String firstName) {
+            this.admin.firstName = firstName;
             return this;
         }
 
-        public Mutator firstName(String firstName) {
-            Admin.this.firstName = firstName;
+        public Mutator withLastName(String lastName) {
+            this.admin.lastName = lastName;
             return this;
         }
 
-        public Mutator lastName(String lastName) {
-            Admin.this.lastName = lastName;
+        public Mutator withBalance(BigDecimal balance) {
+            this.admin.balance = balance;
             return this;
         }
 
-        public Mutator balance(BigDecimal balance) {
-            Admin.this.balance = balance;
+        public Mutator withEmail(String email) {
+            this.admin.email = email;
             return this;
         }
 
-        public Mutator email(String email) {
-            Admin.this.email = email;
-            return this;
-        }
-
-        public Mutator transaction(List<Transaction> transactions) {
-            Admin.this.transactions = transactions;
+        public Mutator withTransactions(List<Transaction> transactions) {
+            this.admin.transactions = transactions;
             return this;
         }
 
         public Admin mutate() {
-            return Admin.this;
+            return admin;
         }
     }
 
