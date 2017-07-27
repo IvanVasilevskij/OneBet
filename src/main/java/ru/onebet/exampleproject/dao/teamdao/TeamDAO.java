@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TeamDAO <T extends Team> {
 
-    T createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive);
+    T createTeam(String teamName);
 
     T findTeamByTeamName(String teamName);
 

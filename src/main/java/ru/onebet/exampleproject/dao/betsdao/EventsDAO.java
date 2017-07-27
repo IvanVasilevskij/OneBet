@@ -21,4 +21,6 @@ public interface EventsDAO<T extends Team,E extends EventBetweenCoupleTeam> {
     List<E> allEventsWithThisTeam(T teamName);
 
     void checkThatThisEventHaveTheTeam (E event, T team);
+
+    List<E> chooseAllEventInEnteredDate(LocalDateTime date);
 }

@@ -14,7 +14,7 @@ public interface MakedBets <T extends Team, E extends EventBetweenCoupleTeam> {
 
     T getBettingTeam();
 
-    ClientImpl getClientImpl();
+    ClientImpl getClient();
 
     E getEvent();
 }

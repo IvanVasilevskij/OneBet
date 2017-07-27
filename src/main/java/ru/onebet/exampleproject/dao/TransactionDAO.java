@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class TransactionDAO {
+
     private final EntityManager em;
     private UserDAOImpl daoUser;
 
@@ -26,12 +27,15 @@ public class TransactionDAO {
 
     public void emitMoney(Admin admin, BigDecimal amount) {
 
+        ClientImpl client = daoUser.ensureClientForEmitMoneyOperation();
+
         em.getTransaction().begin();
 
         try {
             Transaction t = Transaction.Builder()
                     .date(LocalDateTime.now())
                     .amount(amount)
+                    .client(client)
                     .admin(admin)
                     .build();
 
@@ -51,13 +55,12 @@ public class TransactionDAO {
     }
 
     public void sendMoney(ClientImpl client, BigDecimal amount) {
+        Admin root = daoUser.ensureRootUser();
 
         em.getTransaction().begin();
 
         try {
             daoUser.checkBalanceForBet(client, amount);
-
-            Admin root = daoUser.ensureRootUser();
 
             Transaction t = Transaction.Builder()
                     .date(LocalDateTime.now())
@@ -87,12 +90,12 @@ public class TransactionDAO {
     }
     public void reciveMoney (ClientImpl client, Admin admin, BigDecimal amount) {
 
+        Admin root = daoUser.ensureRootUser();
+
         em.getTransaction().begin();
 
         try {
-            daoUser.checkBalanceForPayoutPrize(admin, amount);
-
-            Admin root = daoUser.ensureRootUser();
+            checkBalanceForPayoutPrize(admin, amount);
 
             Transaction t = Transaction.Builder()
                     .date(LocalDateTime.now())
@@ -117,11 +120,22 @@ public class TransactionDAO {
                     .balance(root.getBalance().subtract(amount))
                     .mutate();
 
+            em.refresh(client);
+            em.refresh(admin);
+            em.refresh(root);
+
             em.getTransaction().commit();
 
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
+        }
+    }
+
+    public void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
+        if (admin.getBalance().compareTo(amount) < 0) {
+            BigDecimal shortage = amount.subtract(admin.getBalance());
+            emitMoney(admin, shortage);
         }
     }
 }

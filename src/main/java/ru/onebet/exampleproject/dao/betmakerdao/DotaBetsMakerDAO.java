@@ -1,7 +1,7 @@
 package ru.onebet.exampleproject.dao.betmakerdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.betsdao.DotaEventsDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
+@Repository
 public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent>{
 
     private final EntityManager em;

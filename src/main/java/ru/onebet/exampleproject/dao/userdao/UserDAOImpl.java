@@ -2,9 +2,9 @@ package ru.onebet.exampleproject.dao.userdao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.dao.TransactionDAO;
+import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.model.users.Admin;
+import ru.onebet.exampleproject.model.users.Client;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import javax.persistence.EntityExistsException;
@@ -13,29 +13,28 @@ import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Service
+@Repository
 public class UserDAOImpl implements UserDAO{
+
     private final EntityManager em;
-    private TransactionDAO daoTransaction;
 
     @Autowired
-    public UserDAOImpl(EntityManager em,
-                       TransactionDAO daoTransaction) {
+    public UserDAOImpl(EntityManager em) {
         this.em = em;
-        this.daoTransaction = daoTransaction;
     }
 
     @Override
-    public ClientImpl createClient(String login, String password, String firstName, String lastName, String email) throws EntityExistsException {
+    public ClientImpl createClient(String login, String password, String email) throws EntityExistsException {
         em.getTransaction().begin();
+
         try {
-            if (findClient(login).equals(null) && findAdmin(login).equals(null)) {
+            if (findAdmin(login) == null && findClient(login) == null) {
+
+
                 ClientImpl client = ClientImpl.Builder()
                         .login(login)
                         .password(password)
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .balance(new BigDecimal("0.0"))
+                        .balance(new BigDecimal("0.00"))
                         .email(email)
                         .build();
 
@@ -62,15 +61,15 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public Admin createAdmin(String login, String password, String firstName, String lastName, String email) throws EntityExistsException {
+    public Admin createAdmin(String login, String password, String email) throws EntityExistsException {
         em.getTransaction().begin();
         try {
-            if (findClient(login).equals(null) && findAdmin(login).equals(null)) {
+            if (findAdmin(login) == null && findClient(login) == null) {
+
                 Admin admin = Admin.Builder()
                         .login(login)
                         .password(password)
-                        .firstName(firstName)
-                        .lastName(lastName)
+                        .balance(new BigDecimal("0.00"))
                         .email(email)
                         .build();
 
@@ -114,14 +113,28 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
+    public ClientImpl ensureClientForEmitMoneyOperation() {
+        try {
+            ClientImpl clientForEmitMoneyOperations = findClient(ClientImpl.ClientForEmitMoneyOperations);
+            if (clientForEmitMoneyOperations == null) {
+                clientForEmitMoneyOperations = createClient(ClientImpl.ClientForEmitMoneyOperations,
+                        "null",
+                        "null");
+            }
+            return clientForEmitMoneyOperations;
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
+
+    @Override
     public Admin ensureRootUser() {
         try {
             Admin root = findAdmin(Admin.RootAdminName);
-            if (root.equals(null)) {
+            if (root == null) {
                 root =  createAdmin(Admin.RootAdminName,
-                        "password",
-                        "Ivan",
-                        "Vasilevskij",
+                        "4012659172",
                         "vasilevskij.ivan@gmail.com");
             }
             return root;
@@ -146,14 +159,6 @@ public class UserDAOImpl implements UserDAO{
     @Override
     public void checkBalanceForBet(ClientImpl client, BigDecimal amount) {
         if (client.getBalance().compareTo(amount) < 0) throw new IllegalArgumentException("Client have no balance for this event");
-    }
-
-    @Override
-    public void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
-        if (admin.getBalance().compareTo(amount) < 0) {
-            BigDecimal shortage = amount.subtract(admin.getBalance());
-            daoTransaction.emitMoney(admin, shortage);
-        }
     }
 
     @Override

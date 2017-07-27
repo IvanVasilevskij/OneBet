@@ -15,7 +15,7 @@ import java.util.List;
                 query = "select u from Admin u where u.login = :login"
         )
 )
-@Table(name = "CLIENTS")
+@Table(name = "ADMINS")
 public class Admin implements User{
     public static final String FindByLogin = "Admin.findByLogin";
     public static final String RootAdminName = "Vasilevskij.Ivan";
@@ -185,6 +185,39 @@ public class Admin implements User{
         public Admin mutate() {
             return Admin.this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Admin)) return false;
+
+        Admin admin = (Admin) o;
+
+        if (getId() != admin.getId()) return false;
+        if (getLogin() != null ? !getLogin().equals(admin.getLogin()) : admin.getLogin() != null) return false;
+        if (getPassword() != null ? !getPassword().equals(admin.getPassword()) : admin.getPassword() != null)
+            return false;
+        if (getFirstName() != null ? !getFirstName().equals(admin.getFirstName()) : admin.getFirstName() != null)
+            return false;
+        if (getLastName() != null ? !getLastName().equals(admin.getLastName()) : admin.getLastName() != null)
+            return false;
+        if (getBalance() != null ? !getBalance().equals(admin.getBalance()) : admin.getBalance() != null) return false;
+        if (getEmail() != null ? !getEmail().equals(admin.getEmail()) : admin.getEmail() != null) return false;
+        return getTransactions() != null ? getTransactions().equals(admin.getTransactions()) : admin.getTransactions() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getLogin() != null ? getLogin().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        result = 31 * result + (getFirstName() != null ? getFirstName().hashCode() : 0);
+        result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
+        result = 31 * result + (getBalance() != null ? getBalance().hashCode() : 0);
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getTransactions() != null ? getTransactions().hashCode() : 0);
+        return result;
     }
 }
 

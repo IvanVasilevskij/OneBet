@@ -24,7 +24,7 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
     private DotaTeam bettingTeam;
 
     @ManyToOne(optional = false)
-    private ClientImpl clientImpl;
+    private ClientImpl client;
 
     @ManyToOne(optional = false)
     private DotaEvent event;
@@ -44,9 +44,8 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         return bettingTeam;
     }
 
-    @Override
-    public ClientImpl getClientImpl() {
-        return clientImpl;
+    public ClientImpl getClient() {
+        return client;
     }
 
     @Override
@@ -79,7 +78,7 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         }
 
         public Builder client(ClientImpl clientImpl) {
-            MakedBetsOfDota.this.clientImpl = clientImpl;
+            MakedBetsOfDota.this.client = clientImpl;
             return this;
         }
 
@@ -108,7 +107,7 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         }
 
         public Mutator client(ClientImpl client) {
-            MakedBetsOfDota.this.clientImpl = client;
+            MakedBetsOfDota.this.client = client;
             return this;
         }
 

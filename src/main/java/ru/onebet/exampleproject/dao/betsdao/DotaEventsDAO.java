@@ -1,7 +1,7 @@
 package ru.onebet.exampleproject.dao.betsdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Repository
 public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
     private final EntityManager em;
@@ -60,11 +60,11 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
-    public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) { //NEED ADD TEST
+    public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
         try {
             List<DotaEvent> events = em.createQuery("from DotaEvent").getResultList();
             List<DotaEvent> resultListEventsWithThisTeam = events.stream()
-                    .filter(c -> c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team))
+                    .filter(c -> (c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team)))
                     .collect(Collectors.toList());
             return resultListEventsWithThisTeam;
         } catch (Throwable t) {
@@ -80,5 +80,19 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
         }
     }
 
-    //добавить выборку event'ов по дате без времени. только день недели!!!
+    @Override
+    public List<DotaEvent> chooseAllEventInEnteredDate(LocalDateTime date) {
+        try {
+            LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
+            LocalDateTime endOfDayAtEnteredDate = date.withHour(23).withMinute(59);
+            List<DotaEvent> allEvents = em.createQuery("from DotaEvent").getResultList();
+            List<DotaEvent> choosedEvents = allEvents.stream()
+                    .filter(c -> (c.getDate().compareTo(startOfDayAtEnteredDate) >= 0 && c.getDate().compareTo(endOfDayAtEnteredDate) <= 0))
+                    .collect(Collectors.toList());
+            return choosedEvents;
+        } catch (Throwable t) {
+            em.getTransaction().rollback();
+            throw new IllegalStateException(t);
+        }
+    }
 }

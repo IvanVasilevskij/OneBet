@@ -28,32 +28,16 @@ public class DotaTeamDAOTest {
     private DotaTeamDAO daoTeam;
 
     @Test
-    public void testCreateComand() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+    public void testCreateTeam() throws Exception {
+        DotaTeam teamFirst = daoTeam.createTeam("EG");
 
         assertEquals("EG", em.find(DotaTeam.class, teamFirst.getId()).getTeamName());
-        assertEquals("Sumail", em.find(DotaTeam.class, teamFirst.getId()).getRoleMid());
-        assertEquals("Arteezy", em.find(DotaTeam.class, teamFirst.getId()).getRoleCarry());
-        assertEquals("Universe", em.find(DotaTeam.class, teamFirst.getId()).getRoleHard());
-        assertEquals("Zai", em.find(DotaTeam.class, teamFirst.getId()).getRoleSupFour());
-        assertEquals("Crit", em.find(DotaTeam.class, teamFirst.getId()).getRoleSupFive());
-    }
+}
 
     @Test
-    public void testFindComandByComandName() throws Exception {
+    public void testFindTeamByTeamName() throws Exception {
         DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+                "EG");
 
         DotaTeam teamFinded = daoTeam.findTeamByTeamName("EG");
 
@@ -61,14 +45,8 @@ public class DotaTeamDAOTest {
     }
 
     @Test
-    public void testDeleteComandByComandName() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+    public void testDeleteTeamByTeamName() throws Exception {
+        DotaTeam teamFirst = daoTeam.createTeam("EG");
 
         em.getTransaction().begin();
 
@@ -81,23 +59,11 @@ public class DotaTeamDAOTest {
 
     @Test
     public void testGetAllTeams() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+        DotaTeam teamFirst = daoTeam.createTeam("EG");
 
         assertSame(1, daoTeam.getAllTeams().size());
 
-        DotaTeam teamSecond = daoTeam.createTeam(
-                "VP",
-                "No[o]ne",
-                "Ramzes666",
-                "9pasha",
-                "Lil",
-                "Solo");
+        DotaTeam teamSecond = daoTeam.createTeam("VP");
 
         assertSame(2, daoTeam.getAllTeams().size());
 

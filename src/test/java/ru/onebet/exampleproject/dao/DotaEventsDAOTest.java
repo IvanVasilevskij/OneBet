@@ -1,5 +1,6 @@
 package ru.onebet.exampleproject.dao;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +30,7 @@ public class DotaEventsDAOTest {
     private EntityManager em;
 
     @Autowired
-    private DotaEventsDAO daoEvent;
+    private DotaEventsDAO daoEventDota;
 
     @Autowired
     private DotaTeamDAO daoTeam;
@@ -38,31 +38,24 @@ public class DotaEventsDAOTest {
     @Autowired
     private CheckOperations sCheck;
 
+    @Before
+    public void createTwoTeam() throws Exception {
+        DotaTeam teamFirst = daoTeam.createTeam("EG");
+
+        DotaTeam teamSecond = daoTeam.createTeam("VP");
+    }
 
     @Test
     public void testCreateEvent() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
 
-        DotaTeam teamSecond = daoTeam.createTeam(
-                "VP",
-                "No[o]ne",
-                "Ramzes666",
-                "9pasha",
-                "Lil",
-                "Solo");
+        DotaTeam teamFirst = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamSecond = daoTeam.findTeamByTeamName("VP");
 
+        LocalDateTime timeOfTheEvent = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        LocalDateTime timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
-
-        DotaEvent event = daoEvent.createEvent(teamFirst,
+        DotaEvent event = daoEventDota.createEvent(teamFirst,
                 teamSecond,
-                timeOfTheGame,
+                timeOfTheEvent,
                 75.3,
                 12.8,
                 21.9);
@@ -72,42 +65,61 @@ public class DotaEventsDAOTest {
 
     @Test
     public void testAllBets() throws Exception {
-        DotaTeam teamFirst = daoTeam.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
 
-        DotaTeam teamSecond = daoTeam.createTeam(
-                "VP",
-                "No[o]ne",
-                "Ramzes666",
-                "9pasha",
-                "Lil",
-                "Solo");
+        DotaTeam teamFirst = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamSecond = daoTeam.findTeamByTeamName("VP");
 
-        LocalDateTime timeOfTheFirstGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+        LocalDateTime timeOfTheFirstEvent = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        DotaEvent event = daoEvent.createEvent(teamFirst,
+        DotaEvent event = daoEventDota.createEvent(teamFirst,
                 teamSecond,
-                timeOfTheFirstGame,
+                timeOfTheFirstEvent,
                 75.3,
                 12.8,
                 21.9);
 
-        assertEquals(1, daoEvent.allEvents());
+        assertEquals(1, daoEventDota.allEvents());
 
-        LocalDateTime timeOfTheSecondGame = sCheck.tryToParseDateFromString("25.05.2015 19:30");
+        LocalDateTime timeOfTheSecondEvent = sCheck.tryToParseDateFromString("25.05.2015 19:30");
 
-        DotaEvent eventTwo = daoEvent.createEvent(teamFirst,
+        DotaEvent eventTwo = daoEventDota.createEvent(teamFirst,
                 teamSecond,
-                timeOfTheSecondGame,
+                timeOfTheSecondEvent,
                 75.3,
                 12.8,
                 21.9);
 
-        assertEquals(2, daoEvent.allEvents());
+        assertEquals(2, daoEventDota.allEvents());
+    }
+
+    @Test
+    public void testChooseAllEventInEnteredDate() throws Exception {
+
+        DotaTeam teamFirst = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamSecond = daoTeam.findTeamByTeamName("VP");
+
+        LocalDateTime timeOfTheFirstEvent = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+
+        DotaEvent eventFirst = daoEventDota.createEvent(teamFirst,
+                teamSecond,
+                timeOfTheFirstEvent,
+                75.3,
+                12.8,
+                21.9);
+
+        LocalDateTime timeOfTheSecondEvent = sCheck.tryToParseDateFromString("25.06.2015 16:30");
+
+        DotaEvent eventSecond = daoEventDota.createEvent(teamFirst,
+                teamSecond,
+                timeOfTheSecondEvent,
+                75.3,
+                12.8,
+                21.9);
+
+        LocalDateTime date = sCheck.tryToParseDateFromString("25.06.2015");
+
+        List<DotaEvent> resultList = daoEventDota.chooseAllEventInEnteredDate(date);
+
+        assertEquals(resultList.size(),1);
     }
 }

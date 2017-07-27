@@ -19,6 +19,8 @@ import java.util.List;
 @Table(name = "CLIENTS")
 public class ClientImpl implements Client<MakedBetsOfDota>{
     public static final String FindByLogin = "ClientImpl.findByLogin";
+    public static final String ClientForEmitMoneyOperations = "ClientForEmitMoneyOperations";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +46,9 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
     private BigDecimal balance;
 
     @Column(name = "EMAIL")
-    @NotNull
     private String email;
 
-    @OneToMany(mappedBy = "clientImpl", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<MakedBetsOfDota> bets;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
@@ -203,6 +204,42 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
         public ClientImpl mutate() {
             return ClientImpl.this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ClientImpl)) return false;
+
+        ClientImpl client = (ClientImpl) o;
+
+        if (getId() != client.getId()) return false;
+        if (getLogin() != null ? !getLogin().equals(client.getLogin()) : client.getLogin() != null) return false;
+        if (getPassword() != null ? !getPassword().equals(client.getPassword()) : client.getPassword() != null)
+            return false;
+        if (getFirstName() != null ? !getFirstName().equals(client.getFirstName()) : client.getFirstName() != null)
+            return false;
+        if (getLastName() != null ? !getLastName().equals(client.getLastName()) : client.getLastName() != null)
+            return false;
+        if (getBalance() != null ? !getBalance().equals(client.getBalance()) : client.getBalance() != null)
+            return false;
+        if (getEmail() != null ? !getEmail().equals(client.getEmail()) : client.getEmail() != null) return false;
+        if (getBets() != null ? !getBets().equals(client.getBets()) : client.getBets() != null) return false;
+        return getTransactions() != null ? getTransactions().equals(client.getTransactions()) : client.getTransactions() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getLogin() != null ? getLogin().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        result = 31 * result + (getFirstName() != null ? getFirstName().hashCode() : 0);
+        result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
+        result = 31 * result + (getBalance() != null ? getBalance().hashCode() : 0);
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getBets() != null ? getBets().hashCode() : 0);
+        result = 31 * result + (getTransactions() != null ? getTransactions().hashCode() : 0);
+        return result;
     }
 }
 

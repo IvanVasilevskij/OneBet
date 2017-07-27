@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface UserDAO {
 
-    ClientImpl createClient(String login, String password, String firstName, String lastName, String email);
+    ClientImpl createClient(String login, String password, String email);
 
     ClientImpl findClient(String login);
 
-    Admin createAdmin(String login, String password, String firstName, String lastName, String email);
+    Admin createAdmin(String login, String password, String email);
 
     Admin findAdmin(String login);
 
@@ -20,11 +20,11 @@ public interface UserDAO {
 
     Admin ensureRootUser();
 
+    ClientImpl ensureClientForEmitMoneyOperation();
+
     ClientImpl checkPassword(String login, String password);
 
     void checkBalanceForBet(ClientImpl client, BigDecimal amount);
-
-    void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount);
 
     List<ClientImpl> getAllClients();
 

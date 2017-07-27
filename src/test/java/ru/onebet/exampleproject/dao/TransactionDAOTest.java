@@ -17,7 +17,6 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
@@ -32,7 +31,6 @@ public class TransactionDAOTest {
 
     @Autowired
     private TransactionDAO daoTransaction;
-
 
     @Test
     public void testEmitMoney() throws Exception {
@@ -59,8 +57,6 @@ public class TransactionDAOTest {
         ClientImpl client = daoUser.createClient(
                 "client",
                 "password",
-                "Ivan",
-                "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
         em.getTransaction().begin();
@@ -92,15 +88,11 @@ public class TransactionDAOTest {
         Admin admin = daoUser.createAdmin(
                 "admin",
                 "654321",
-                "Sema",
-                "Golikov",
                 "vasilevskij.ivan@gmail.com");
 
         ClientImpl client = daoUser.createClient(
                 "client",
                 "password",
-                "Ivan",
-                "Vasilevskij",
                 "vasilevskij.ivan@gmail.com");
 
 
@@ -118,5 +110,29 @@ public class TransactionDAOTest {
         assertEquals(new BigDecimal("350.00"), root.getBalance());
         assertEquals(new BigDecimal("50.00"), client.getTransactions().get(1).getAmount());
         assertEquals(new BigDecimal("00.00"), admin.getBalance());
+    }
+
+    @Test
+    public void testCheckBalanceForPayoutPrize() throws Exception {
+        Admin admin = daoUser.createAdmin(
+                "admin",
+                "654321",
+                "vasilevskij.ivan@gmail.com");
+
+        em.getTransaction().begin();
+
+        admin.Mutate(admin)
+                .balance(new BigDecimal("150.00"))
+                .mutate();
+
+        em.persist(admin);
+        em.getTransaction().commit();
+
+        assertEquals(new BigDecimal("150.00"),admin.getBalance());
+
+        daoTransaction.checkBalanceForPayoutPrize(admin, new BigDecimal("200.00"));
+
+        assertEquals(new BigDecimal("200.00"),admin.getBalance());
+
     }
 }

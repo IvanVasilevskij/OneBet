@@ -1,5 +1,6 @@
 package ru.onebet.exampleproject.dao;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,14 @@ import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
+import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import javax.persistence.EntityManager;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -33,143 +35,122 @@ public class MakedDotaEventsDAOTest {
     private EntityManager em;
 
     @Autowired
-    private DotaTeamDAO daoC;
+    private DotaTeamDAO daoTeam;
 
     @Autowired
-    private DotaEventsDAO daoB;
+    private DotaEventsDAO daoEventDota;
 
     @Autowired
-    private UserDAOImpl daoU;
+    private UserDAOImpl daoUser;
 
     @Autowired
-    private DotaBetsMakerDAO daoM;
+    private DotaBetsMakerDAO daoBetsMaker;
 
     @Autowired
     private CheckOperations sCheck;
 
+    @Before
+    public void createTwoTeamAndClientAndEvent() throws Exception {
+        DotaTeam teamFirst = daoTeam.createTeam("EG");
+
+        DotaTeam teamSecond = daoTeam.createTeam("VP");
+
+        ClientImpl client = daoUser.createClient(
+                "client",
+                "123456",
+                "vasilevskij.ivan@gmail.com");
+    }
+
+
     @Test
     public void testMakeBet() throws Exception {
 
-        ClientImpl clientImpl = daoU.createClient(
-                "userOne",
-                "123456",
-                "Ivan",
-                "Vasilevskij",
-                "vasilevskij.ivan@gmail.com");
+        ClientImpl client = daoUser.findClient("client");
 
         em.getTransaction().begin();
 
-        clientImpl.Mutate(clientImpl)
+        client.Mutate(client)
                 .balance(new BigDecimal("250.00"))
-                .build();
+                .mutate();
 
         em.getTransaction().commit();
 
-        ClientImpl root = daoU.ensureRootUser();
+        Admin root = daoUser.ensureRootUser();
 
-        DotaTeam teamOne = daoC.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+        DotaTeam teamFirst = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamSecond = daoTeam.findTeamByTeamName("VP");
 
-        DotaTeam teamTwo = daoC.createTeam(
-                "VP",
-                "No[o]ne",
-                "Ramzes666",
-                "9pasha",
-                "Lil",
-                "Solo");
+        LocalDateTime timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
-
-        DotaEvent event = daoB.createEvent("EG",
-                "VP",
+        DotaEvent event = daoEventDota.createEvent(teamFirst,
+                teamSecond,
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        daoM.makeBet(clientImpl,
+        daoBetsMaker.makeBet(client,
                 event,
-                teamOne,
+                teamFirst,
                 new BigDecimal("200.00"));
 
         assertEquals(1, em.createQuery("from MakedBetsOfDota ").getResultList().size());
-        assertEquals(new BigDecimal("50.00"), clientImpl.getBalance());
+        assertEquals(new BigDecimal("50.00"), client.getBalance());
         assertEquals(new BigDecimal("200.00"),root.getBalance());
 
-        daoM.makeBet(clientImpl,
+        daoBetsMaker.makeBet(client,
                 event,
-                teamOne,
+                teamSecond,
                 new BigDecimal("45.00"));
 
         assertEquals(2, em.createQuery("from MakedBetsOfDota ").getResultList().size());
-        assertEquals(new BigDecimal("5.00"), clientImpl.getBalance());
+        assertEquals(new BigDecimal("5.00"), client.getBalance());
         assertEquals(new BigDecimal("245.00"),root.getBalance());
 
     }
 
     @Test
     public void testAllMakedBets() throws Exception {
-        assertEquals(daoM.allMakedBets().size(), em.createQuery("from MakedBetsOfDota ").getResultList().size());
-        assertEquals(daoM.allMakedBets().size(), 0);
+        assertEquals(daoBetsMaker.allMakedBets(), em.createQuery("from MakedBetsOfDota ").getResultList());
+        assertEquals(daoBetsMaker.allMakedBets().size(), 0);
 
-        ClientImpl clientImpl = daoU.createClient(
-                "userOne",
-                "123456",
-                "Ivan",
-                "Vasilevskij",
-                "vasilevskij.ivan@gmail.com");
+        ClientImpl client = daoUser.findClient("client");
 
         em.getTransaction().begin();
 
-        clientImpl.Mutate(clientImpl)
+        client.Mutate(client)
                 .balance(new BigDecimal("250.00"))
-                .build();
+                .mutate();
         em.getTransaction().commit();
 
-        ClientImpl root = daoU.ensureRootUser();
+        Admin root = daoUser.ensureRootUser();
 
-        DotaTeam teamOne = daoC.createTeam(
-                "EG",
-                "Sumail",
-                "Arteezy",
-                "Universe",
-                "Zai",
-                "Crit");
+        DotaTeam teamFirst = daoTeam.findTeamByTeamName("EG");
+        DotaTeam teamSecond = daoTeam.findTeamByTeamName("VP");
 
-        DotaTeam teamTwo = daoC.createTeam(
-                "VP",
-                "No[o]ne",
-                "Ramzes666",
-                "9pasha",
-                "Lil",
-                "Solo");
+        LocalDateTime timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
 
-        Date timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
-
-        DotaEvent bet = daoB.createEvent("EG",
-                "VP",
+        DotaEvent event = daoEventDota.createEvent(teamFirst,
+                teamSecond,
                 timeOfTheGame,
                 75.3,
                 12.8,
                 21.9);
 
-        daoM.makeBet(clientImpl,
-                bet,
-                teamOne,
+        daoBetsMaker.makeBet(client,
+                event,
+                teamSecond,
                 new BigDecimal("200.00"));
 
-        assertEquals(daoM.allMakedBets().size(), 1);
-        assertEquals(clientImpl.getBets().size(),1);
+        assertEquals(daoBetsMaker.allMakedBets(), em.createQuery("from MakedBetsOfDota ").getResultList());
+        assertEquals(daoBetsMaker.allMakedBets().size(), 1);
+        assertEquals(client.getBets().size(),1);
 
-        daoM.makeBet(clientImpl,
-                bet,
-                teamOne,
+        daoBetsMaker.makeBet(client,
+                event,
+                teamFirst,
                 new BigDecimal("20.00"));
-        assertEquals(daoM.allMakedBets().size(), 2);
+
+        assertEquals(daoBetsMaker.allMakedBets().size(), 2);
     }
 }

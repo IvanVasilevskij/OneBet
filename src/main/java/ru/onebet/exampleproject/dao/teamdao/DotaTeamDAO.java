@@ -2,7 +2,7 @@ package ru.onebet.exampleproject.dao.teamdao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityExistsException;
@@ -10,8 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.util.List;
 
-@Service
+@Repository
 public class DotaTeamDAO implements TeamDAO <DotaTeam>{
+
     private final EntityManager em;
 
     @Autowired
@@ -29,17 +30,13 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
         }
     }
 
-    public DotaTeam createTeam(String teamName, String roleMid, String roleCarry, String roleHard, String roleSupFour, String roleSupFive) throws EntityExistsException {
+    @Override
+    public DotaTeam createTeam(String teamName) throws EntityExistsException {
         em.getTransaction().begin();
         try {
             if (findTeamByTeamName(teamName) == null) {
                 DotaTeam team = DotaTeam.Builder()
                         .comandName(teamName)
-                        .roleMid(roleMid)
-                        .roleCarry(roleCarry)
-                        .roleHard(roleHard)
-                        .roleSupFour(roleSupFour)
-                        .roleSupFive(roleSupFive)
                         .build();
 
 
