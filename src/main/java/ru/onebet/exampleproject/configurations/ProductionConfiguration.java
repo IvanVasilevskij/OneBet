@@ -3,6 +3,9 @@ package ru.onebet.exampleproject.configurations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,5 +25,14 @@ public class ProductionConfiguration {
         return emf.createEntityManager();
     }
 
+    @Bean
+    public ViewResolver getResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 
+        resolver.setPrefix("/pages/");
+        resolver.setSuffix(".jsp");
+        resolver.setViewClass(JstlView.class);
+
+        return resolver;
+    }
 }
