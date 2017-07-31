@@ -4,14 +4,14 @@ import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 
 import java.util.List;
 
-public class AllEventsBean {
-    private List<DotaEvent> events;
+public class EventsBean {
+    private List<String> events;
 
-    public List<DotaEvent> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public void setEvents(List<DotaEvent> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
     }
 

@@ -3,12 +3,13 @@ package ru.onebet.exampleproject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.onebet.exampleproject.dao.betsdao.DotaEventsDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.users.ClientImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class Controllers {
@@ -22,9 +23,9 @@ public class Controllers {
         this.daoEvent = daoEvent;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/create-user")
-    public String createUser(@RequestParam String login, String enteredPassword, String repetedPassword, ModelMap model) {
-        if (enteredPassword.compareTo(repetedPassword) != 0) {
+    @PostMapping("/create-user")
+    public String createUser(@RequestParam String login,@RequestParam String enteredPassword,@RequestParam String repeatedPassword, ModelMap model) {
+        if (!enteredPassword.equals(repeatedPassword)) {
             return "incorrect-password";
         }
         ClientImpl client = daoUser.createClient(login,enteredPassword);
@@ -34,12 +35,15 @@ public class Controllers {
         return "user-successfully-created";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/all-events")
-    public String allEvents(ModelMap model) {
-        AllEventsBean bean = new AllEventsBean();
-        bean.setEvents(daoEvent.allEvents());
+    @GetMapping("/events")
+    public String events(ModelMap model) {
+        EventsBean bean = new EventsBean();
+        List<String> a = new ArrayList<>();
+        a.add("aaa0");
+        a.add("bbb");
+        bean.setEvents(a);
 
         model.put("events", bean);
-        return "all-events";
+        return "/events";
     }
 }
