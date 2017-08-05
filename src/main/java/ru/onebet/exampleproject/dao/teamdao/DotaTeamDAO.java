@@ -32,13 +32,11 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
 
     @Override
     public DotaTeam createTeam(String teamName) throws EntityExistsException {
-        em.getTransaction().begin();
         try {
                 DotaTeam team = DotaTeam.Builder()
                         .withTeamName(teamName)
                         .build();
                 em.persist(team);
-                em.getTransaction().commit();
                 return team;
         } catch (Throwable t) {
             em.getTransaction().rollback();

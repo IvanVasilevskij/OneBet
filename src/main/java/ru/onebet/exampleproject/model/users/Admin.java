@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "ADMINS")
 public class Admin implements User{
     public static final String FindByLogin = "Admin.findByLogin";
-    public static final String RootAdminName = "Vasilevskij.Ivan";
+    public static final String RootAdminName = "Vasilevskij.Ivan.admin";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,15 +93,6 @@ public class Admin implements User{
         this.login = builder.login;
         this.password = builder.password;
         this.balance = builder.balance;
-    }
-
-    private Admin(Mutator mutator) {
-        this.password = mutator.admin.password;
-        this.firstName = mutator.admin.firstName;
-        this.lastName = mutator.admin.lastName;
-        this.balance = mutator.admin.balance;
-        this.email = mutator.admin.email;
-        this.transactions = mutator.admin.transactions;
     }
 
     public static Builder builder() {

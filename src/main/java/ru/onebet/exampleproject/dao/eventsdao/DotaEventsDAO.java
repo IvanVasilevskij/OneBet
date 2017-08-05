@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject.dao.betsdao;
+package ru.onebet.exampleproject.dao.eventsdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -6,6 +6,7 @@ import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
     private final EntityManager em;
 
-
     @Autowired
     public DotaEventsDAO(EntityManager em) {
         this.em = em;
@@ -23,6 +23,7 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
 
     @Override
+    @Transactional
     public DotaEvent createEvent(
             DotaTeam teamFirst,
             DotaTeam teamSecond,
@@ -30,8 +31,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
             double percentForTeamFirst,
             double percentForDraw,
             double percentForTeamSecond) {
-
-        em.getTransaction().begin();
 
         DotaEvent event = DotaEvent.Builder()
                 .withTeamFirst(teamFirst)
@@ -43,12 +42,11 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
                 .build();
 
         em.persist(event);
-        em.getTransaction().commit();
-
         return event;
     }
 
     @Override
+    @Transactional
     public List<DotaEvent> allEvents() {
         try {
             return em.createQuery("from DotaEvent", DotaEvent.class).getResultList();
@@ -59,6 +57,7 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
+    @Transactional
     public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
         try {
             return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
@@ -78,6 +77,7 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
+    @Transactional
     public List<DotaEvent> chooseAllEventInEnteredDate(LocalDateTime date) {
         try {
             LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);

@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject.dao.betsdao;
+package ru.onebet.exampleproject.dao.eventsdao;
 
 import ru.onebet.exampleproject.model.coupleteambets.EventBetweenCoupleTeam;
 import ru.onebet.exampleproject.model.team.Team;

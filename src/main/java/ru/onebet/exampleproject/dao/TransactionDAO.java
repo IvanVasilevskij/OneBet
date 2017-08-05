@@ -16,37 +16,29 @@ import java.time.LocalDateTime;
 public class TransactionDAO {
 
     private final EntityManager em;
-    private UserDAOImpl daoUser;
 
     @Autowired
-    public TransactionDAO(EntityManager em,
-                          UserDAOImpl daoUser) {
+    public TransactionDAO(EntityManager em) {
         this.em = em;
-        this.daoUser = daoUser;
     }
 
-    void emitMoney(Admin admin, BigDecimal amount) {
-
-        ClientImpl client = daoUser.ensureClientForEmitMoneyOperation();
-
-        em.getTransaction().begin();
-
+    void emitMoney(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
         try {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
-                    .withClient(client)
+                    .withClient(clientForEmitMoneyOperation)
                     .withAdmin(admin)
                     .build();
 
             em.persist(t);
+            em.persist(clientForEmitMoneyOperation);
             em.refresh(admin);
 
-            admin.mutator(admin)
+            admin = Admin.mutator(admin)
                     .withBalance(admin.getBalance().add(amount))
                     .mutate();
-
-            em.getTransaction().commit();
+            em.persist(admin);
 
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -54,14 +46,8 @@ public class TransactionDAO {
         }
     }
 
-    public void sendMoney(ClientImpl client, BigDecimal amount) {
-        Admin root = daoUser.ensureRootUser();
-
-        em.getTransaction().begin();
-
+    public void sendMoney(ClientImpl client, Admin root, BigDecimal amount) {
         try {
-            daoUser.checkBalanceForBet(client, amount);
-
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
@@ -73,48 +59,45 @@ public class TransactionDAO {
             em.refresh(client);
             em.refresh(root);
 
-            client.mutator(client)
+            client = ClientImpl.mutator(client)
                     .withBalance(client.getBalance().subtract(amount))
                     .mutate();
+            em.persist(client);
 
-            root.mutator(root)
+            root = Admin.mutator(root)
                     .withBalance(root.getBalance().add(amount))
                     .mutate();
-
-            em.getTransaction().commit();
+            em.persist(root);
 
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
     }
-    public void reciveMoney (ClientImpl client, Admin admin, BigDecimal amount) {
-
-        Admin root = daoUser.ensureRootUser();
-
-        em.getTransaction().begin();
-
+    public void reciveMoney (ClientImpl client, Admin root, BigDecimal amount) {
         try {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
                     .withClient(client)
-                    .withAdmin(admin)
+                    .withAdmin(root)
                     .build();
 
             em.persist(t);
             em.refresh(client);
-            em.refresh(admin);
+            em.refresh(root);
 
-            client.mutator(client)
+
+            client = ClientImpl.mutator(client)
                     .withBalance(client.getBalance().add(amount))
                     .mutate();
 
-            root.mutator(root)
+            root = Admin.mutator(root)
                     .withBalance(root.getBalance().subtract(amount))
                     .mutate();
 
-            em.getTransaction().commit();
+            em.persist(client);
+            em.persist(root);
 
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -122,10 +105,11 @@ public class TransactionDAO {
         }
     }
 
-    void checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
+    void checkBalanceForPayoutPrize(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
         if (admin.getBalance().compareTo(amount) < 0) {
             BigDecimal shortage = amount.subtract(admin.getBalance());
-            emitMoney(admin, shortage);
+            emitMoney(admin, clientForEmitMoneyOperation, shortage);
+            em.persist(admin);
         }
     }
 }

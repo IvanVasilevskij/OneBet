@@ -126,4 +126,18 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
             return new DotaEvent(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return teamFirst.getTeamName() +
+                "(" + getPercentForTeamFirst() + ")" +
+                " vs " +
+                teamSecond.getTeamName() +
+                "(" + getPercentForTeamSecond() + ")" +
+                date.getDayOfMonth() + "." +
+                (date.getMonthValue() < 10 ? ("0" + date.getMonthValue()) : (date.getMonthValue())) + "." +
+                date.getYear() + " " +
+                date.getHour() + ":" +
+                date.getMinute();
+    }
 }

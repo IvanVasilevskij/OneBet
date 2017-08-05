@@ -35,15 +35,24 @@ public class TransactionDAOTest {
     @Test
     public void testEmitMoney() throws Exception {
 
+        em.getTransaction().begin();
         Admin root = daoUser.ensureRootUser();
+        em.getTransaction().commit();
 
-        daoTransaction.emitMoney(root, new BigDecimal("500.00"));
+        em.getTransaction().begin();
+        ClientImpl clientForEmitMoneyOperation = daoUser.ensureClientForEmitMoneyOperation();
+        em.getTransaction().commit();
 
+        em.getTransaction().begin();
+        daoTransaction.emitMoney(root, clientForEmitMoneyOperation, new BigDecimal("500.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("500.00"), daoUser.findAdmin(Admin.RootAdminName).getBalance());
         assertEquals(new BigDecimal("500.00"), daoUser.findAdmin(Admin.RootAdminName).getTransactions().get(0).getAmount());
 
-        daoTransaction.emitMoney(root, new BigDecimal("250.00"));
+        em.getTransaction().begin();
+        daoTransaction.emitMoney(root, clientForEmitMoneyOperation, new BigDecimal("250.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("750.00"), daoUser.findAdmin(Admin.RootAdminName).getBalance());
         assertEquals(new BigDecimal("250.00"), daoUser.findAdmin(Admin.RootAdminName).getTransactions().get(1).getAmount());
@@ -52,27 +61,32 @@ public class TransactionDAOTest {
     @Test
     public void testSendMoney() throws Exception {
 
+        em.getTransaction().begin();
         Admin root = daoUser.ensureRootUser();
 
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "password");
-
-        em.getTransaction().begin();
-
-        client.mutator(client)
-                .withBalance(client.getBalance().add(new BigDecimal("150.00")))
-                .mutate();
-
         em.getTransaction().commit();
 
-        daoTransaction.sendMoney(client, new BigDecimal("100.00"));
+        em.getTransaction().begin();
+        client = ClientImpl.mutator(client)
+                .withBalance(client.getBalance().add(new BigDecimal("150.00")))
+                .mutate();
+        em.persist(client);
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        daoTransaction.sendMoney(client, root, new BigDecimal("100.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("50.00"), client.getBalance());
         assertEquals(new BigDecimal("100.00"), root.getBalance());
         assertEquals(new BigDecimal("100.00"), client.getTransactions().get(0).getAmount());
 
-        daoTransaction.sendMoney(client,new BigDecimal("50.00"));
+        em.getTransaction().begin();
+        daoTransaction.sendMoney(client, root, new BigDecimal("50.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("0.00"), client.getBalance());
         assertEquals(new BigDecimal("150.00"), root.getBalance());
@@ -82,51 +96,59 @@ public class TransactionDAOTest {
     @Test
     public void testReciveMoney() throws Exception {
 
+        em.getTransaction().begin();
         Admin root = daoUser.ensureRootUser();
-
-        Admin admin = daoUser.createAdmin(
-                "admin",
-                "654321");
 
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "password");
 
+        ClientImpl clientForEmitMoneyOperation = daoUser.ensureClientForEmitMoneyOperation();
+        em.getTransaction().commit();
 
-        daoTransaction.reciveMoney(client, admin, new BigDecimal("100.00"));
+        em.getTransaction().begin();
+        daoTransaction.reciveMoney(client, root, new BigDecimal("100.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("100.00"), client.getBalance());
         assertEquals(new BigDecimal("-100.00"), root.getBalance());
         assertEquals(new BigDecimal("100.00"), client.getTransactions().get(0).getAmount());
 
-        daoTransaction.emitMoney(root, new BigDecimal("500.00"));
+        em.getTransaction().begin();
+        daoTransaction.emitMoney(root, clientForEmitMoneyOperation, new BigDecimal("500.00"));
+        em.getTransaction().commit();
 
-        daoTransaction.reciveMoney(client, admin, new BigDecimal("50.00"));
+        em.getTransaction().begin();
+        daoTransaction.reciveMoney(client, root, new BigDecimal("50.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("150.00"), client.getBalance());
         assertEquals(new BigDecimal("350.00"), root.getBalance());
         assertEquals(new BigDecimal("50.00"), client.getTransactions().get(1).getAmount());
-        assertEquals(new BigDecimal("00.00"), admin.getBalance());
     }
 
     @Test
     public void testCheckBalanceForPayoutPrize() throws Exception {
+
+        em.getTransaction().begin();
         Admin admin = daoUser.createAdmin(
                 "admin",
                 "654321");
+        ClientImpl clientForEmitMoneyOperation = daoUser.ensureClientForEmitMoneyOperation();
+        em.getTransaction().commit();
 
         em.getTransaction().begin();
-
-        admin.mutator(admin)
+        admin = Admin.mutator(admin)
                 .withBalance(new BigDecimal("150.00"))
                 .mutate();
-
         em.persist(admin);
         em.getTransaction().commit();
 
         assertEquals(new BigDecimal("150.00"),admin.getBalance());
 
-        daoTransaction.checkBalanceForPayoutPrize(admin, new BigDecimal("200.00"));
+        em.getTransaction().begin();
+        daoTransaction.checkBalanceForPayoutPrize(admin, clientForEmitMoneyOperation, new BigDecimal("200.00"));
+        em.getTransaction().commit();
 
         assertEquals(new BigDecimal("200.00"),admin.getBalance());
 

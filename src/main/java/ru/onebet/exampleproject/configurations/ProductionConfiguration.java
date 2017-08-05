@@ -1,23 +1,35 @@
 package ru.onebet.exampleproject.configurations;
 
+import com.sun.org.apache.xerces.internal.parsers.SecurityConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 @Configuration
 @ComponentScan(basePackages = "ru.onebet.exampleproject")
+@Import(SecurityConfiguration.class)
 @EnableWebMvc
 public class ProductionConfiguration extends WebMvcConfigurerAdapter{
+
+    @Autowired
+    private UserDAOImpl daoUser;
+
+    @Autowired
+    private EntityManager em;
 
     @Bean
     public EntityManagerFactory getEmf() {
@@ -26,7 +38,9 @@ public class ProductionConfiguration extends WebMvcConfigurerAdapter{
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/*.css").addResourceLocations("/resources/");
+        registry.addResourceHandler("/css/*.css").addResourceLocations("/css/");
+        registry.addResourceHandler("/img/*.jpg").addResourceLocations("/img/");
+        registry.addResourceHandler("/fonts/*.*").addResourceLocations("/fonts/");
     }
 
     @Bean
@@ -43,5 +57,13 @@ public class ProductionConfiguration extends WebMvcConfigurerAdapter{
         resolver.setViewClass(JstlView.class);
 
         return resolver;
+    }
+
+    @PostConstruct
+    public void ensureRootAndClientForMoneyOperation() {
+        em.getTransaction().begin();
+        daoUser.ensureRootUser();
+        daoUser.ensureClientForEmitMoneyOperation();
+        em.getTransaction().commit();
     }
 }

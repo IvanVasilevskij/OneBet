@@ -17,6 +17,10 @@ public interface UserDAO {
 
     Admin findAdmin(String login);
 
+    void updateInformationForClient(ClientImpl client, String firstName, String lastName, String email);
+
+    void updateInformationForAdmin(Admin admin, String firstName, String lastName, String email);
+
     void deleteUserByLogin(String login);
 
     Admin ensureRootUser();

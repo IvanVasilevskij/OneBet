@@ -74,15 +74,6 @@ public class DotaTeam implements Team {
         this.teamName = builder.teamName;
     }
 
-    private DotaTeam(Mutator mutator) {
-        this.teamName = mutator.team.teamName;
-        this.roleCarry = mutator.team.roleCarry;
-        this.roleHard = mutator.team.roleHard;
-        this.roleMid = mutator.team.roleMid;
-        this.roleSupFour = mutator.team.roleSupFour;
-        this.roleSupFive = mutator.team.roleSupFive;
-    }
-
     public static Builder Builder() {
         return new Builder();
     }

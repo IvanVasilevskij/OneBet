@@ -4,6 +4,6 @@
     <title>Incorrect password</title>
 </head>
 <body>
-    <h1>Incorrect password had detected!</h1>
+    <h1>Incorrect password detected!</h1>
 </body>
 </html>

@@ -29,29 +29,36 @@ public class DotaTeamDAOTest {
 
     @Test
     public void testCreateTeam() throws Exception {
+        em.getTransaction().begin();
         DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
+        em.getTransaction().commit();
 
         assertEquals("EG", em.find(DotaTeam.class, teamFirst.getId()).getTeamName());
 }
 
     @Test
     public void testFindTeamByTeamName() throws Exception {
+        em.getTransaction().begin();
         DotaTeam teamFirst = dotaTeamDAO.createTeam(
                 "EG");
+        em.getTransaction().commit();
 
+        em.getTransaction().begin();
         DotaTeam teamFinded = dotaTeamDAO.findTeamByTeamName("EG");
+        em.getTransaction().commit();
 
         assertEquals(teamFirst, teamFinded);
     }
 
     @Test
     public void testDeleteTeamByTeamName() throws Exception {
-        DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
 
         em.getTransaction().begin();
+        DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
+        em.getTransaction().commit();
 
+        em.getTransaction().begin();
         dotaTeamDAO.deleteTeamByTeamName("EG");
-
         em.getTransaction().commit();
 
         assertEquals(null, dotaTeamDAO.findTeamByTeamName("EG"));
@@ -59,11 +66,15 @@ public class DotaTeamDAOTest {
 
     @Test
     public void testGetAllTeams() throws Exception {
+        em.getTransaction().begin();
         DotaTeam teamFirst = dotaTeamDAO.createTeam("EG");
+        em.getTransaction().commit();
 
         assertSame(1, dotaTeamDAO.getAllTeams().size());
 
+        em.getTransaction().begin();
         DotaTeam teamSecond = dotaTeamDAO.createTeam("VP");
+        em.getTransaction().commit();
 
         assertSame(2, dotaTeamDAO.getAllTeams().size());
 

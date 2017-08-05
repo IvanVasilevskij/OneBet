@@ -82,8 +82,8 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
             return this;
         }
 
-        public Builder withClient(final ClientImpl clientImpl) {
-            this.client = clientImpl;
+        public Builder withClient(final ClientImpl client) {
+            this.client = client;
             return this;
         }
 

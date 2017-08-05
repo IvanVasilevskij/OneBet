@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "CLIENTS")
 public class ClientImpl implements Client<MakedBetsOfDota>{
     public static final String FindByLogin = "ClientImpl.findByLogin";
-    public static final String ClientForEmitMoneyOperations = "ClientForEmitMoneyOperations";
+    public static final String ClientForEmitMoneyOperations = "Vasilevskij.Ivan.client";
 
 
     @Id
@@ -102,16 +102,6 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
         this.login = builder.login;
         this.password = builder.password;
         this.balance = builder.balance;
-    }
-
-    private ClientImpl(Mutator mutator) {
-        this.password = mutator.client.password;
-        this.firstName = mutator.client.firstName;
-        this.lastName = mutator.client.lastName;
-        this.balance = mutator.client.balance;
-        this.email = mutator.client.email;
-        this.bets = mutator.client.bets;
-        this.transactions = mutator.client.transactions;
     }
 
     public static Builder builder() {

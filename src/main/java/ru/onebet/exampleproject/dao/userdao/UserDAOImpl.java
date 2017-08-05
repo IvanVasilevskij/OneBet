@@ -25,15 +25,13 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public ClientImpl createClient(String login, String password) throws EntityExistsException {
-        em.getTransaction().begin();
         try {
                 ClientImpl client = ClientImpl.builder()
                         .withLogin(login)
                         .withPassword(password)
-                        .withBalance(new BigDecimal("0.00"))
+                        .withBalance(BigDecimal.ZERO)
                         .build();
                 em.persist(client);
-                em.getTransaction().commit();
                 return client;
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -54,17 +52,14 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public Admin createAdmin(String login, String password) throws EntityExistsException {
-        em.getTransaction().begin();
         try {
                 Admin admin = Admin.builder()
                         .withLogin(login)
                         .withPassword(password)
-                        .withBalance(new BigDecimal("0.00"))
+                        .withBalance(BigDecimal.ZERO)
                         .build();
 
                 em.persist(admin);
-                em.getTransaction().commit();
-
                 return admin;
         } catch (Throwable t) {
             em.getTransaction().rollback();
@@ -84,8 +79,35 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
+    public void updateInformationForAdmin(Admin admin, String firstName, String lastName, String email) {
+        String trimmedFirstName = firstName.trim();
+        String trimmedLastName = lastName.trim();
+        String trimmedEmail = email.trim();
+
+        admin = Admin.mutator(admin)
+                .withFirstName(trimmedFirstName)
+                .withLastName(trimmedLastName)
+                .withEmail(trimmedEmail)
+                .mutate();
+        em.persist(admin);
+    }
+
+    @Override
+    public void updateInformationForClient(ClientImpl client, String firstName, String lastName, String email) {
+        String trimmedFirstName = firstName.trim();
+        String trimmedLastName = lastName.trim();
+        String trimmedEmail = email.trim();
+
+        client = ClientImpl.mutator(client)
+                .withFirstName(trimmedFirstName)
+                .withLastName(trimmedLastName)
+                .withEmail(trimmedEmail)
+                .mutate();
+        em.persist(client);
+    }
+
+    @Override
     public void deleteUserByLogin(String login) throws EntityExistsException {
-        em.getTransaction().begin();
         try {
             if (findClient(login) != null) {
                 em.remove(findClient(login));
@@ -93,7 +115,6 @@ public class UserDAOImpl implements UserDAO{
             else if(findAdmin((login)) != null) {
                 em.remove(findAdmin(login));
             }
-            em.getTransaction().commit();
         } catch (Throwable t) {
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
@@ -106,7 +127,7 @@ public class UserDAOImpl implements UserDAO{
             ClientImpl clientForEmitMoneyOperations = findClient(ClientImpl.ClientForEmitMoneyOperations);
             if (clientForEmitMoneyOperations == null) {
                 clientForEmitMoneyOperations = createClient(ClientImpl.ClientForEmitMoneyOperations,
-                        "null");
+                        "4012659172");
             }
             return clientForEmitMoneyOperations;
         } catch (Throwable t) {
@@ -132,9 +153,7 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public User checkPassword(User user, String password) {
-        em.getTransaction().begin();
         if (!user.getPassword().equals(password)) throw new IllegalArgumentException("Incorrect password");
-        em.getTransaction().commit();
         return user;
     }
 
