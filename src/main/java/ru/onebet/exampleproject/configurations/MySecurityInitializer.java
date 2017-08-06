@@ -1,4 +1,4 @@
-package ru.onebet.exampleproject;
+package ru.onebet.exampleproject.configurations;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

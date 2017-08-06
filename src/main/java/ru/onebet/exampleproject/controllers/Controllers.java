@@ -1,6 +1,7 @@
 package ru.onebet.exampleproject.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -48,36 +49,6 @@ public class Controllers {
         return "free/home-page";
     }
 
-
-    @PostMapping("/create-user")
-    public String createUser(@RequestParam String login,
-                             @RequestParam String enteredPassword,
-                             @RequestParam String repeatedPassword,
-                             ModelMap model) {
-        if (daoUser.findClient(login) != null) return "withoutrole/username-already-used";
-        else if (daoUser.findAdmin(login) != null) return "withoutrole/username-already-used";
-        else {
-            if (!enteredPassword.equals(repeatedPassword)) return "withoutrole/incorrect-password";
-            String hashedPassword = passwordEncoder.encode(enteredPassword);
-
-            ClientImpl client = daoUser.createClient(login, hashedPassword);
-
-            model.put("login", client.getLogin());
-
-            return "free/user-successfully-created";
-        }
-    }
-
-    @GetMapping("/signin")
-    public String login() {
-        return "withoutrole/login";
-    }
-
-    @PostMapping("/logout")
-    public String logout() {
-        return "withoutrole/login";
-    }
-
     @GetMapping("/events")
     public String events(ModelMap model) {
         EventsDTO bean = new EventsDTO();
@@ -89,6 +60,7 @@ public class Controllers {
     }
 
     @GetMapping("/users")
+    @Secured("ADMIN")
     public String users(ModelMap model) {
         UserListDTO bean = new UserListDTO();
 
@@ -97,11 +69,11 @@ public class Controllers {
 
         model.put("users", bean);
 
-        return "foradmin/users";
+        return "admin/users";
     }
 
-    @PostMapping("/user-successfully-created")
-    public void informationSuccessfullyUpdated(@RequestParam String firstName,
+    @PostMapping("/update-user-informations")
+    public String updateUserInformations(@RequestParam String firstName,
                                                @RequestParam String lastName,
                                                @RequestParam String email) {
         Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -111,13 +83,15 @@ public class Controllers {
             em.getTransaction().begin();
             daoUser.updateInformationForClient(client, firstName, lastName, email);
             em.getTransaction().commit();
+
+            return "/user/private-room";
         } else {
             Admin admin = (Admin) o;
 
             em.getTransaction().begin();
             daoUser.updateInformationForAdmin(admin, firstName, lastName, email);
             em.getTransaction().commit();
+            return "/user/private-room";
         }
     }
 }
-//jpa transaction manager

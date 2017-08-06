@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,7 +10,7 @@
     <h1>Please enter other information</h1>
     <p>Please, fill in the fields below</p>
 
-    <form method="post" action="/">
+    <form:form method="post" action="/update-user-informations">
 
     <p>
         <label for="firstName">Firstname:</label>
@@ -24,14 +26,15 @@
         <label for="email">Email:</label>
         <input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" id="email">
     </p>
-    </form>
+        <security:csrfInput/>
+    </form:form>
 
-    <form method="get" action="/private-room">
+    <form:form method="get" action="/private-room">
         <input type="submit" value="Enter in private room"/>
-    </form>
+    </form:form>
 
-    <p>
-        <a href="../free/home-page.jsp">Return to the main page</a>
-    </p>
+    <form:form method="get" action="/tohomepage">
+        <input type="submit" value="Return to homepage"/>
+    </form:form>
 </body>
 </html>

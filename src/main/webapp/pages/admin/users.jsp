@@ -15,7 +15,7 @@
 
                 <c:forEach var="client" items="${users.clients}">
                     <c:if test="${client.email == null}">
-                        <td> </td>>
+                        <td>Not indicated</td>>
                     </c:if>
                     <c:if test="${client.email != null}">
                         <td>${client.email}</td>

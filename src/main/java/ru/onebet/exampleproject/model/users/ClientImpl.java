@@ -54,6 +54,9 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
+    public ClientImpl() {
+    }
+
     public int getId() {
         return id;
     }

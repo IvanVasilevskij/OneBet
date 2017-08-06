@@ -50,6 +50,9 @@ public class Admin implements User{
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
+    public Admin() {
+    }
+
     public int getId() {
         return id;
     }

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -21,7 +22,7 @@ import javax.persistence.Persistence;
 
 @Configuration
 @ComponentScan(basePackages = "ru.onebet.exampleproject")
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class})
 @EnableWebMvc
 public class ProductionConfiguration extends WebMvcConfigurerAdapter{
 
@@ -57,6 +58,11 @@ public class ProductionConfiguration extends WebMvcConfigurerAdapter{
         resolver.setViewClass(JstlView.class);
 
         return resolver;
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @PostConstruct
