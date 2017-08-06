@@ -19,10 +19,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         http.csrf()
                 .and()
                     .authorizeRequests()
-                        .antMatchers("/", "/css/**", "/img/**", "/fonts/**", "/free/**").permitAll()
-                        .antMatchers("/pages/admin/**", "/pages/user/**").hasRole("ADMIN")
-                        .antMatchers("/pages/client/**", "/pages/user/**").hasRole("CLIENT")
-                        .antMatchers("/pages/withoutrole/**", "/signin", "/login").access("isAnonymous()")
+                        .antMatchers("/").permitAll()
+
+                        .antMatchers("/users",
+                                "/goprivatroom",
+                                "/goupdateinformation",
+                                "/add-other-admin-inf").hasRole("ADMIN")
+
+                        .antMatchers("/goprivatroom",
+                                "/goupdateinformation",
+                                "/update-client-informations").hasRole("CLIENT")
+
+                        .antMatchers("/create-user",
+                                "/signin",
+                                "/login",
+                                "/tologinpage",
+                                "/tocreatepage").anonymous()
+
+                        .anyRequest().permitAll()
                 .and()
                     .formLogin()
                         .loginPage("/signin")
@@ -33,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .and()
                     .logout()
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                         .deleteCookies("JSESSIONID");
     }
 

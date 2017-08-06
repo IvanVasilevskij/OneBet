@@ -7,8 +7,8 @@
 <body>
 <h1>User created with login:${requestScope["login"]}</h1>
 
-    <form:form method="get" action="/tohomepage">
+    <form method="get" action="/tohomepage">
         <input type="submit" value="Return to homepage"/>
-    </form:form>
+    </form>
 </body>
 </html>

@@ -10,7 +10,7 @@
     <h1>Please enter other information</h1>
     <p>Please, fill in the fields below</p>
 
-    <form:form method="post" action="/update-user-informations">
+    <form method="post" action="/update-client-informations">
 
     <p>
         <label for="firstName">Firstname:</label>
@@ -26,15 +26,16 @@
         <label for="email">Email:</label>
         <input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" id="email">
     </p>
+        <input class="login-submit" type="submit" value="Update"/><br/>
         <security:csrfInput/>
-    </form:form>
+    </form>
 
-    <form:form method="get" action="/private-room">
-        <input type="submit" value="Enter in private room"/>
-    </form:form>
+    <form method="get" action="/goprivatroom">
+        <input type="submit" value="Return to private room"/>
+    </form>
 
-    <form:form method="get" action="/tohomepage">
+    <form method="get" action="/tohomepage">
         <input type="submit" value="Return to homepage"/>
-    </form:form>
+    </form>
 </body>
 </html>

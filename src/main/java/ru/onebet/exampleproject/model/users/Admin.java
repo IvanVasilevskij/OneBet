@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "ADMINS")
 public class Admin implements User{
     public static final String FindByLogin = "Admin.findByLogin";
-    public static final String RootAdminName = "Vasilevskij.Ivan.admin";
+    public static final String RootAdminName = "root";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

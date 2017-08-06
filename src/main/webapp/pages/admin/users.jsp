@@ -13,14 +13,13 @@
             <tr>
             <td>${client.login}</td>
 
-                <c:forEach var="client" items="${users.clients}">
-                    <c:if test="${client.email == null}">
-                        <td>Not indicated</td>>
-                    </c:if>
-                    <c:if test="${client.email != null}">
-                        <td>${client.email}</td>
-                    </c:if>
-                </c:forEach>
+                <c:if test="${client.email == null}">
+                    <td>Not indicated</td>>
+                </c:if>
+                <c:if test="${client.email != null}">
+                    <td>${client.email}</td>
+                </c:if>
+
             </tr>
         </c:forEach>
     </table>
@@ -31,14 +30,12 @@
         <tr>
             <td>${admin.login}</td>
 
-            <c:forEach var="admin" items="${users.admins}">
-                <c:if test="${admin.email == null}">
-                    <td> </td>>
-                </c:if>
-                <c:if test="${admin.email != null}">
-                    <td>${admin.email}</td>
-                </c:if>
-            </c:forEach>
+            <c:if test="${admin.email == null}">
+                <td>Not indicated</td>>
+            </c:if>
+            <c:if test="${admin.email != null}">
+                <td>${admin.email}</td>
+            </c:if>
         </tr>
         </c:forEach>
     </table>

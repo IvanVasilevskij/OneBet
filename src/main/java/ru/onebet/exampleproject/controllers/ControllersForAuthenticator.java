@@ -43,11 +43,7 @@ public class ControllersForAuthenticator {
 
     @PostMapping("/signin")
     public String login() {
-        return "withoutrole/login";
-    }
-
-    @PostMapping("/logout")
-    public String logout() {
         return "free/home-page";
     }
+
 }

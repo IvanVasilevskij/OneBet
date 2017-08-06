@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "CLIENTS")
 public class ClientImpl implements Client<MakedBetsOfDota>{
     public static final String FindByLogin = "ClientImpl.findByLogin";
-    public static final String ClientForEmitMoneyOperations = "Vasilevskij.Ivan.client";
+    public static final String ClientForEmitMoneyOperations = "client";
 
 
     @Id

@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.dao.userdao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
@@ -17,10 +18,12 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO{
 
     private final EntityManager em;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserDAOImpl(EntityManager em) {
+    public UserDAOImpl(EntityManager em, BCryptPasswordEncoder passwordEncoder) {
         this.em = em;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -127,7 +130,7 @@ public class UserDAOImpl implements UserDAO{
             ClientImpl clientForEmitMoneyOperations = findClient(ClientImpl.ClientForEmitMoneyOperations);
             if (clientForEmitMoneyOperations == null) {
                 clientForEmitMoneyOperations = createClient(ClientImpl.ClientForEmitMoneyOperations,
-                        "4012659172");
+                        passwordEncoder.encode("4012659172"));
             }
             return clientForEmitMoneyOperations;
         } catch (Throwable t) {
@@ -142,7 +145,7 @@ public class UserDAOImpl implements UserDAO{
             Admin root = findAdmin(Admin.RootAdminName);
             if (root == null) {
                 root =  createAdmin(Admin.RootAdminName,
-                        "4012659172");
+                        passwordEncoder.encode("4012659172"));
             }
             return root;
         } catch (Throwable t) {
