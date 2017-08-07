@@ -10,21 +10,16 @@
 </head>
 <body>
         <p>Login: ${user.client.login}</p>
-
-
-            <p>Firstname: ${user.client.firstName}</p>
-
-            <p>Lasname: ${user.client.lastName}</p>
-
-            <p>Email: ${user.client.email}</p>
-
+        <p>Firstname: ${user.client.firstName}</p>
+        <p>Lasname: ${user.client.lastName}</p>
+        <p>Email: ${user.client.email}</p>
         <p>Balance: ${user.client.balance}</p>
 
     <c:forEach var="bet" items="${user.client.bets}">
         <p>Bets: ${bet}</p>
     </c:forEach>
 
-    <form method="get" action="/goupdateinformation">
+    <form method="get" action="/toUpdateClientDetails">
         <input type="submit" value="Update other information"/>
     </form>
 

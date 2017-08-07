@@ -22,19 +22,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                         .antMatchers("/").permitAll()
 
                         .antMatchers("/users",
-                                "/goprivatroom",
-                                "/goupdateinformation",
-                                "/add-other-admin-inf").hasRole("ADMIN")
+                                "/updateAdminDetails",
+                                "/toUpdateAdminDetails",
+                                "/enterAdminPrivateRoom").hasRole("ADMIN")
+                        .antMatchers("/createNewAdmin",
+                                "/toCreateNewAdmin").hasRole("ADMINROOT")
+                        .antMatchers("/toCreateClientPage",
+                                "/createClient",
+                                "/updateClientDetails",
+                                "/toUpdateClientDetails",
+                                "/enterClientPrivateRoom").hasRole("CLIENT")
 
-                        .antMatchers("/goprivatroom",
-                                "/goupdateinformation",
-                                "/update-client-informations").hasRole("CLIENT")
-
-                        .antMatchers("/create-user",
-                                "/signin",
-                                "/login",
-                                "/tologinpage",
-                                "/tocreatepage").anonymous()
+                        .antMatchers("/toLoginPage",
+                                "/signin").anonymous()
 
                         .anyRequest().permitAll()
                 .and()

@@ -12,14 +12,12 @@
         <c:forEach var="client" items="${users.clients}">
             <tr>
             <td>${client.login}</td>
-
                 <c:if test="${client.email == null}">
                     <td>Not indicated</td>>
                 </c:if>
                 <c:if test="${client.email != null}">
                     <td>${client.email}</td>
                 </c:if>
-
             </tr>
         </c:forEach>
     </table>
@@ -29,7 +27,6 @@
         <c:forEach var="admin" items="${users.admins}">
         <tr>
             <td>${admin.login}</td>
-
             <c:if test="${admin.email == null}">
                 <td>Not indicated</td>>
             </c:if>
@@ -39,6 +36,5 @@
         </tr>
         </c:forEach>
     </table>
-
 </body>
 </html>

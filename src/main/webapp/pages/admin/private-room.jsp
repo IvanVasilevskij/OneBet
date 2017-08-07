@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <jsp:useBean id="user" type="ru.onebet.exampleproject.dto.AdminDTO" scope="request" />
 
 <html>
@@ -10,35 +11,37 @@
 </head>
 <body>
         <p>Login: ${user.admin.login}</p>
-
-            <c:if test="${user.admin.firstName == null}">
-                <p>Firstname: Not indicated</p>
-            </c:if>
-            <c:if test="${user.admin.firstName != null}}">
-                <p>Firstname: ${user.admin.firstName}</p>
-            </c:if>
-
-
-            <c:if test="${user.admin.lastName == null}">
-                <p>Lastname: Not indicated</p>
-            </c:if>
-            <c:if test="${user.admin.lastName != null}}">
-                <p>Lasname: ${user.admin.lastName}</p>
-            </c:if>
-
-
-            <c:if test="${user.admin.email == null}">
-                <p>Email: Not indicated</p>
-            </c:if>
-            <c:if test="${user.admin.email != null}}">
-                <p>Email: ${user.admin.email}</p>
-            </c:if>
-
+        <p>Firstname: ${user.admin.firstName}</p>
+        <p>Lasname: ${user.admin.lastName}</p>
+        <p>Email: ${user.admin.email}</p>
         <p>Balance: ${user.admin.balance}</p>
 
-    <form method="get" action="/goupdateinformation">
-        <input type="submit" value="Update other information"/>
-    </form>
+        <form method="get" action="/toUpdateAdminDetails">
+            <input type="submit" value="Update other information"/>
+        </form>
+
+        <form method="get" action="/goCreateNewDotaTeam">
+            <input type="submit" value="Create a new team"/>
+        </form>
+
+        <form method="post" action="/goUpdateDotaTeam">
+            <label for="teamNameForUpdate">Teamname:</label>
+            <input required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
+            <input type="submit" value="Update a team"/>
+            <security:csrfInput/>
+        </form>
+
+        <form method="get" action="/toHomePage">
+            <input type="submit" value="Return to homepage"/>
+        </form>
+
+        <form method="get" action="/toAllCreatedDotaTeamPage">
+            <input type="submit" value="See all created Dota team"/>
+        </form>
+
+        <form method="get" action="/toCreateNewAdmin">
+            <input type="submit" value="Create new admin"/>
+        </form>
 
 </body>
 </html>

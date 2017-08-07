@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +29,9 @@ public class ProductionConfiguration extends WebMvcConfigurerAdapter{
 
     @Autowired
     private UserDAOImpl daoUser;
+
+    @Autowired
+    private DotaTeamDAO daoDotaTeam;
 
     @Autowired
     private EntityManager em;

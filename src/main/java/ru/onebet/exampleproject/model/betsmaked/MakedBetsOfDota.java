@@ -18,16 +18,19 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
 
     @Column(name = "DATE_OF_BET")
     @NotNull
-    private final LocalDateTime date;
+    private LocalDateTime date;
 
     @OneToOne
-    private final DotaTeam bettingTeam;
+    private DotaTeam bettingTeam;
 
     @ManyToOne(optional = false)
-    private final ClientImpl client;
+    private ClientImpl client;
 
     @ManyToOne(optional = false)
-    private final DotaEvent event;
+    private DotaEvent event;
+
+    public MakedBetsOfDota() {
+    }
 
     @Override
     public int getId() {

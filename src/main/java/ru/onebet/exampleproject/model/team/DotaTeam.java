@@ -40,6 +40,9 @@ public class DotaTeam implements Team {
     @NotNull
     private String roleSupFive = "unknown";
 
+    public DotaTeam() {
+    }
+
     @Override
     public int getId() {
         return id;
@@ -78,8 +81,8 @@ public class DotaTeam implements Team {
         return new Builder();
     }
 
-    public static Mutator Mutator(DotaTeam team) {
-        return Mutator(team);
+    public static Mutator mutator(DotaTeam team) {
+        return new Mutator(team);
     }
 
     public static class Builder {
@@ -117,7 +120,7 @@ public class DotaTeam implements Team {
             return this;
         }
 
-        public Mutator roleCarry(String roleCarry) {
+        public Mutator withRoleCarry(String roleCarry) {
             this.team.roleCarry = roleCarry;
             return this;
         }
@@ -140,5 +143,17 @@ public class DotaTeam implements Team {
         public DotaTeam mutate() {
             return team;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "DotaTeam{" +
+                "teamName='" + teamName + '\'' +
+                ", roleMid='" + roleMid + '\'' +
+                ", roleCarry='" + roleCarry + '\'' +
+                ", roleHard='" + roleHard + '\'' +
+                ", roleSupFour='" + roleSupFour + '\'' +
+                ", roleSupFive='" + roleSupFive + '\'' +
+                '}';
     }
 }

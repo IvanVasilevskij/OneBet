@@ -88,9 +88,9 @@ public class UserDAOImpl implements UserDAO{
         String trimmedEmail = email.trim();
 
         admin = Admin.mutator(admin)
-                .withFirstName(trimmedFirstName)
-                .withLastName(trimmedLastName)
-                .withEmail(trimmedEmail)
+                .withFirstName(trimmedFirstName.equals("") ? admin.getFirstName() : trimmedFirstName)
+                .withLastName(trimmedLastName.equals("") ? admin.getLastName() : trimmedLastName)
+                .withEmail(trimmedEmail.equals("") ? admin.getEmail() : trimmedEmail)
                 .mutate();
         em.persist(admin);
     }
@@ -102,9 +102,9 @@ public class UserDAOImpl implements UserDAO{
         String trimmedEmail = email.trim();
 
         client = ClientImpl.mutator(client)
-                .withFirstName(trimmedFirstName)
-                .withLastName(trimmedLastName)
-                .withEmail(trimmedEmail)
+                .withFirstName(trimmedFirstName.equals("") ? client.getFirstName() : trimmedFirstName)
+                .withLastName(trimmedLastName.equals("") ? client.getLastName() : trimmedLastName)
+                .withEmail(trimmedEmail.equals("") ? client.getEmail() : trimmedEmail)
                 .mutate();
         em.persist(client);
     }

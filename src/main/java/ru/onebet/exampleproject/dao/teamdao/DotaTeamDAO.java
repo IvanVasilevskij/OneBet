@@ -3,6 +3,7 @@ package ru.onebet.exampleproject.dao.teamdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityExistsException;
@@ -61,5 +62,22 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
             em.getTransaction().rollback();
             throw new IllegalStateException(t);
         }
+    }
+
+    public DotaTeam updateDOtaTeam(DotaTeam teamF,
+                               String roleMid,
+                               String roleCarry,
+                               String roleHard,
+                               String roleSupFour,
+                               String roleSupFive) {
+        teamF = DotaTeam.mutator(teamF)
+                .withRoleMid(roleMid.equals("") ? teamF.getRoleMid() : roleMid)
+                .withRoleCarry(roleCarry.equals("") ? teamF.getRoleCarry() : roleCarry)
+                .withRoleHard(roleHard.equals("") ? teamF.getRoleHard() : roleHard)
+                .withRoleSupFour(roleSupFour.equals("") ? teamF.getRoleSupFour() : roleSupFour)
+                .withRoleSupFive(roleSupFive.equals("") ? teamF.getRoleSupFive() : roleSupFive)
+                .mutate();
+        em.persist(teamF);
+        return teamF;
     }
 }

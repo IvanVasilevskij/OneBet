@@ -13,5 +13,4 @@ public interface TeamDAO <T extends Team> {
     void deleteTeamByTeamName(String teamName);
 
     List<T> getAllTeams();
-
-    }
+}

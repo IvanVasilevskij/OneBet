@@ -17,22 +17,25 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
     private int id;
     @Column(name = "DATE_OF_BET")
     @NotNull
-    private final LocalDateTime date;
+    private  LocalDateTime date;
     @ManyToOne(optional = false)
     @NotNull
-    private final DotaTeam teamFirst;
+    private DotaTeam teamFirst;
     @ManyToOne(optional = false)
     @NotNull
-    private final DotaTeam teamSecond;
+    private  DotaTeam teamSecond;
     @Column(name = "PERSENT_TO_COMAND_ONE")
     @NotNull
-    private final double percentForTeamFirst;
+    private double percentForTeamFirst;
     @Column(name = "PERSENT_TO_DROW")
     @NotNull
-    private final double persentForDrow;
+    private double persentForDrow;
     @Column(name = "PERSENT_TO_COMAND_TWO")
     @NotNull
-    private final double percentForTeamSecond;
+    private double percentForTeamSecond;
+
+    public DotaEvent() {
+    }
 
     @Override
     public int getId() {

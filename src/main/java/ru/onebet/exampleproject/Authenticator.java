@@ -23,6 +23,8 @@ public class Authenticator implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             if (daoUser.findClient(username) != null) {
                 return new User(username, (daoUser.findClient(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_CLIENT")));
+            } else if (daoUser.findAdmin(username).getLogin().equals("root")) {
+                return new User(username, (daoUser.findAdmin(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMINROOT")));
             } else if (daoUser.findAdmin(username) != null) {
                 return new User(username, (daoUser.findAdmin(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
             }

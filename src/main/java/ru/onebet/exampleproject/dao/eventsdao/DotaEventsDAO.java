@@ -23,7 +23,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
 
     @Override
-    @Transactional
     public DotaEvent createEvent(
             DotaTeam teamFirst,
             DotaTeam teamSecond,
@@ -46,7 +45,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
-    @Transactional
     public List<DotaEvent> allEvents() {
         try {
             return em.createQuery("from DotaEvent", DotaEvent.class).getResultList();
@@ -57,7 +55,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
-    @Transactional
     public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
         try {
             return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
@@ -77,7 +74,6 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
-    @Transactional
     public List<DotaEvent> chooseAllEventInEnteredDate(LocalDateTime date) {
         try {
             LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
