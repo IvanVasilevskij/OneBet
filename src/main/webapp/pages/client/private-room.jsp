@@ -19,9 +19,13 @@
         <p>Bets: ${bet}</p>
     </c:forEach>
 
-    <form method="get" action="/toUpdateClientDetails">
-        <input type="submit" value="Update other information"/>
-    </form>
+        <form method="get" action="/toUpdateClientDetails">
+            <input type="submit" value="Update other information"/>
+        </form>
+        
+        <form method="get" action="/toHomePage">
+            <input type="submit" value="Return to homepage"/>
+        </form>
 
 </body>
 </html>

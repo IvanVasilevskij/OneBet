@@ -32,16 +32,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                                 "/emitMoney",
                                 "/toEmitMoneyPage").hasRole("ADMINROOT")
 
-                        .antMatchers("/toCreateClientPage",
-                                "/createClient",
-                                "/updateClientDetails",
+                        .antMatchers("/updateClientDetails",
                                 "/toUpdateClientDetails",
                                 "/enterClientPrivateRoom").hasRole("CLIENT")
 
-                        .antMatchers("/toLoginPage",
+                        .antMatchers("/toCreateClientPage",
+                                "/createClient",
+                                "/toLoginPage",
                                 "/signin").anonymous()
 
                         .anyRequest().permitAll()
+
+                .and().exceptionHandling().accessDeniedPage("/403")
+
                 .and()
                     .formLogin()
                         .loginPage("/signin")
