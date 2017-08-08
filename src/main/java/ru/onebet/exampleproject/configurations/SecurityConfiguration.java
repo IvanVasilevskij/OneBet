@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.onebet.exampleproject.Authenticator;
+import ru.onebet.exampleproject.controllers.AdminManipulationControllers;
 
 
 @Configuration
@@ -24,9 +25,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                         .antMatchers("/users",
                                 "/updateAdminDetails",
                                 "/toUpdateAdminDetails",
-                                "/enterAdminPrivateRoom").hasRole("ADMIN")
+                                "/enterAdminPrivateRoom").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_ADMINROOT')")
+
                         .antMatchers("/createNewAdmin",
-                                "/toCreateNewAdmin").hasRole("ADMINROOT")
+                                "/toCreateNewAdmin",
+                                "/emitMoney",
+                                "/toEmitMoneyPage").hasRole("ADMINROOT")
+
                         .antMatchers("/toCreateClientPage",
                                 "/createClient",
                                 "/updateClientDetails",

@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <jsp:useBean id="user" type="ru.onebet.exampleproject.dto.AdminDTO" scope="request" />
+<jsp:useBean id="root" type="ru.onebet.exampleproject.dto.AdminDTO" scope="request" />
 
 <html>
 <head>
@@ -15,6 +16,7 @@
         <p>Lasname: ${user.admin.lastName}</p>
         <p>Email: ${user.admin.email}</p>
         <p>Balance: ${user.admin.balance}</p>
+        <p>Root balance: ${root.admin.balance}</p>
 
         <form method="get" action="/toUpdateAdminDetails">
             <input type="submit" value="Update other information"/>
@@ -41,6 +43,10 @@
 
         <form method="get" action="/toCreateNewAdmin">
             <input type="submit" value="Create new admin"/>
+        </form>
+
+        <form method="get" action="/toEmitMoneyPage">
+            <input type="submit" value="Emit money"/>
         </form>
 
 </body>

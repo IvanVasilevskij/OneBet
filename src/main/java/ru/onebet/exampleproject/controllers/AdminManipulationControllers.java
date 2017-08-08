@@ -9,26 +9,32 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.AdminDTO;
 import ru.onebet.exampleproject.dto.UserListDTO;
 import ru.onebet.exampleproject.model.users.Admin;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 
 @Controller
 public class AdminManipulationControllers {
     private final UserDAOImpl daoUser;
     private final EntityManager em;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final TransactionDAO daoTransaction;
 
     @Autowired
     public AdminManipulationControllers(EntityManager em,
-                                         UserDAOImpl daoUser,
-                                         BCryptPasswordEncoder passwordEncoder) {
+                                        UserDAOImpl daoUser,
+                                        BCryptPasswordEncoder passwordEncoder,
+                                        TransactionDAO daoTransaction) {
         this.em = em;
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
+        this.daoTransaction = daoTransaction;
     }
 
     @GetMapping("/users")
@@ -60,6 +66,10 @@ public class AdminManipulationControllers {
         bean.setAdmin(admin);
         model.put("user", bean);
 
+        AdminDTO beanSecond = new AdminDTO();
+        beanSecond.setAdmin(daoUser.findAdmin("root"));
+        model.put("root", beanSecond);
+
         return "admin/private-room";
     }
 
@@ -81,6 +91,10 @@ public class AdminManipulationControllers {
         AdminDTO bean = new AdminDTO();
         bean.setAdmin(admin);
         model.put("user", bean);
+
+        AdminDTO beanSecond = new AdminDTO();
+        beanSecond.setAdmin(daoUser.findAdmin("root"));
+        model.put("root", beanSecond);
         return "admin/private-room";
     }
 
@@ -103,5 +117,35 @@ public class AdminManipulationControllers {
 
             return "free/user-successfully-created";
         }
+    }
+
+    @GetMapping("/toEmitMoneyPage")
+    public String toEmitMoneyPage() {
+        return "/admin/emit-money";
+    }
+
+    @PostMapping("/emitMoney")
+    public String emitMoney(@RequestParam String emit,
+                            ModelMap model) {
+
+        ClientImpl client = daoUser.findClient("client");
+        Admin root = daoUser.findAdmin("root");
+
+        em.getTransaction().begin();
+        daoTransaction.emitMoney(root, client, new BigDecimal(emit));
+        em.getTransaction().commit();
+
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Admin admin = daoUser.findAdmin(username);
+
+        AdminDTO bean = new AdminDTO();
+        bean.setAdmin(admin);
+        model.put("user", bean);
+
+        AdminDTO beanSecond = new AdminDTO();
+        beanSecond.setAdmin(daoUser.findAdmin("root"));
+        model.put("root", beanSecond);
+
+        return "admin/private-room";
     }
 }

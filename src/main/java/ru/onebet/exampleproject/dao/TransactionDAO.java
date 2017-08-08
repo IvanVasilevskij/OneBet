@@ -22,7 +22,7 @@ public class TransactionDAO {
         this.em = em;
     }
 
-    void emitMoney(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
+    public void emitMoney(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
         try {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())

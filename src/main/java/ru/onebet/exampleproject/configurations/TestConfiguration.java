@@ -2,6 +2,9 @@ package ru.onebet.exampleproject.configurations;
 
 import org.springframework.context.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -9,8 +12,10 @@ import javax.persistence.Persistence;
 
 @Configuration
 @ComponentScan(basePackages = "ru.onebet.exampleproject",
-excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {ProductionConfiguration.class, SecurityConfiguration.class})})
-public class TestConfiguration {
+excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {ProductionConfiguration.class})})
+@EnableWebMvc
+@EnableTransactionManagement
+public class TestConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public EntityManagerFactory getEmf() {
@@ -26,6 +31,5 @@ public class TestConfiguration {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }
