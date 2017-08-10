@@ -4,12 +4,15 @@
 <html>
 <head>
     <title>The event's that are occuring or have occured on our website!</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
     <p>List of all events:</p>
     <c:forEach var="event" items="${events.events}">
         <p>Event: ${event}</p>
     </c:forEach>
+    <form method="get" action="<c:url value="/to-home-page"/>">
+        <input class="takeClient" type="submit" value="Return to homepage"/>
+    </form>
 </body>
 </html>

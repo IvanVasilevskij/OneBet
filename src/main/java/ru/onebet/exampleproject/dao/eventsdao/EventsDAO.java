@@ -18,7 +18,7 @@ public interface EventsDAO<T extends Team,E extends EventBetweenCoupleTeam> {
 
     List<E> allEvents();
 
-    List<E> allEventsWithThisTeam(T teamName);
+    List<E> allEventsWithThisTeam(String teamName);
 
     void checkThatThisEventHaveTheTeam (E event, T team);
 

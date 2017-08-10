@@ -9,7 +9,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "BETS")
+@NamedQueries({
+        @NamedQuery(
+                name = DotaEvent.FindEventsByTeamName,
+                query = "select u from DotaEvent u where u.teamFirst.teamName = :teamName or u.teamSecond.teamName = :teamName"
+        ),
+        @NamedQuery(
+                name = DotaEvent.FindEventsByEnteredDate,
+                query = "select u from DotaEvent u where u.date > :dateS and u.date < :dateE"
+        )
+})
 public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
+    public static final String FindEventsByTeamName = "DotaTeam.FindEventsByTeamName";
+    public static final String FindEventsByEnteredDate = "DotaTeam.FindEventsByEnteredDate";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

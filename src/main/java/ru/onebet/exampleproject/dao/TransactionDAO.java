@@ -32,13 +32,13 @@ public class TransactionDAO {
                     .build();
 
             em.persist(t);
-            em.persist(clientForEmitMoneyOperation);
             em.refresh(admin);
 
             admin = Admin.mutator(admin)
                     .withBalance(admin.getBalance().add(amount))
                     .mutate();
             em.persist(admin);
+
 
         } catch (Throwable t) {
             em.getTransaction().rollback();

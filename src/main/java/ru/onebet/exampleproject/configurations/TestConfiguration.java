@@ -1,7 +1,9 @@
 package ru.onebet.exampleproject.configurations;
 
 import org.springframework.context.annotation.*;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -32,4 +34,8 @@ public class TestConfiguration extends WebMvcConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public PlatformTransactionManager tx(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
 }

@@ -1,15 +1,16 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="team" type="ru.onebet.exampleproject.dto.DotaTeamDTO" scope="request" />
 
 <html>
 <head>
     <title>Please, fill in the fields below</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 
 </head>
 <body>
-    <form method="post" action="/updateDotaTeamInformation">
+    <form method="post" action="<c:url value="/updateDotaTeamInformation"/>">
             <label>Teamname: ${team.team.teamName}</label>
         <input hidden type="text" value="${team.team.teamName}" name="teamName" id="teamName">
 
@@ -37,12 +38,12 @@
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="/enterAdminPrivateRoom">
-        <input type="submit" value="Return to private room"/>
+    <form method="get" action="<c:url value="/admin/private-room"/>">
+        <input class="takeAdmin" type="submit" value="Return to private room"/>
     </form>
 
-    <form method="get" action="/toHomePage">
-        <input type="submit" value="Return to homepage"/>
+    <form method="get" action="<c:url value="/to-home-page"/>">
+        <input class="takeAdmin" type="submit" value="Return to homepage"/>
     </form>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>All created users</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
     <table border="1">
@@ -36,5 +36,8 @@
         </tr>
         </c:forEach>
     </table>
+    <form method="get" action="<c:url value="/to-home-page"/>">
+        <input class="takeClient" type="submit" value="Return to homepage"/>
+    </form>
 </body>
 </html>

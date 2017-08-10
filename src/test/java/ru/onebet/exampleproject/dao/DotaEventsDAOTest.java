@@ -4,9 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.eventsdao.DotaEventsDAO;
 import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
@@ -24,6 +26,8 @@ import static org.junit.Assert.assertSame;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@WebAppConfiguration
+@EnableWebSecurity
 public class DotaEventsDAOTest {
 
     @Autowired
@@ -133,6 +137,16 @@ public class DotaEventsDAOTest {
                 12.8,
                 21.9);
         em.getTransaction().commit();
+
+    // то, данный кусок кода делает проверку testAllEventsWithThisTeam / выборку всех обытий с введенной командой
+
+        em.getTransaction().begin();
+        List<DotaEvent> eventsWithTeam = daoEventDota.allEventsWithThisTeam("VP");
+        em.getTransaction().commit();
+        assertEquals(1, eventsWithTeam.size());
+        assertEquals(eventsWithTeam.get(0), eventFirst);
+
+    // конец проверки, см. выше
 
         LocalDateTime timeOfTheSecondEvent = sCheck.tryToParseDateFromString("25.06.2015 16:30");
 

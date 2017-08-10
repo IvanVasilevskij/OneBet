@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>Private room</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
         <p>Login: ${user.client.login}</p>
@@ -19,12 +19,12 @@
         <p>Bets: ${bet}</p>
     </c:forEach>
 
-        <form method="get" action="/toUpdateClientDetails">
-            <input type="submit" value="Update other information"/>
+        <form method="get" action="<c:url value="/client/to-update-client-details-page"/>">
+            <input class="takeClient" type="submit" value="Update other information"/>
         </form>
         
-        <form method="get" action="/toHomePage">
-            <input type="submit" value="Return to homepage"/>
+        <form method="get" action="<c:url value="/to-home-page"/>">
+            <input class="takeClient" type="submit" value="Return to homepage"/>
         </form>
 
 </body>

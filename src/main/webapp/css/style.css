@@ -2,6 +2,27 @@ p {
     color: maroon;
 }
 
+.takeClient {
+    padding:5px 15px;
+    background: lightslategray;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 10px;
+    width: 300px;
+    height: 30px;
+}
+.takeAdmin {
+    padding:5px 15px;
+    background: lightgreen;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 10px;
+    width: 300px;
+    height: 30px;
+}
+
 th {
     color: maroon;
     width: 150px;
@@ -52,7 +73,6 @@ input[type = "text"], input[type = "password"] {
     margin-bottom: 25px;
     border-radius: 4px;
     padding-left: 40px;
-    /*padding-right: 40px;*/
 }
 .login-submit {
     padding: 13px 30px;

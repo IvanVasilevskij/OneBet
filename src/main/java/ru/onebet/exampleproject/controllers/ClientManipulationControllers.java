@@ -30,16 +30,16 @@ public class ClientManipulationControllers {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/toCreateClientPage")
+    @GetMapping("/anonymous/to-create-client-page")
     public String toCreateClientPage() {
         return "withoutrole/create-client";
     }
 
-    @PostMapping("/createClient")
+    @PostMapping("/anonymous/create-new-client")
     public String createClient(@RequestParam String login,
-                             @RequestParam String enteredPassword,
-                             @RequestParam String repeatedPassword,
-                             ModelMap model) {
+                               @RequestParam String enteredPassword,
+                               @RequestParam String repeatedPassword,
+                               ModelMap model) {
         if (daoUser.findClient(login) != null) return "withoutrole/username-already-used";
         else if (daoUser.findAdmin(login) != null) return "withoutrole/username-already-used";
         else {
@@ -56,11 +56,11 @@ public class ClientManipulationControllers {
         }
     }
 
-    @PostMapping("/updateClientDetails")
+    @PostMapping("/client/update-client-details")
     public String updateClientDetails(@RequestParam String firstName,
-                                           @RequestParam String lastName,
-                                           @RequestParam String email,
-                                           ModelMap model) {
+                                      @RequestParam String lastName,
+                                      @RequestParam String email,
+                                      ModelMap model) {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
         ClientImpl client = daoUser.findClient(username);
@@ -76,12 +76,12 @@ public class ClientManipulationControllers {
         return "client/private-room";
     }
 
-    @GetMapping("/toUpdateClientDetails")
+    @GetMapping("/client/to-update-client-details-page")
     public String toUpdateClientDetails() {
         return "client/update-client-details";
     }
 
-    @GetMapping("/enterClientPrivateRoom")
+    @GetMapping("/client/private-room")
     public String enterClientPrivateRoom(ModelMap model) {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         ClientImpl client = daoUser.findClient(username);
@@ -90,6 +90,5 @@ public class ClientManipulationControllers {
         bean.setClient(client);
         model.put("user", bean);
         return "client/private-room";
-
     }
 }

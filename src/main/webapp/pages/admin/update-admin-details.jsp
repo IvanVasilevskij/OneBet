@@ -5,14 +5,14 @@
 <html>
 <head>
     <title>Creating user</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 
 </head>
 <body>
     <h1>Please enter other information</h1>
     <p>Please, fill in the fields below</p>
 
-    <form method="post" action="/updateAdminDetails">
+    <form method="post" action="<c:url value="/admin/update-admin-details"/>">
     <p>
         <label for="firstName">Firstname:</label>
         <input type="text" name="firstName" id="firstName">
@@ -29,12 +29,12 @@
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="/goprivatroom">
-        <input type="submit" value="Return to private room"/>
+    <form method="get" action="<c:url value="/admin/private-room"/>">
+        <input class="takeAdmin" type="submit" value="Return to private room"/>
     </form>
 
-    <form method="get" action="/toHomePage">
-        <input type="submit" value="Return to homepage"/>
+    <form method="get" action="<c:url value="/to-home-page"/>">
+        <input class="takeAdmin" type="submit" value="Return to homepage"/>
     </form>
 </body>
 </html>

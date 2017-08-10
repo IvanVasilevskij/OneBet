@@ -6,8 +6,9 @@ import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,23 +47,24 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
     @Override
     public List<DotaEvent> allEvents() {
-        try {
             return em.createQuery("from DotaEvent", DotaEvent.class).getResultList();
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
+//    @Override
+//    public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
+//            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
+//                    .filter(c -> (c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team)))
+//                    .collect(Collectors.toList());
+//    }
+
     @Override
-    public List<DotaEvent> allEventsWithThisTeam(DotaTeam team) {
+    public List<DotaEvent> allEventsWithThisTeam(String teamName) {
         try {
-            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
-                    .filter(c -> (c.getTeamFirst().equals(team) || c.getTeamSecond().equals(team)))
-                    .collect(Collectors.toList());
+            return em.createNamedQuery(DotaEvent.FindEventsByTeamName, DotaEvent.class)
+                    .setParameter("teamName", teamName)
+                    .getResultList();
         } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
+            return null;
         }
     }
 
@@ -73,17 +75,23 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
         }
     }
 
+//    @Override
+//    public List<DotaEvent> chooseAllEventInEnteredDate(LocalDateTime date) {
+//            LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
+//            LocalDateTime endOfDayAtEnteredDate = date.withHour(23).withMinute(59);
+//            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
+//                    .filter(c -> (c.getDate().compareTo(startOfDayAtEnteredDate) >= 0 && c.getDate().compareTo(endOfDayAtEnteredDate) <= 0))
+//                    .collect(Collectors.toList());
+//    }
+
     @Override
     public List<DotaEvent> chooseAllEventInEnteredDate(LocalDateTime date) {
-        try {
-            LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
-            LocalDateTime endOfDayAtEnteredDate = date.withHour(23).withMinute(59);
-            return em.createQuery("from DotaEvent", DotaEvent.class).getResultList().stream()
-                    .filter(c -> (c.getDate().compareTo(startOfDayAtEnteredDate) >= 0 && c.getDate().compareTo(endOfDayAtEnteredDate) <= 0))
-                    .collect(Collectors.toList());
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
+        LocalDateTime startOfDayAtEnteredDate = date.withHour(0).withMinute(0);
+        LocalDateTime endOfDayAtEnteredDate = date.withDayOfMonth(date.getDayOfMonth()+1);
+
+        return em.createNamedQuery(DotaEvent.FindEventsByEnteredDate, DotaEvent.class)
+                .setParameter("dateS", startOfDayAtEnteredDate)
+                .setParameter("dateE", endOfDayAtEnteredDate)
+                .getResultList();
     }
 }

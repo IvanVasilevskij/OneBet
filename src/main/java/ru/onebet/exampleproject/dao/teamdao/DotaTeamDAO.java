@@ -8,12 +8,14 @@ import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
+@Transactional
 public class DotaTeamDAO implements TeamDAO <DotaTeam>{
 
+    @PersistenceContext
     private final EntityManager em;
 
     @Autowired
@@ -22,27 +24,24 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
     }
 
     public DotaTeam findTeamByTeamName(String teamName) {
-        try {
-            return em.createNamedQuery(DotaTeam.FindByLogin, DotaTeam.class)
+            return em.createNamedQuery(DotaTeam.FindByTeamName, DotaTeam.class)
                     .setParameter("teamName", teamName)
                     .getSingleResult();
-        } catch (NoResultException notFound) {
-            return null;
-        }
     }
 
     @Override
+    @Transactional
     public DotaTeam createTeam(String teamName) throws EntityExistsException {
-        try {
+//        try {
                 DotaTeam team = DotaTeam.Builder()
                         .withTeamName(teamName)
                         .build();
                 em.persist(team);
                 return team;
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
+//        } catch (Throwable t) {
+//            em.getTransaction().rollback();
+//            throw new IllegalStateException(t);
+//        }
     }
 
     public void deleteTeamByTeamName(String teamName) {
@@ -56,12 +55,7 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
 
     @Override
     public List<DotaTeam> getAllTeams() {
-        try {
             return em.createQuery("from DotaTeam", DotaTeam.class).getResultList();
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     public DotaTeam updateDOtaTeam(DotaTeam teamF,

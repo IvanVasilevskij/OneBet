@@ -22,28 +22,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                     .authorizeRequests()
                         .antMatchers("/").permitAll()
 
-                        .antMatchers("/users",
-                                "/updateAdminDetails",
-                                "/toUpdateAdminDetails",
-                                "/enterAdminPrivateRoom").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_ADMINROOT')")
+                        .antMatchers("/admin/*").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_ADMINROOT')")
 
-                        .antMatchers("/createNewAdmin",
-                                "/toCreateNewAdmin",
-                                "/emitMoney",
-                                "/toEmitMoneyPage").hasRole("ADMINROOT")
+                        .antMatchers("/admin-root/*").hasRole("ADMINROOT")
 
-                        .antMatchers("/updateClientDetails",
-                                "/toUpdateClientDetails",
-                                "/enterClientPrivateRoom").hasRole("CLIENT")
+                        .antMatchers("/client/*").hasRole("CLIENT")
 
-                        .antMatchers("/toCreateClientPage",
-                                "/createClient",
-                                "/toLoginPage",
-                                "/signin").anonymous()
+                        .antMatchers("/anonymous/*").anonymous()
 
                         .anyRequest().permitAll()
 
-                .and().exceptionHandling().accessDeniedPage("/403")
+                .and().exceptionHandling().accessDeniedPage("/free/403")
 
                 .and()
                     .formLogin()

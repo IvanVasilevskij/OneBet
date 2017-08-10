@@ -8,13 +8,13 @@ import javax.persistence.*;
 @Entity
 @NamedQueries(
         @NamedQuery(
-                name = DotaTeam.FindByLogin,
+                name = DotaTeam.FindByTeamName,
                 query = "select u from DotaTeam u where u.teamName = :teamName"
         )
 )
 @Table(name = "COMADS")
 public class DotaTeam implements Team {
-    public static final String FindByLogin = "DotaTeam.FindByLogin";
+    public static final String FindByTeamName = "DotaTeam.FindByTeamName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

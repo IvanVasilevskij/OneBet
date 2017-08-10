@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -24,6 +27,7 @@ import javax.persistence.Persistence;
 @ComponentScan(basePackages = "ru.onebet.exampleproject")
 @Import({SecurityConfiguration.class})
 @EnableWebMvc
+@EnableTransactionManagement
 public class ProductionConfiguration extends WebMvcConfigurerAdapter{
 
     @Autowired
@@ -63,6 +67,11 @@ public class ProductionConfiguration extends WebMvcConfigurerAdapter{
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PlatformTransactionManager tx(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 
     @PostConstruct

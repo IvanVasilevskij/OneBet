@@ -24,7 +24,7 @@ public class TeamManipulationControllers {
         this.daoDotaTeam = daoDotaTeam;
     }
 
-    @PostMapping("/createTeam")
+    @PostMapping("/admin/create-dota-team")
     public String createDotaTeam(@RequestParam String teamName,
                                  ModelMap model) {
 
@@ -68,7 +68,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @PostMapping("/goUpdateDotaTeam")
+    @PostMapping("/admin/to-update-dota-team-page")
     public String goUpdateDotaTeam(@RequestParam String teamNameForUpdate,
                                    ModelMap model) {
         DotaTeam team = daoDotaTeam.findTeamByTeamName(teamNameForUpdate);
@@ -79,7 +79,7 @@ public class TeamManipulationControllers {
         return "admin/update-team";
     }
 
-    @PostMapping("/deleteDotaTeam")
+    @PostMapping("/admin/delete-dota-team")
     public String deleteDotaTeam(@RequestParam String teamForDelete,
                                  ModelMap model) {
         em.getTransaction().begin();
@@ -93,7 +93,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @GetMapping("/toAllCreatedDotaTeamPage")
+    @GetMapping("/admin/list-of-all-dota-team")
     public String toAllCreatedDotaTeamPage(ModelMap model) {
 
         DotaTeamDTO bean = new DotaTeamDTO();
@@ -103,7 +103,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @GetMapping("/goCreateNewDotaTeam")
+    @GetMapping("/admin/to-create-dota-team-page")
     public String goCreateNewDotaTeam() {
         return "admin/create-team";
     }

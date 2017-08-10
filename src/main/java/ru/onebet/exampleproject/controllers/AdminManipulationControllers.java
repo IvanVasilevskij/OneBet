@@ -37,7 +37,7 @@ public class AdminManipulationControllers {
         this.daoTransaction = daoTransaction;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin/list-of-all-users")
     public String users(ModelMap model) {
         UserListDTO bean = new UserListDTO();
 
@@ -49,7 +49,7 @@ public class AdminManipulationControllers {
         return "admin/all-users";
     }
 
-    @PostMapping("/updateAdminDetails")
+    @PostMapping("/admin/update-admin-details")
     public String updateAdminDetails(@RequestParam String firstName,
                                           @RequestParam String lastName,
                                           @RequestParam String email,
@@ -73,17 +73,17 @@ public class AdminManipulationControllers {
         return "admin/private-room";
     }
 
-    @GetMapping("/toUpdateAdminDetails")
+    @GetMapping("/admin/update-admins-details")
     public String toUpdateAdminDetails() {
         return "admin/update-admin-details";
     }
 
-    @GetMapping("/toCreateNewAdmin")
+    @GetMapping("/admin-root/to-create-new-admin-page")
     public String toCreateNewAdmin() {
         return "admin/create-new-admin";
     }
 
-    @GetMapping("/enterAdminPrivateRoom")
+    @GetMapping("/admin/private-room")
     public String enterAdminPrivateRoom(ModelMap model) {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
@@ -98,7 +98,7 @@ public class AdminManipulationControllers {
         return "admin/private-room";
     }
 
-    @PostMapping("/createNewAdmin")
+    @PostMapping("/admin-root/create-new-admin")
     public String createNewAdmin(@RequestParam String login,
                                  @RequestParam String enteredPassword,
                                  @RequestParam String repeatedPassword,
@@ -119,12 +119,12 @@ public class AdminManipulationControllers {
         }
     }
 
-    @GetMapping("/toEmitMoneyPage")
+    @GetMapping("/admin-root/to-emit-money-page")
     public String toEmitMoneyPage() {
         return "/admin/emit-money";
     }
 
-    @PostMapping("/emitMoney")
+    @PostMapping("/admin-root/emit-money")
     public String emitMoney(@RequestParam String emit,
                             ModelMap model) {
 

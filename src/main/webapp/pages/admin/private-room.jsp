@@ -8,7 +8,7 @@
 <html>
 <head>
     <title>Private room</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
         <p>Login: ${user.admin.login}</p>
@@ -18,35 +18,34 @@
         <p>Balance: ${user.admin.balance}</p>
         <p>Root balance: ${root.admin.balance}</p>
 
-        <form method="get" action="/toUpdateAdminDetails">
-            <input type="submit" value="Update other information"/>
+        <form method="get" action="<c:url value="/admin/update-admins-details"/>">
+            <input class="takeAdmin" type="submit" value="Update other information"/>
         </form>
 
-        <form method="get" action="/goCreateNewDotaTeam">
-            <input type="submit" value="Create a new team"/>
+        <form method="get" action="<c:url value="/admin/to-create-dota-team-page"/>">
+            <input class="takeAdmin" type="submit" value="Create a new team"/>
         </form>
 
-        <form method="post" action="/goUpdateDotaTeam">
-            <label for="teamNameForUpdate">Teamname:</label>
-            <input required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
-            <input type="submit" value="Update a team"/>
+        <form method="post" action="<c:url value="/admin/to-update-dota-team-page"/>">
+            <input placeholder="enter teamname" required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
+            <input class="takeAdmin" type="submit" value="Update a team"/>
             <security:csrfInput/>
         </form>
 
-        <form method="get" action="/toHomePage">
-            <input type="submit" value="Return to homepage"/>
+        <form method="get" action="<c:url value="/to-home-page"/>">
+            <input class="takeClient" type="submit" value="Return to homepage"/>
         </form>
 
-        <form method="get" action="/toAllCreatedDotaTeamPage">
-            <input type="submit" value="See all created Dota team"/>
+        <form method="get" action="<c:url value="/admin/list-of-all-dota-team"/>">
+            <input class="takeAdmin" type="submit" value="See all created Dota team"/>
         </form>
 
-        <form method="get" action="/toCreateNewAdmin">
-            <input type="submit" value="Create new admin"/>
+        <form method="get" action="<c:url value="/admin-root/to-create-new-admin-page"/>">
+            <input class="takeAdmin" type="submit" value="Create new admin"/>
         </form>
 
-        <form method="get" action="/toEmitMoneyPage">
-            <input type="submit" value="Emit money"/>
+        <form method="get" action="<c:url value="/admin-root/to-emit-money-page"/>">
+            <input class="takeAdmin" type="submit" value="Emit money"/>
         </form>
 
 </body>

@@ -48,7 +48,7 @@ public class UserDAOImpl implements UserDAO{
             return em.createNamedQuery(ClientImpl.FindByLogin, ClientImpl.class)
                     .setParameter("login", login)
                     .getSingleResult();
-        } catch (NoResultException notFound) {
+        } catch (Throwable t) {
             return null;
         }
     }
@@ -76,7 +76,7 @@ public class UserDAOImpl implements UserDAO{
             return em.createNamedQuery(Admin.FindByLogin, Admin.class)
                     .setParameter("login", login)
                     .getSingleResult();
-        } catch (NoResultException notFound) {
+        } catch (Throwable t) {
             return null;
         }
     }
@@ -126,32 +126,22 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public ClientImpl ensureClientForEmitMoneyOperation() {
-        try {
             ClientImpl clientForEmitMoneyOperations = findClient(ClientImpl.ClientForEmitMoneyOperations);
             if (clientForEmitMoneyOperations == null) {
                 clientForEmitMoneyOperations = createClient(ClientImpl.ClientForEmitMoneyOperations,
                         passwordEncoder.encode("4012659172"));
             }
             return clientForEmitMoneyOperations;
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
     public Admin ensureRootUser() {
-        try {
             Admin root = findAdmin(Admin.RootAdminName);
             if (root == null) {
                 root =  createAdmin(Admin.RootAdminName,
                         passwordEncoder.encode("4012659172"));
             }
             return root;
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
@@ -167,21 +157,11 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public List<ClientImpl> getAllClients() {
-        try {
             return em.createQuery("from ClientImpl", ClientImpl.class).getResultList();
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
     public List<Admin> getAllAdmins() {
-        try {
             return em.createQuery("from Admin" , Admin.class).getResultList();
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 }

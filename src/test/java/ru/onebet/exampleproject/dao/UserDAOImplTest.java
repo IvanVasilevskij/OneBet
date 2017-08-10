@@ -4,9 +4,11 @@ package ru.onebet.exampleproject.dao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
@@ -22,6 +24,8 @@ import static org.junit.Assert.assertSame;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@WebAppConfiguration
+@EnableWebSecurity
 public class UserDAOImplTest {
 
     @Autowired
@@ -76,6 +80,12 @@ public class UserDAOImplTest {
         Admin adminFinded = daoUser.findAdmin("admin");
 
         assertEquals(admin, adminFinded);
+
+        Admin adminError = daoUser.findAdmin("adminError");
+
+        assertEquals(null, adminError);
+
+
     }
 
     @Test

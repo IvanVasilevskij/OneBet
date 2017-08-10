@@ -44,17 +44,9 @@ public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent, Maked
         em.persist(mBet);
         em.refresh(client);
 
-        em.persist(client);
-        em.persist(root);
-        em.persist(event);
     }
 
     public List<MakedBetsOfDota> allMakedBets() {
-        try {
             return em.createQuery("from MakedBetsOfDota", MakedBetsOfDota.class).getResultList();
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 }

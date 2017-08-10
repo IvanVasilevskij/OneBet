@@ -6,7 +6,7 @@
 <html>
 <head>
     <title>All Dota team:</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 
 </head>
 <body>
@@ -14,22 +14,21 @@
         <p>${team}</p>
     </c:forEach>
 
-    <form method="post" action="/goUpdateDotaTeam">
-        <label for="teamNameForUpdate">Teamname for updating: </label>
-        <input required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
-        <input type="submit" value="Update team"/>
+    <form method="post" action="<c:url value="/admin/to-update-dota-team-page"/>">
+        <input placeholder="enter teamname" required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
+        <input class="takeAdmin" type="submit" value="Update team"/>
         <security:csrfInput/>
     </form>
 
-    <form method="post" action="/deleteDotaTeam">
-        <label for="teamForDelete">Teamname for delte: </label>
-        <input required type="text" name="teamForDelete" id="teamForDelete">
-        <input type="submit" value="Delete team"/>
+    <form method="post" action="<c:url value="/admin/delete-dota-team"/>">
+
+        <input pattern="enter teamname" required type="text" name="teamForDelete" id="teamForDelete">
+        <input class="takeAdmin" type="submit" value="Delete team"/>
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="/toHomePage">
-        <input type="submit" value="Return to homepage"/>
+    <form method="get" action="<c:url value="/to-home-page"/>">
+        <input class="takeClient" type="submit" value="Return to homepage"/>
     </form>
 </body>
 </html>

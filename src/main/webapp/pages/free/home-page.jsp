@@ -5,38 +5,38 @@
 <html>
   <head>
     <title>OneBet.ru</title>
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
   </head>
   <body>
-    Hello, You have gone to the OneBet.ru!
+    <h1>Hello, You have gone to the OneBet.ru!</h1>
 
-    <form method="get" action="/toCreateClientPage">
-      <input type="submit" value="Create user"/>
+    <form method="get" action="<c:url value="/anonymous/to-create-client-page"/>">
+      <input class="takeClient" type="submit" value="Create user"/>
     </form>
 
-    <form method="get" action="/toLoginPage">
-      <input type="submit" value="login"/>
+    <form method="get" action="<c:url value="/anonymous/to-login-page"/>">
+      <input class="takeClient" type="submit" value="login"/>
     </form>
 
-    <form method="get" action="/events">
-      <input type="submit" value="See all events"/>
+    <form method="get" action="<c:url value="/free-information/list-of-all-events"/>">
+      <input class="takeClient" type="submit" value="See all events"/>
     </form>
 
-    <form method="get" action="/users">
-      <input type="submit" value="See all users"/>
+    <form method="get" action="<c:url value="/admin/list-of-all-users"/>">
+      <input class="takeAdmin" type="submit" value="See all users"/>
     </form>
 
-    <form method="post" action="/logout">
-      <input type="submit" value="logout"/>
+    <form method="post" action="<c:url value="/logout"/>">
+      <input class="takeClient" type="submit" value="logout"/>
       <security:csrfInput/>
     </form>
 
-    <form method="get" action="/enterClientPrivateRoom">
-      <input type="submit" value="Enter in private room for Client only"/>
+    <form method="get" action="<c:url value="/client/private-room"/>">
+      <input class="takeClient" type="submit" value="Enter in private room for Client only"/>
     </form>
 
-    <form method="get" action="/enterAdminPrivateRoom">
-      <input type="submit" value="Enter in private room for admin only"/>
+    <form method="get" action="<c:url value="/admin/private-room"/>">
+      <input class="takeAdmin" type="submit" value="Enter in private room for Admin only"/>
     </form>
 
   </body>

@@ -8,8 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
+import ru.onebet.exampleproject.model.users.Admin;
+import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Service
 public class Authenticator implements UserDetailsService {
@@ -21,13 +24,14 @@ public class Authenticator implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            if (daoUser.findClient(username) != null) {
-                return new User(username, (daoUser.findClient(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_CLIENT")));
-            } else if (daoUser.findAdmin(username).getLogin().equals("root")) {
-                return new User(username, (daoUser.findAdmin(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMINROOT")));
-            } else if (daoUser.findAdmin(username) != null) {
-                return new User(username, (daoUser.findAdmin(username).getPassword()), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-            }
-        else throw  new UsernameNotFoundException("User doesen't exist");
+        ClientImpl client = daoUser.findClient(username);
+        Admin admin = daoUser.findAdmin(username);
+            if (client != null) {
+                return new User(username, (client.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
+            } else if (admin.getLogin().equals("root")) {
+                return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINROOT")));
+            } else if (admin != null) {
+                return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            } else throw  new UsernameNotFoundException("User doesen't exist");
     }
 }
