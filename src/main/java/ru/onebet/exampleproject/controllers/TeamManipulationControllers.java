@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,26 +15,22 @@ import javax.persistence.EntityManager;
 
 @Controller
 public class TeamManipulationControllers {
-    private final EntityManager em;
     private final DotaTeamDAO daoDotaTeam;
 
     @Autowired
-    public TeamManipulationControllers(EntityManager em,
-                                       DotaTeamDAO daoDotaTeam) {
-        this.em = em;
+    public TeamManipulationControllers(DotaTeamDAO daoDotaTeam) {
         this.daoDotaTeam = daoDotaTeam;
     }
 
     @PostMapping("/admin/create-dota-team")
+    @Transactional
     public String createDotaTeam(@RequestParam String teamName,
                                  ModelMap model) {
 
         if (daoDotaTeam.findTeamByTeamName(teamName) != null) {
             return "/admin/incorrect-teamname";
         } else {
-            em.getTransaction().begin();
             DotaTeam team = daoDotaTeam.createTeam(teamName);
-            em.getTransaction().commit();
 
             DotaTeamDTO bean = new DotaTeamDTO();
             bean.setAllTeam(daoDotaTeam.getAllTeams());
@@ -53,13 +50,9 @@ public class TeamManipulationControllers {
                                             @RequestParam String roleSupFive,
                                             ModelMap model) {
 
-        em.getTransaction().begin();
-        DotaTeam teamF = daoDotaTeam.findTeamByTeamName(teamName);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
-        DotaTeam team = daoDotaTeam.updateDOtaTeam(teamF, roleMid, roleCarry, roleHard, roleSupFour, roleSupFive);
-        em.getTransaction().commit();
+        DotaTeam teamF = daoDotaTeam.findTeamByTeamName(teamName);
+        daoDotaTeam.updateDOtaTeam(teamF, roleMid, roleCarry, roleHard, roleSupFour, roleSupFive);
 
         DotaTeamDTO bean = new DotaTeamDTO();
         bean.setAllTeam(daoDotaTeam.getAllTeams());
@@ -82,9 +75,7 @@ public class TeamManipulationControllers {
     @PostMapping("/admin/delete-dota-team")
     public String deleteDotaTeam(@RequestParam String teamForDelete,
                                  ModelMap model) {
-        em.getTransaction().begin();
         daoDotaTeam.deleteTeamByTeamName(teamForDelete);
-        em.getTransaction().commit();
 
         DotaTeamDTO bean = new DotaTeamDTO();
         bean.setAllTeam(daoDotaTeam.getAllTeams());

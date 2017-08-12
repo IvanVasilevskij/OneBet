@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,19 +14,14 @@ import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.ClientDTO;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
-import javax.persistence.EntityManager;
-
 @Controller
 public class ClientManipulationControllers {
     private final UserDAOImpl daoUser;
-    private final EntityManager em;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClientManipulationControllers(EntityManager em,
-                                         UserDAOImpl daoUser,
+    public ClientManipulationControllers(UserDAOImpl daoUser,
                                          BCryptPasswordEncoder passwordEncoder) {
-        this.em = em;
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
     }
@@ -36,6 +32,7 @@ public class ClientManipulationControllers {
     }
 
     @PostMapping("/anonymous/create-new-client")
+    @Transactional
     public String createClient(@RequestParam String login,
                                @RequestParam String enteredPassword,
                                @RequestParam String repeatedPassword,
@@ -46,9 +43,7 @@ public class ClientManipulationControllers {
             if (!enteredPassword.equals(repeatedPassword)) return "withoutrole/incorrect-password";
             String hashedPassword = passwordEncoder.encode(enteredPassword);
 
-            em.getTransaction().begin();
             ClientImpl client = daoUser.createClient(login, hashedPassword);
-            em.getTransaction().commit();
 
             model.put("login", client.getLogin());
 
@@ -57,6 +52,7 @@ public class ClientManipulationControllers {
     }
 
     @PostMapping("/client/update-client-details")
+    @Transactional
     public String updateClientDetails(@RequestParam String firstName,
                                       @RequestParam String lastName,
                                       @RequestParam String email,
@@ -65,9 +61,7 @@ public class ClientManipulationControllers {
 
         ClientImpl client = daoUser.findClient(username);
 
-        em.getTransaction().begin();
         daoUser.updateInformationForClient(client, firstName, lastName, email);
-        em.getTransaction().commit();
 
         ClientDTO bean = new ClientDTO();
         bean.setClient(client);

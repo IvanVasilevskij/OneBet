@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,28 +17,25 @@ import ru.onebet.exampleproject.dto.UserListDTO;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
-import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 @Controller
 public class AdminManipulationControllers {
     private final UserDAOImpl daoUser;
-    private final EntityManager em;
     private final BCryptPasswordEncoder passwordEncoder;
     private final TransactionDAO daoTransaction;
 
     @Autowired
-    public AdminManipulationControllers(EntityManager em,
-                                        UserDAOImpl daoUser,
+    public AdminManipulationControllers(UserDAOImpl daoUser,
                                         BCryptPasswordEncoder passwordEncoder,
                                         TransactionDAO daoTransaction) {
-        this.em = em;
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
         this.daoTransaction = daoTransaction;
     }
 
     @GetMapping("/admin/list-of-all-users")
+    @Transactional
     public String users(ModelMap model) {
         UserListDTO bean = new UserListDTO();
 
@@ -50,6 +48,7 @@ public class AdminManipulationControllers {
     }
 
     @PostMapping("/admin/update-admin-details")
+    @Transactional
     public String updateAdminDetails(@RequestParam String firstName,
                                           @RequestParam String lastName,
                                           @RequestParam String email,
@@ -58,9 +57,7 @@ public class AdminManipulationControllers {
 
         Admin admin = daoUser.findAdmin(username);
 
-        em.getTransaction().begin();
         daoUser.updateInformationForAdmin(admin, firstName, lastName, email);
-        em.getTransaction().commit();
 
         AdminDTO bean = new AdminDTO();
         bean.setAdmin(admin);
@@ -99,6 +96,7 @@ public class AdminManipulationControllers {
     }
 
     @PostMapping("/admin-root/create-new-admin")
+    @Transactional
     public String createNewAdmin(@RequestParam String login,
                                  @RequestParam String enteredPassword,
                                  @RequestParam String repeatedPassword,
@@ -109,9 +107,7 @@ public class AdminManipulationControllers {
             if (!enteredPassword.equals(repeatedPassword)) return "withoutrole/incorrect-password";
             String hashedPassword = passwordEncoder.encode(enteredPassword);
 
-            em.getTransaction().begin();
             Admin admin = daoUser.createAdmin(login, hashedPassword);
-            em.getTransaction().commit();
 
             model.put("login", admin.getLogin());
 
@@ -125,15 +121,14 @@ public class AdminManipulationControllers {
     }
 
     @PostMapping("/admin-root/emit-money")
+    @Transactional
     public String emitMoney(@RequestParam String emit,
                             ModelMap model) {
 
         ClientImpl client = daoUser.findClient("client");
         Admin root = daoUser.findAdmin("root");
 
-        em.getTransaction().begin();
         daoTransaction.emitMoney(root, client, new BigDecimal(emit));
-        em.getTransaction().commit();
 
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Admin admin = daoUser.findAdmin(username);

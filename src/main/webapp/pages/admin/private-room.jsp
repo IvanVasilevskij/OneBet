@@ -26,12 +26,6 @@
             <input class="takeAdmin" type="submit" value="Create a new team"/>
         </form>
 
-        <form method="post" action="<c:url value="/admin/to-update-dota-team-page"/>">
-            <input placeholder="enter teamname" required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
-            <input class="takeAdmin" type="submit" value="Update a team"/>
-            <security:csrfInput/>
-        </form>
-
         <form method="get" action="<c:url value="/to-home-page"/>">
             <input class="takeClient" type="submit" value="Return to homepage"/>
         </form>

@@ -2,19 +2,20 @@ package ru.onebet.exampleproject.dao.eventsdao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
+@Transactional
 public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
 
+    @PersistenceContext
     private final EntityManager em;
 
     @Autowired
@@ -69,10 +70,8 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
     }
 
     @Override
-    public void checkThatThisEventHaveTheTeam (DotaEvent event, DotaTeam team) {
-        if (!event.getTeamFirst().equals(team) && !event.getTeamSecond().equals(team)) {
-            throw new IllegalArgumentException("This comand doesen't paricipating at this withEvent");
-        }
+    public boolean checkThatThisEventHaveTheTeam (DotaEvent event, DotaTeam team) {
+        return event.getTeamFirst().equals(team) || event.getTeamSecond().equals(team);
     }
 
 //    @Override

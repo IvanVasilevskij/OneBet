@@ -21,7 +21,6 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
     public static final String FindByLogin = "ClientImpl.findByLogin";
     public static final String ClientForEmitMoneyOperations = "client";
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", insertable = false, updatable = false)
@@ -42,7 +41,6 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
     private String lastName;
 
     @Column(name = "BALANCE")
-    @NotNull
     private BigDecimal balance;
 
     @Column(name = "EMAIL")
@@ -189,7 +187,6 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
         }
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -207,9 +204,7 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
             return false;
         if (getBalance() != null ? !getBalance().equals(client.getBalance()) : client.getBalance() != null)
             return false;
-        if (getEmail() != null ? !getEmail().equals(client.getEmail()) : client.getEmail() != null) return false;
-        if (getBets() != null ? !getBets().equals(client.getBets()) : client.getBets() != null) return false;
-        return getTransactions() != null ? getTransactions().equals(client.getTransactions()) : client.getTransactions() == null;
+        return getEmail() != null ? getEmail().equals(client.getEmail()) : client.getEmail() == null;
     }
 
     @Override
@@ -221,8 +216,6 @@ public class ClientImpl implements Client<MakedBetsOfDota>{
         result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
         result = 31 * result + (getBalance() != null ? getBalance().hashCode() : 0);
         result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
-        result = 31 * result + (getBets() != null ? getBets().hashCode() : 0);
-        result = 31 * result + (getTransactions() != null ? getTransactions().hashCode() : 0);
         return result;
     }
 }

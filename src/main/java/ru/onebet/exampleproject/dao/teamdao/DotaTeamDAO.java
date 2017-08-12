@@ -23,33 +23,31 @@ public class DotaTeamDAO implements TeamDAO <DotaTeam>{
         this.em = em;
     }
 
+    @Transactional(readOnly = true)
     public DotaTeam findTeamByTeamName(String teamName) {
+        try {
             return em.createNamedQuery(DotaTeam.FindByTeamName, DotaTeam.class)
                     .setParameter("teamName", teamName)
                     .getSingleResult();
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     @Override
-    @Transactional
     public DotaTeam createTeam(String teamName) throws EntityExistsException {
-//        try {
                 DotaTeam team = DotaTeam.Builder()
                         .withTeamName(teamName)
                         .build();
                 em.persist(team);
                 return team;
-//        } catch (Throwable t) {
-//            em.getTransaction().rollback();
-//            throw new IllegalStateException(t);
-//        }
     }
 
+    @Override
     public void deleteTeamByTeamName(String teamName) {
-        try {
-                em.remove(findTeamByTeamName(teamName));
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
+        DotaTeam team = findTeamByTeamName(teamName);
+        if (team != null) {
+            em.remove(team);
         }
     }
 

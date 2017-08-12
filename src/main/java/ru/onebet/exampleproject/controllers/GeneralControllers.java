@@ -3,6 +3,7 @@ package ru.onebet.exampleproject.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.onebet.exampleproject.dto.*;
@@ -15,25 +16,16 @@ import java.util.List;
 
 @Controller
 public class GeneralControllers {
-    private final UserDAOImpl daoUser;
     private final DotaEventsDAO daoEvent;
-    private final EntityManager em;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public GeneralControllers(EntityManager em,
-                              UserDAOImpl daoUser,
-                              DotaEventsDAO daoEvent,
-                              BCryptPasswordEncoder passwordEncoder) {
-        this.em = em;
-        this.daoUser = daoUser;
+    public GeneralControllers(DotaEventsDAO daoEvent) {
         this.daoEvent = daoEvent;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
     public String returnToHomaPage() {
-        return "free/home-page";
+        return "/free/home-page";
     }
 
     @GetMapping("/free/403")
@@ -48,7 +40,7 @@ public class GeneralControllers {
         bean.setEvents(list);
 
         model.put("events", bean);
-        return "user/all-events";
+        return "/user/all-events";
     }
 
     @GetMapping("/to-home-page")

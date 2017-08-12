@@ -2,19 +2,22 @@ package ru.onebet.exampleproject.dao;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Service
+@Repository
+@Transactional
 public class TransactionDAO {
 
+    @PersistenceContext
     private final EntityManager em;
 
     @Autowired
@@ -23,31 +26,24 @@ public class TransactionDAO {
     }
 
     public void emitMoney(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
-        try {
-            Transaction t = Transaction.Builder()
-                    .withDate(LocalDateTime.now())
-                    .withAmount(amount)
-                    .withClient(clientForEmitMoneyOperation)
-                    .withAdmin(admin)
-                    .build();
+        Transaction t = Transaction.Builder()
+                .withDate(LocalDateTime.now())
+                .withAmount(amount)
+                .withClient(clientForEmitMoneyOperation)
+                .withAdmin(admin)
+                .build();
 
-            em.persist(t);
-            em.refresh(admin);
+        em.persist(t);
+        em.refresh(admin);
+        em.refresh(clientForEmitMoneyOperation);
 
-            admin = Admin.mutator(admin)
-                    .withBalance(admin.getBalance().add(amount))
-                    .mutate();
-            em.persist(admin);
-
-
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
+        admin = Admin.mutator(admin)
+                .withBalance(admin.getBalance().add(amount))
+                .mutate();
+        em.persist(admin);
     }
 
     public void sendMoney(ClientImpl client, Admin root, BigDecimal amount) {
-        try {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
@@ -68,14 +64,9 @@ public class TransactionDAO {
                     .withBalance(root.getBalance().add(amount))
                     .mutate();
             em.persist(root);
-
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
+
     public void reciveMoney (ClientImpl client, Admin root, BigDecimal amount) {
-        try {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
@@ -87,7 +78,6 @@ public class TransactionDAO {
             em.refresh(client);
             em.refresh(root);
 
-
             client = ClientImpl.mutator(client)
                     .withBalance(client.getBalance().add(amount))
                     .mutate();
@@ -98,18 +88,11 @@ public class TransactionDAO {
 
             em.persist(client);
             em.persist(root);
-
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
-    void checkBalanceForPayoutPrize(Admin admin, ClientImpl clientForEmitMoneyOperation, BigDecimal amount) {
+    public BigDecimal checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
         if (admin.getBalance().compareTo(amount) < 0) {
-            BigDecimal shortage = amount.subtract(admin.getBalance());
-            emitMoney(admin, clientForEmitMoneyOperation, shortage);
-            em.persist(admin);
-        }
+            return amount.subtract(admin.getBalance());
+        } else return BigDecimal.ZERO;
     }
 }

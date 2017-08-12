@@ -9,6 +9,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
@@ -25,7 +27,6 @@ import static org.junit.Assert.assertSame;
 @ContextConfiguration(classes = TestConfiguration.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @WebAppConfiguration
-@EnableWebSecurity
 public class UserDAOImplTest {
 
     @Autowired
@@ -35,48 +36,40 @@ public class UserDAOImplTest {
     private UserDAOImpl daoUser;
 
     @Test
+    @Transactional
     public void testCreateClientOrAdmin() throws Exception {
 
-        em.getTransaction().begin();
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "123456");
-
-        em.getTransaction().commit();
-        assertEquals("withClient", em.find(ClientImpl.class, client.getId()).getLogin());
-        assertEquals("123456", em.find(ClientImpl.class, client.getId()).getPassword());
-        assertEquals(BigDecimal.ZERO, em.find(ClientImpl.class, client.getId()).getBalance());
-
-        em.getTransaction().begin();
         Admin admin = daoUser.createAdmin(
                 "admin",
                 "654321");
-        em.getTransaction().commit();
 
-        assertEquals("admin", em.find(Admin.class, admin.getId()).getLogin());
-        assertEquals("654321", em.find(Admin.class, admin.getId()).getPassword());
-        assertEquals(BigDecimal.ZERO, em.find(Admin.class, admin.getId()).getBalance());
+        assertEquals("withClient", daoUser.findClient("withClient").getLogin());
+        assertEquals("123456", daoUser.findClient("withClient").getPassword());
+        assertEquals(BigDecimal.ZERO.setScale(2), daoUser.findClient("withClient").getBalance());
+
+        assertEquals("admin", daoUser.findAdmin("admin").getLogin());
+        assertEquals("654321", daoUser.findAdmin("admin").getPassword());
+        assertEquals(BigDecimal.ZERO.setScale(2), daoUser.findAdmin("admin").getBalance());
     }
 
     @Test
+    @Transactional
     public void testFindClientOrAdmin() throws Exception {
 
-        em.getTransaction().begin();
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "123456");
-        em.getTransaction().commit();
-
         ClientImpl clientFinded = daoUser.findClient("withClient");
 
         assertEquals(client, clientFinded);
 
-        em.getTransaction().begin();
         Admin admin = daoUser.createAdmin(
                 "admin",
                 "654321");
 
-        em.getTransaction().commit();
         Admin adminFinded = daoUser.findAdmin("admin");
 
         assertEquals(admin, adminFinded);
@@ -84,124 +77,103 @@ public class UserDAOImplTest {
         Admin adminError = daoUser.findAdmin("adminError");
 
         assertEquals(null, adminError);
-
-
     }
 
     @Test
+    @Transactional
     public void testDeleteUserByLogin() throws Exception {
 
-        em.getTransaction().begin();
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "password");
-        em.getTransaction().commit();
 
-        assertEquals(1,em.createQuery("from ClientImpl", ClientImpl.class).getResultList().size());
+        assertEquals(1, daoUser.getAllClients().size());
 
-        em.getTransaction().begin();
         daoUser.deleteUserByLogin("withClient");
-        em.getTransaction().commit();
 
         assertEquals(null, daoUser.findClient("withClient"));
 
-        em.getTransaction().begin();
         Admin admin = daoUser.createAdmin(
                 "admin",
                 "654321");
-        em.getTransaction().commit();
 
-        assertEquals(1,em.createQuery("from Admin ", Admin.class).getResultList().size());
+        assertEquals(1, daoUser.getAllAdmins().size());
 
-        em.getTransaction().begin();
         daoUser.deleteUserByLogin("admin");
-        em.getTransaction().commit();
+
         assertEquals(null, daoUser.findAdmin("admin"));
 
 
     }
 
     @Test
+    @Transactional
     public void testEnsureClientForEmitMoneyOperation() throws Exception {
-        em.getTransaction().begin();
         ClientImpl client = daoUser.ensureClientForEmitMoneyOperation();
-        em.getTransaction().commit();
-        em.getTransaction().begin();
         ClientImpl clientTrySecond = daoUser.ensureClientForEmitMoneyOperation();
-        em.getTransaction().commit();
-        assertSame(client, clientTrySecond);
+
+        assertEquals(client, clientTrySecond);
+
     }
 
     @Test
+    @Transactional
     public void testEnsureRootUser() throws Exception {
-        em.getTransaction().begin();
         Admin root = daoUser.ensureRootUser();
-        em.getTransaction().commit();
-        em.getTransaction().begin();
         Admin rootTrySecond = daoUser.ensureRootUser();
-        em.getTransaction().commit();
-        assertSame(root, rootTrySecond);
+
+        assertEquals(root, rootTrySecond);
     }
 
     @Test
+    @Transactional
     public void testCheckPassword() throws Exception {
-        em.getTransaction().begin();
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "123456");
-        em.getTransaction().commit();
         assertEquals(client, daoUser.checkPassword(client, "123456"));
 
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Transactional
     public void testCheckBalanceForBet() {
-        em.getTransaction().begin();
         ClientImpl client = daoUser.createClient(
                 "withClient",
                 "123456");
-        em.getTransaction().commit();
-        em.getTransaction().begin();
 
         client = ClientImpl.mutator(client)
                 .withBalance(new BigDecimal("250.00"))
                 .mutate();
+        em.refresh(client);
 
-        em.persist(client);
-        em.getTransaction().commit();
-
-        daoUser.checkBalanceForBet(client, new BigDecimal("251.00"));
+        assertEquals(daoUser.checkBalanceForBet(client, new BigDecimal("251.00")), false);
+        assertEquals(daoUser.checkBalanceForBet(client, new BigDecimal("249.00")), true);
     }
 
     @Test
+    @Transactional
     public void testGetAllUsers() throws Exception {
-        em.getTransaction().begin();
         ClientImpl clientFirst = daoUser.createClient(
                 "clientFirst",
                 "password");
-        em.getTransaction().commit();
 
         assertEquals(1, daoUser.getAllClients().size());
 
-        em.getTransaction().begin();
         ClientImpl clientSecond = daoUser.createClient(
                 "clientSecond",
                 "password");
-        em.getTransaction().commit();
         assertEquals(2, daoUser.getAllClients().size());
 
-        em.getTransaction().begin();
         Admin adminFirst = daoUser.createAdmin(
                 "aminFirst",
                 "password");
-        em.getTransaction().commit();
+
         assertEquals(1, daoUser.getAllAdmins().size());
 
-        em.getTransaction().begin();
         Admin adminSecond = daoUser.createAdmin(
                 "adminSecond",
                 "password");
-        em.getTransaction().commit();
         assertEquals(2, daoUser.getAllAdmins().size());
     }
 }

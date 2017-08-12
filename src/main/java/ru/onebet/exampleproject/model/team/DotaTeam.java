@@ -156,4 +156,36 @@ public class DotaTeam implements Team {
                 ", roleSupFive='" + roleSupFive + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DotaTeam)) return false;
+
+        DotaTeam team = (DotaTeam) o;
+
+        if (getId() != team.getId()) return false;
+        if (getTeamName() != null ? !getTeamName().equals(team.getTeamName()) : team.getTeamName() != null)
+            return false;
+        if (getRoleMid() != null ? !getRoleMid().equals(team.getRoleMid()) : team.getRoleMid() != null) return false;
+        if (getRoleCarry() != null ? !getRoleCarry().equals(team.getRoleCarry()) : team.getRoleCarry() != null)
+            return false;
+        if (getRoleHard() != null ? !getRoleHard().equals(team.getRoleHard()) : team.getRoleHard() != null)
+            return false;
+        if (getRoleSupFour() != null ? !getRoleSupFour().equals(team.getRoleSupFour()) : team.getRoleSupFour() != null)
+            return false;
+        return getRoleSupFive() != null ? getRoleSupFive().equals(team.getRoleSupFive()) : team.getRoleSupFive() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getTeamName() != null ? getTeamName().hashCode() : 0);
+        result = 31 * result + (getRoleMid() != null ? getRoleMid().hashCode() : 0);
+        result = 31 * result + (getRoleCarry() != null ? getRoleCarry().hashCode() : 0);
+        result = 31 * result + (getRoleHard() != null ? getRoleHard().hashCode() : 0);
+        result = 31 * result + (getRoleSupFour() != null ? getRoleSupFour().hashCode() : 0);
+        result = 31 * result + (getRoleSupFive() != null ? getRoleSupFive().hashCode() : 0);
+        return result;
+    }
 }

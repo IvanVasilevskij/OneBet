@@ -29,10 +29,12 @@ public interface UserDAO {
 
     User checkPassword(User user, String password);
 
-    void checkBalanceForBet(ClientImpl client, BigDecimal amount);
+    boolean checkBalanceForBet(ClientImpl client, BigDecimal amount);
 
     List<ClientImpl> getAllClients();
 
     List<Admin> getAllAdmins();
+
+    ClientImpl upBalance(ClientImpl client, BigDecimal amount);
 
 }

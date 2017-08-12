@@ -191,8 +191,7 @@ public class Admin implements User{
         if (getLastName() != null ? !getLastName().equals(admin.getLastName()) : admin.getLastName() != null)
             return false;
         if (getBalance() != null ? !getBalance().equals(admin.getBalance()) : admin.getBalance() != null) return false;
-        if (getEmail() != null ? !getEmail().equals(admin.getEmail()) : admin.getEmail() != null) return false;
-        return getTransactions() != null ? getTransactions().equals(admin.getTransactions()) : admin.getTransactions() == null;
+        return getEmail() != null ? getEmail().equals(admin.getEmail()) : admin.getEmail() == null;
     }
 
     @Override
@@ -204,7 +203,6 @@ public class Admin implements User{
         result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
         result = 31 * result + (getBalance() != null ? getBalance().hashCode() : 0);
         result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
-        result = 31 * result + (getTransactions() != null ? getTransactions().hashCode() : 0);
         return result;
     }
 }

@@ -155,4 +155,33 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
                 date.getHour() + ":" +
                 date.getMinute();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DotaEvent)) return false;
+
+        DotaEvent event = (DotaEvent) o;
+
+        if (getId() != event.getId()) return false;
+        if (Double.compare(event.getPercentForTeamFirst(), getPercentForTeamFirst()) != 0) return false;
+        if (Double.compare(event.getPersentForDrow(), getPersentForDrow()) != 0) return false;
+        if (Double.compare(event.getPercentForTeamSecond(), getPercentForTeamSecond()) != 0) return false;
+        return getDate() != null ? getDate().equals(event.getDate()) : event.getDate() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = getId();
+        result = 31 * result + (getDate() != null ? getDate().hashCode() : 0);
+        temp = Double.doubleToLongBits(getPercentForTeamFirst());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getPersentForDrow());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getPercentForTeamSecond());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

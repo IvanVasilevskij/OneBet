@@ -4,19 +4,21 @@ package ru.onebet.exampleproject.dao.userdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.model.users.User;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
+@Transactional
 public class UserDAOImpl implements UserDAO{
-
+    @PersistenceContext
     private final EntityManager em;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -28,21 +30,17 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public ClientImpl createClient(String login, String password) throws EntityExistsException {
-        try {
                 ClientImpl client = ClientImpl.builder()
                         .withLogin(login)
                         .withPassword(password)
-                        .withBalance(BigDecimal.ZERO)
+                        .withBalance(BigDecimal.ZERO.setScale(2))
                         .build();
                 em.persist(client);
                 return client;
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ClientImpl findClient(String login) {
         try {
             return em.createNamedQuery(ClientImpl.FindByLogin, ClientImpl.class)
@@ -55,19 +53,13 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public Admin createAdmin(String login, String password) throws EntityExistsException {
-        try {
                 Admin admin = Admin.builder()
                         .withLogin(login)
                         .withPassword(password)
-                        .withBalance(BigDecimal.ZERO)
+                        .withBalance(BigDecimal.ZERO.setScale(2))
                         .build();
-
                 em.persist(admin);
                 return admin;
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
@@ -111,17 +103,12 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public void deleteUserByLogin(String login) throws EntityExistsException {
-        try {
             if (findClient(login) != null) {
                 em.remove(findClient(login));
             }
             else if(findAdmin((login)) != null) {
                 em.remove(findAdmin(login));
             }
-        } catch (Throwable t) {
-            em.getTransaction().rollback();
-            throw new IllegalStateException(t);
-        }
     }
 
     @Override
@@ -151,8 +138,8 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public void checkBalanceForBet(ClientImpl client, BigDecimal amount) {
-        if (client.getBalance().compareTo(amount) < 0) throw new IllegalArgumentException("Client have no balance for this withEvent");
+    public boolean checkBalanceForBet(ClientImpl client, BigDecimal amount) {
+        return client.getBalance().compareTo(amount) >= 0;
     }
 
     @Override
@@ -164,4 +151,14 @@ public class UserDAOImpl implements UserDAO{
     public List<Admin> getAllAdmins() {
             return em.createQuery("from Admin" , Admin.class).getResultList();
     }
+
+    @Override
+    public ClientImpl upBalance(ClientImpl client, BigDecimal amount) {
+        client = ClientImpl.mutator(client)
+                .withBalance(amount)
+                .mutate();
+        em.persist(client);
+        return client;
+    }
+
 }

@@ -27,7 +27,7 @@ import javax.persistence.Persistence;
 @ComponentScan(basePackages = "ru.onebet.exampleproject")
 @Import({SecurityConfiguration.class})
 @EnableWebMvc
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 public class ProductionConfiguration extends WebMvcConfigurerAdapter{
 
     @Autowired

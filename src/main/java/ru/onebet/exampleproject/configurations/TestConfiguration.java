@@ -2,6 +2,7 @@ package ru.onebet.exampleproject.configurations;
 
 import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,7 +17,8 @@ import javax.persistence.Persistence;
 @ComponentScan(basePackages = "ru.onebet.exampleproject",
 excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {ProductionConfiguration.class})})
 @EnableWebMvc
-@EnableTransactionManagement
+@EnableWebSecurity
+@EnableTransactionManagement(proxyTargetClass = true)
 public class TestConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean

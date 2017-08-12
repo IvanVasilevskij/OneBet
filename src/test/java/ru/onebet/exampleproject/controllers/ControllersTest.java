@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ru.onebet.exampleproject.configurations.ProductionConfiguration;
 import ru.onebet.exampleproject.configurations.SecurityConfiguration;
-import ru.onebet.exampleproject.configurations.TestConfiguration;
 
 import javax.servlet.Filter;
 
@@ -57,7 +56,7 @@ public class ControllersTest {
 
     @Test
     public void testAllUsersPage() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/users").with(user("admin").password("admin").roles("ADMIN")))
+        mvc.perform(MockMvcRequestBuilders.get("/admin/list-of-all-users").with(user("admin").password("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }
 }

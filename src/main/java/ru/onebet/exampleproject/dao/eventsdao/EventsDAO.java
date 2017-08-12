@@ -20,7 +20,7 @@ public interface EventsDAO<T extends Team,E extends EventBetweenCoupleTeam> {
 
     List<E> allEventsWithThisTeam(String teamName);
 
-    void checkThatThisEventHaveTheTeam (E event, T team);
+    boolean checkThatThisEventHaveTheTeam (E event, T team);
 
     List<E> chooseAllEventInEnteredDate(LocalDateTime date);
 }

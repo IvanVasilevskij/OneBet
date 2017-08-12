@@ -22,7 +22,7 @@
 
     <form method="post" action="<c:url value="/admin/delete-dota-team"/>">
 
-        <input pattern="enter teamname" required type="text" name="teamForDelete" id="teamForDelete">
+        <input placeholder="enter teamname" required type="text" name="teamForDelete" id="teamForDelete">
         <input class="takeAdmin" type="submit" value="Delete team"/>
         <security:csrfInput/>
     </form>
