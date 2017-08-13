@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.AdminDTO;
+import ru.onebet.exampleproject.dto.TransactionDTO;
+import ru.onebet.exampleproject.dto.TransactionUserDTO;
 import ru.onebet.exampleproject.dto.UserListDTO;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import java.math.BigDecimal;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminManipulationControllers {
@@ -34,7 +37,7 @@ public class AdminManipulationControllers {
         this.daoTransaction = daoTransaction;
     }
 
-    @GetMapping("/admin/list-of-all-users")
+    @GetMapping("/OneBet.ru/admin/list-of-all-users")
     @Transactional
     public String users(ModelMap model) {
         UserListDTO bean = new UserListDTO();
@@ -47,7 +50,7 @@ public class AdminManipulationControllers {
         return "admin/all-users";
     }
 
-    @PostMapping("/admin/update-admin-details")
+    @PostMapping("/OneBet.ru/admin/update-admin-details")
     @Transactional
     public String updateAdminDetails(@RequestParam String firstName,
                                           @RequestParam String lastName,
@@ -70,7 +73,7 @@ public class AdminManipulationControllers {
         return "admin/private-room";
     }
 
-    @GetMapping("/admin/update-admins-details")
+    @GetMapping("/OneBet.ru/admin/update-admins-details")
     public String toUpdateAdminDetails() {
         return "admin/update-admin-details";
     }
@@ -80,7 +83,7 @@ public class AdminManipulationControllers {
         return "admin/create-new-admin";
     }
 
-    @GetMapping("/admin/private-room")
+    @GetMapping("/OneBet.ru/admin/private-room")
     public String enterAdminPrivateRoom(ModelMap model) {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
@@ -92,10 +95,18 @@ public class AdminManipulationControllers {
         AdminDTO beanSecond = new AdminDTO();
         beanSecond.setAdmin(daoUser.findAdmin("root"));
         model.put("root", beanSecond);
+
+        TransactionUserDTO beanThree = new TransactionUserDTO();
+        beanThree.setTransaction(daoTransaction.transactionList().stream()
+                .filter(c -> c.getAdmin().equals(admin))
+                .collect(Collectors.toList()));
+
+        model.put("transaction", beanThree);
+
         return "admin/private-room";
     }
 
-    @PostMapping("/admin-root/create-new-admin")
+    @PostMapping("/OneBet.ru/admin-root/create-new-admin")
     @Transactional
     public String createNewAdmin(@RequestParam String login,
                                  @RequestParam String enteredPassword,
@@ -115,7 +126,7 @@ public class AdminManipulationControllers {
         }
     }
 
-    @GetMapping("/admin-root/to-emit-money-page")
+    @GetMapping("/OneBet.ru/admin-root/to-emit-money-page")
     public String toEmitMoneyPage() {
         return "/admin/emit-money";
     }
@@ -142,5 +153,13 @@ public class AdminManipulationControllers {
         model.put("root", beanSecond);
 
         return "admin/private-room";
+    }
+
+    @GetMapping("/OneBet.ru/admin/all-trasaction-list")
+    public String allTrnsactionList(ModelMap model) {
+        TransactionDTO bean = new TransactionDTO();
+        bean.setTransaction(daoTransaction.transactionList());
+        model.put("transaction", bean);
+        return "admin/all-transaction-list";
     }
 }

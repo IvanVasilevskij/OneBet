@@ -1,5 +1,24 @@
+body {
+    background-image: url("../img/otherAllPagesBG.jpg");
+}
+.bodyPrivateRoom {
+    background-image: url("../img/backgroundForPrivateRoom.jpg");
+}
+.bodyHomePage {
+    background-image: url("../img/HPbackgroundt.jpg");
+}
 p {
     color: maroon;
+}
+caption {
+    color: springgreen;
+}
+
+.transactionsTable td{
+    width: 600px;
+}
+.loginBody {
+    background-image: url("../img/background.jpg");
 }
 
 .takeClient {
@@ -24,13 +43,13 @@ p {
 }
 
 th {
-    color: maroon;
+    color: springgreen;
     width: 150px;
     height: 30px;
 }
 
 td {
-    color: maroon;
+    color: springgreen;
     width: 150px;
     height: 30px;
     align-content: center;

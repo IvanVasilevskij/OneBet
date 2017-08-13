@@ -26,6 +26,9 @@ public class Transaction {
     @Column(name = "DATE")
     private LocalDateTime date;
 
+    public Transaction() {
+    }
+
     public int getId() {
         return id;
     }
@@ -89,5 +92,13 @@ public class Transaction {
         public Transaction build() {
             return new Transaction(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "client=" + client.getLogin() +
+                ", admin=" + admin.getLogin() +
+                ", amount=" + amount +
+                ", date=" + date;
     }
 }

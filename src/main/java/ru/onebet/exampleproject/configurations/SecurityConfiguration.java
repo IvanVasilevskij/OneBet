@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.onebet.exampleproject.Authenticator;
-import ru.onebet.exampleproject.controllers.AdminManipulationControllers;
 
 
 @Configuration
@@ -22,21 +21,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                     .authorizeRequests()
                         .antMatchers("/").permitAll()
 
-                        .antMatchers("/admin/*").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_ADMINROOT')")
+                        .antMatchers("/OneBet.ru/admin/*").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_ADMINROOT')")
 
-                        .antMatchers("/admin-root/*").hasRole("ADMINROOT")
+                        .antMatchers("/OneBet.ru/admin-root/*").hasRole("ADMINROOT")
 
-                        .antMatchers("/client/*").hasRole("CLIENT")
+                        .antMatchers("/OneBet.ru/client/*").hasRole("CLIENT")
 
-                        .antMatchers("/anonymous/*").anonymous()
+                        .antMatchers("/OneBet.ru/anonymous/*").anonymous()
 
                         .anyRequest().permitAll()
 
-                .and().exceptionHandling().accessDeniedPage("/free/403")
+                .and().exceptionHandling().accessDeniedPage("/OneBet.ru/free/403")
 
                 .and()
                     .formLogin()
-                        .loginPage("/signin")
+                        .loginPage("/OneBet.ru/signin")
                         .loginProcessingUrl("/login")
                         .usernameParameter("login")
                         .passwordParameter("password")

@@ -12,7 +12,7 @@
     <h1>Please enter other information</h1>
     <p>Please, fill in the fields below</p>
 
-    <form method="post" action="<c:url value="/admin/update-admin-details"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/admin/update-admin-details"/>">
     <p>
         <label for="firstName">Firstname:</label>
         <input type="text" name="firstName" id="firstName">
@@ -29,11 +29,11 @@
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/private-room"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/private-room"/>">
         <input class="takeAdmin" type="submit" value="Return to private room"/>
     </form>
 
-    <form method="get" action="<c:url value="/to-home-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeAdmin" type="submit" value="Return to homepage"/>
     </form>
 </body>

@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -94,5 +95,9 @@ public class TransactionDAO {
         if (admin.getBalance().compareTo(amount) < 0) {
             return amount.subtract(admin.getBalance());
         } else return BigDecimal.ZERO;
+    }
+
+    public List<Transaction> transactionList() {
+        return em.createQuery("from Transaction " , Transaction.class).getResultList();
     }
 }

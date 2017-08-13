@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
     <link rel="stylesheet" href="<c:url value="/css/font-awesome.css"/>" type="text/css">
 </head>
-<body background="../../img/background.jpg">
+<body class="loginBody">
 <div class="login">
     <img src="<c:url value="/img/face.jpg"/>">
 <form:form action="/login" method="post">

@@ -14,20 +14,20 @@
         <p>${team}</p>
     </c:forEach>
 
-    <form method="post" action="<c:url value="/admin/to-update-dota-team-page"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/admin/to-update-dota-team-page"/>">
         <input placeholder="enter teamname" required type="text" name="teamNameForUpdate" id="teamNameForUpdate">
         <input class="takeAdmin" type="submit" value="Update team"/>
         <security:csrfInput/>
     </form>
 
-    <form method="post" action="<c:url value="/admin/delete-dota-team"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/admin/delete-dota-team"/>">
 
         <input placeholder="enter teamname" required type="text" name="teamForDelete" id="teamForDelete">
         <input class="takeAdmin" type="submit" value="Delete team"/>
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="<c:url value="/to-home-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeClient" type="submit" value="Return to homepage"/>
     </form>
 </body>

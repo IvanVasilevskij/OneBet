@@ -22,7 +22,7 @@ public class TeamManipulationControllers {
         this.daoDotaTeam = daoDotaTeam;
     }
 
-    @PostMapping("/admin/create-dota-team")
+    @PostMapping("/OneBet.ru/admin/create-dota-team")
     @Transactional
     public String createDotaTeam(@RequestParam String teamName,
                                  ModelMap model) {
@@ -41,7 +41,7 @@ public class TeamManipulationControllers {
         }
     }
 
-    @PostMapping("/updateDotaTeamInformation")
+    @PostMapping("/OneBet.ru/updateDotaTeamInformation")
     public String updateDotaTeamInformation(@RequestParam String teamName,
                                             @RequestParam String roleMid,
                                             @RequestParam String roleCarry,
@@ -61,7 +61,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @PostMapping("/admin/to-update-dota-team-page")
+    @PostMapping("/OneBet.ru/admin/to-update-dota-team-page")
     public String goUpdateDotaTeam(@RequestParam String teamNameForUpdate,
                                    ModelMap model) {
         DotaTeam team = daoDotaTeam.findTeamByTeamName(teamNameForUpdate);
@@ -72,7 +72,7 @@ public class TeamManipulationControllers {
         return "admin/update-team";
     }
 
-    @PostMapping("/admin/delete-dota-team")
+    @PostMapping("/OneBet.ru/admin/delete-dota-team")
     public String deleteDotaTeam(@RequestParam String teamForDelete,
                                  ModelMap model) {
         daoDotaTeam.deleteTeamByTeamName(teamForDelete);
@@ -84,7 +84,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @GetMapping("/admin/list-of-all-dota-team")
+    @GetMapping("/OneBet.ru/admin/list-of-all-dota-team")
     public String toAllCreatedDotaTeamPage(ModelMap model) {
 
         DotaTeamDTO bean = new DotaTeamDTO();
@@ -94,7 +94,7 @@ public class TeamManipulationControllers {
         return "admin/all-created-team";
     }
 
-    @GetMapping("/admin/to-create-dota-team-page")
+    @GetMapping("/OneBet.ru/admin/to-create-dota-team-page")
     public String goCreateNewDotaTeam() {
         return "admin/create-team";
     }

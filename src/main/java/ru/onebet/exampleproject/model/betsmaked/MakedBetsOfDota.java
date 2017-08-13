@@ -99,4 +99,12 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
             return new MakedBetsOfDota(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "MakedBetsOfDota{" +
+                "bettingTeam=" + bettingTeam +
+                ", event=" + event +
+                '}';
+    }
 }

@@ -26,12 +26,12 @@ public class ClientManipulationControllers {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/anonymous/to-create-client-page")
+    @GetMapping("/OneBet.ru/anonymous/to-create-client-page")
     public String toCreateClientPage() {
         return "withoutrole/create-client";
     }
 
-    @PostMapping("/anonymous/create-new-client")
+    @PostMapping("/OneBet.ru/anonymous/create-new-client")
     @Transactional
     public String createClient(@RequestParam String login,
                                @RequestParam String enteredPassword,
@@ -51,7 +51,7 @@ public class ClientManipulationControllers {
         }
     }
 
-    @PostMapping("/client/update-client-details")
+    @PostMapping("/OneBet.ru/client/update-client-details")
     @Transactional
     public String updateClientDetails(@RequestParam String firstName,
                                       @RequestParam String lastName,
@@ -70,12 +70,12 @@ public class ClientManipulationControllers {
         return "client/private-room";
     }
 
-    @GetMapping("/client/to-update-client-details-page")
+    @GetMapping("/OneBet.ru/client/to-update-client-details-page")
     public String toUpdateClientDetails() {
         return "client/update-client-details";
     }
 
-    @GetMapping("/client/private-room")
+    @GetMapping("/OneBet.ru/client/private-room")
     public String enterClientPrivateRoom(ModelMap model) {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         ClientImpl client = daoUser.findClient(username);
@@ -83,6 +83,7 @@ public class ClientManipulationControllers {
         ClientDTO bean = new ClientDTO();
         bean.setClient(client);
         model.put("user", bean);
+
         return "client/private-room";
     }
 }

@@ -11,7 +11,7 @@
 <body background="../../img/background.jpg">
     <div class="login">
         <img src="<c:url value="/img/face.jpg"/>">
-        <form method="post" action="<c:url value="/admin-root/create-new-admin"/>">
+        <form method="post" action="<c:url value="/OneBet.ru/admin-root/create-new-admin"/>">
             <div class="login-input">
                 <input type="text" name="login" pattern=".{6,}" placeholder="login more then 6 char">
             </div>

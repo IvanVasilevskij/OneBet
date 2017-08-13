@@ -11,7 +11,7 @@
     <c:forEach var="event" items="${events.events}">
         <p>Event: ${event}</p>
     </c:forEach>
-    <form method="get" action="<c:url value="/to-home-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeClient" type="submit" value="Return to homepage"/>
     </form>
 </body>

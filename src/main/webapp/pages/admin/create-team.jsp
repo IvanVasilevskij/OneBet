@@ -8,22 +8,22 @@
 
 </head>
 <body>
-    <form method="post" action="<c:url value="/admin/create-dota-team"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/admin/create-dota-team"/>">
             <label for="teamName">Teamname: </label>
             <input required type="text" name="teamName" id="teamName">
         <input class="login-submit" type="submit" value="Create team"/><br/>
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/private-room"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/private-room"/>">
         <input class="takeAdmin" type="submit" value="Return to private room"/>
     </form>
 
-    <form method="get" action="<c:url value="/to-home-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeClient" type="submit" value="Return to homepage"/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/list-of-all-dota-team"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/list-of-all-dota-team"/>">
         <input class="takeAdmin" type="submit" value="See all Dota team"/>
     </form>
 </body>

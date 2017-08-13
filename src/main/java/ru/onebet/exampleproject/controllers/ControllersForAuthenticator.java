@@ -10,12 +10,12 @@ public class ControllersForAuthenticator {
 
     public ControllersForAuthenticator() {}
 
-    @GetMapping("/anonymous/to-login-page")
+    @GetMapping("/OneBet.ru/anonymous/to-login-page")
     public String toLoginPage() {
         return "withoutrole/login";
     }
 
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/signin")
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/OneBet.ru/signin")
     public String login() {
         return "withoutrole/login";
     }

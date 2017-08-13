@@ -10,7 +10,7 @@
 
 </head>
 <body>
-    <form method="post" action="<c:url value="/updateDotaTeamInformation"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/updateDotaTeamInformation"/>">
             <label>Teamname: ${team.team.teamName}</label>
         <input hidden type="text" value="${team.team.teamName}" name="teamName" id="teamName">
 
@@ -38,11 +38,11 @@
         <security:csrfInput/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/private-room"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/private-room"/>">
         <input class="takeAdmin" type="submit" value="Return to private room"/>
     </form>
 
-    <form method="get" action="<c:url value="/to-home-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeAdmin" type="submit" value="Return to homepage"/>
     </form>
 </body>

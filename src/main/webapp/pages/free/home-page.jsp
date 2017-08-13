@@ -7,22 +7,22 @@
     <title>OneBet.ru</title>
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
   </head>
-  <body>
-    <h1>Hello, You have gone to the OneBet.ru!</h1>
+  <body class="bodyHomePage">
+    <h1>Hello, You went to the OneBet.ru!</h1>
 
-    <form method="get" action="<c:url value="/anonymous/to-create-client-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/anonymous/to-create-client-page"/>">
       <input class="takeClient" type="submit" value="Create user"/>
     </form>
 
-    <form method="get" action="<c:url value="/anonymous/to-login-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/anonymous/to-login-page"/>">
       <input class="takeClient" type="submit" value="login"/>
     </form>
 
-    <form method="get" action="<c:url value="/free-information/list-of-all-events"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/free-information/list-of-all-events"/>">
       <input class="takeClient" type="submit" value="See all events"/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/list-of-all-users"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/list-of-all-users"/>">
       <input class="takeAdmin" type="submit" value="See all users"/>
     </form>
 
@@ -31,11 +31,11 @@
       <security:csrfInput/>
     </form>
 
-    <form method="get" action="<c:url value="/client/private-room"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/client/private-room"/>">
       <input class="takeClient" type="submit" value="Enter in private room for Client only"/>
     </form>
 
-    <form method="get" action="<c:url value="/admin/private-room"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/private-room"/>">
       <input class="takeAdmin" type="submit" value="Enter in private room for Admin only"/>
     </form>
 

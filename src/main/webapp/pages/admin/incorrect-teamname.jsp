@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Incorrect team name! This team already created!</h1>
-    <form method="get" action="<c:url value="/admin/to-create-dota-team-page"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/admin/to-create-dota-team-page"/>">
         <input class="takeAdmin" type="submit" value="Return to creating tean page"/>
     </form>
 </body>

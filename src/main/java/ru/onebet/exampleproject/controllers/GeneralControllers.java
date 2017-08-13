@@ -28,12 +28,12 @@ public class GeneralControllers {
         return "/free/home-page";
     }
 
-    @GetMapping("/free/403")
+    @GetMapping("/OneBet.ru/free/403")
     public String returnAccessDeniedPage() {
         return "/free/403";
     }
 
-    @GetMapping("/free-information/list-of-all-events")
+    @GetMapping("/OneBet.ru/free-information/list-of-all-events")
     public String events(ModelMap model) {
         EventsDTO bean = new EventsDTO();
         List<DotaEvent> list = daoEvent.allEvents();
@@ -43,7 +43,7 @@ public class GeneralControllers {
         return "/user/all-events";
     }
 
-    @GetMapping("/to-home-page")
+    @GetMapping("/OneBet.ru/to-home-page")
     public String toHomePage() {
         return "/free/home-page";
     }
