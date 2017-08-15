@@ -9,8 +9,20 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = Transaction.FindByLoginClient,
+                query = "select t from Transaction t where t.client.login = :login"
+        ),
+        @NamedQuery(
+                name = Transaction.FindByLoginAdmin,
+                query = "select t from Transaction t where t.admin.login = :login"
+        )
+})
 @Table(name = "TRANSACTIONS")
 public class Transaction {
+    public static final String FindByLoginAdmin = "Transaction.findByLoginAdmin";
+    public static final String FindByLoginClient = "Transaction.findByLoginClient";
 
     @Id
     @Column(name = "ID", updatable = false, insertable = false)

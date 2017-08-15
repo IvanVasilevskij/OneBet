@@ -10,19 +10,24 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.ClientDTO;
+import ru.onebet.exampleproject.dto.TransactionDTO;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 @Controller
 public class ClientManipulationControllers {
     private final UserDAOImpl daoUser;
+    private final TransactionDAO daoTransaction;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public ClientManipulationControllers(UserDAOImpl daoUser,
+                                         TransactionDAO daoTransaction,
                                          BCryptPasswordEncoder passwordEncoder) {
         this.daoUser = daoUser;
+        this.daoTransaction = daoTransaction;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -67,6 +72,10 @@ public class ClientManipulationControllers {
         bean.setClient(client);
         model.put("user", bean);
 
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        model.put("ta", beanThree);
+
         return "client/private-room";
     }
 
@@ -83,6 +92,10 @@ public class ClientManipulationControllers {
         ClientDTO bean = new ClientDTO();
         bean.setClient(client);
         model.put("user", bean);
+
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        model.put("ta", beanThree);
 
         return "client/private-room";
     }

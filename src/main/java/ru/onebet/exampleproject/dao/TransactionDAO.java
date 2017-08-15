@@ -100,4 +100,16 @@ public class TransactionDAO {
     public List<Transaction> transactionList() {
         return em.createQuery("from Transaction " , Transaction.class).getResultList();
     }
+
+    public List<Transaction> transactionListForClient(String login) {
+        return em.createNamedQuery(Transaction.FindByLoginClient, Transaction.class)
+                .setParameter("login", login)
+                .getResultList();
+    }
+
+    public List<Transaction> transactionListForAdmin(String login) {
+        return em.createNamedQuery(Transaction.FindByLoginAdmin, Transaction.class)
+                .setParameter("login", login)
+                .getResultList();
+    }
 }

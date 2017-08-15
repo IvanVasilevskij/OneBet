@@ -4,7 +4,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <jsp:useBean id="user" type="ru.onebet.exampleproject.dto.AdminDTO" scope="request" />
 <jsp:useBean id="root" type="ru.onebet.exampleproject.dto.AdminDTO" scope="request" />
-<jsp:useBean id="transaction" type="ru.onebet.exampleproject.dto.TransactionUserDTO" scope="request" />
+<jsp:useBean id="ta" type="ru.onebet.exampleproject.dto.TransactionDTO" scope="request" />
 
 
 <html>
@@ -22,7 +22,7 @@
 
         <table border="1" class="transactionsTable">
             <caption>Your transactions</caption>
-                <c:forEach var="transaction" items="${transaction.transaction}">
+                <c:forEach var="transaction" items="${ta.transaction}">
                     <tr>
                         <td>${transaction.toString()}</td>
                     </tr>

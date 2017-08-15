@@ -14,13 +14,11 @@ import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.AdminDTO;
 import ru.onebet.exampleproject.dto.TransactionDTO;
-import ru.onebet.exampleproject.dto.TransactionUserDTO;
 import ru.onebet.exampleproject.dto.UserListDTO;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 
 @Controller
 public class AdminManipulationControllers {
@@ -70,6 +68,10 @@ public class AdminManipulationControllers {
         beanSecond.setAdmin(daoUser.findAdmin("root"));
         model.put("root", beanSecond);
 
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        model.put("transaction", beanThree);
+
         return "admin/private-room";
     }
 
@@ -96,12 +98,14 @@ public class AdminManipulationControllers {
         beanSecond.setAdmin(daoUser.findAdmin("root"));
         model.put("root", beanSecond);
 
-        TransactionUserDTO beanThree = new TransactionUserDTO();
-        beanThree.setTransaction(daoTransaction.transactionList().stream()
-                .filter(c -> c.getAdmin().equals(admin))
-                .collect(Collectors.toList()));
+//        TransactionUserDTO beanThree = new TransactionUserDTO();
+//        beanThree.setTransaction(daoTransaction.transactionList().stream()
+//                .filter(c -> c.getAdmin().equals(admin))
+//                .collect(Collectors.toList()));
 
-        model.put("transaction", beanThree);
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        model.put("ta", beanThree);
 
         return "admin/private-room";
     }
@@ -152,6 +156,10 @@ public class AdminManipulationControllers {
         beanSecond.setAdmin(daoUser.findAdmin("root"));
         model.put("root", beanSecond);
 
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        model.put("ta", beanThree);
+
         return "admin/private-room";
     }
 
@@ -159,7 +167,7 @@ public class AdminManipulationControllers {
     public String allTrnsactionList(ModelMap model) {
         TransactionDTO bean = new TransactionDTO();
         bean.setTransaction(daoTransaction.transactionList());
-        model.put("transaction", bean);
+        model.put("ta", bean);
         return "admin/all-transaction-list";
     }
 }

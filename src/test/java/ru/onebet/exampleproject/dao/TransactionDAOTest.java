@@ -4,7 +4,6 @@ package ru.onebet.exampleproject.dao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,7 +37,7 @@ public class TransactionDAOTest {
 
     @Test
     @Transactional
-    public void testEmitMoney() throws Exception {
+    public void testEmitMoneyAndTransactionsList() throws Exception {
 
         Admin root = daoUser.ensureRootUser();
         ClientImpl clientForEmitMoneyOperation = daoUser.ensureClientForEmitMoneyOperation();
@@ -47,6 +46,15 @@ public class TransactionDAOTest {
 
         assertEquals(new BigDecimal("500.00"), root.getBalance());
         assertEquals(new BigDecimal("500.00"), root.getTransactions().get(0).getAmount());
+
+        // тест transactionsList
+        assertEquals(1, daoTransaction.transactionList().size());
+        // конец данного теста
+
+        //тест transactionsForAdmin / Client
+        assertEquals(1, daoTransaction.transactionListForClient(clientForEmitMoneyOperation.getLogin()).size());
+        assertEquals(1, daoTransaction.transactionListForAdmin(root.getLogin()).size());
+        //end this
     }
 
     @Test
@@ -102,6 +110,5 @@ public class TransactionDAOTest {
         BigDecimal resultFalse =  daoTransaction.checkBalanceForPayoutPrize(admin, new BigDecimal("550.00"));
 
         assertEquals(new BigDecimal("50.00"), resultFalse);
-
     }
 }
