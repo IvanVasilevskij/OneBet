@@ -10,25 +10,33 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.ClientDTO;
 import ru.onebet.exampleproject.dto.TransactionDTO;
+import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
+
+import java.math.BigDecimal;
 
 @Controller
 public class ClientManipulationControllers {
     private final UserDAOImpl daoUser;
     private final TransactionDAO daoTransaction;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CheckOperations sCheck;
+
 
     @Autowired
     public ClientManipulationControllers(UserDAOImpl daoUser,
                                          TransactionDAO daoTransaction,
-                                         BCryptPasswordEncoder passwordEncoder) {
+                                         BCryptPasswordEncoder passwordEncoder,
+                                         CheckOperations sCheck) {
         this.daoUser = daoUser;
         this.daoTransaction = daoTransaction;
         this.passwordEncoder = passwordEncoder;
+        this.sCheck = sCheck;
     }
 
     @GetMapping("/OneBet.ru/anonymous/to-create-client-page")
@@ -93,9 +101,39 @@ public class ClientManipulationControllers {
         bean.setClient(client);
         model.put("user", bean);
 
-        TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
-        model.put("ta", beanThree);
+        TransactionDTO beanTwo = new TransactionDTO();
+        beanTwo.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        model.put("ta", beanTwo);
+
+        return "client/private-room";
+    }
+
+    @GetMapping("/OneBet.ru/client/to-send-money-page")
+    public String toSendMoneyPage() {
+        return "client/send-money";
+    }
+
+    @PostMapping("/OneBet.ru/client/send-money")
+    @Transactional
+    public String sendMoney(@RequestParam String send,
+                            @RequestParam String login,
+                            ModelMap model) {
+        Admin admin = daoUser.findAdmin(login);
+        if (admin == null) return "withoutrole/incorrect-login-name";
+
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        ClientImpl client = daoUser.findClient(username);
+
+        BigDecimal amount = sCheck.tryToParseBigDecimalFromString(send);
+        daoTransaction.sendMoney(client, admin, amount);
+
+        ClientDTO bean = new ClientDTO();
+        bean.setClient(client);
+        model.put("user", bean);
+
+        TransactionDTO beanTwo = new TransactionDTO();
+        beanTwo.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        model.put("ta", beanTwo);
 
         return "client/private-room";
     }

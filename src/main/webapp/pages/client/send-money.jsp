@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
-<form method="post" action="<c:url value="/OneBet.ru/admin-root/emit-money"/>">
-    <input placeholder="enter amount" required type="text" name="emit" pattern="(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)" id="emit">
-    <input class="takeAdmin" type="submit" value="Emit"/>
+<form method="post" action="<c:url value="/OneBet.ru/client/send-money"/>">
+    <input placeholder="enter amount" required type="text" name="send" pattern="(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)" id="send">
+
+    <input placeholder="enter admin login" required type="text" name="login">
+    <input class="takeClient" type="submit" value="Send"/>
     <security:csrfInput/>
 </form>
 </body>

@@ -1,8 +1,7 @@
-<jsp:useBean id="ta" type="ru.onebet.exampleproject.dto.TransactionDTO" scope="request" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-
+<jsp:useBean id="ta" type="ru.onebet.exampleproject.dto.TransactionDTO" scope="request" />
 
 <html>
 <head>
@@ -10,7 +9,7 @@
 </head>
 <body>
     <table border="1" class="transactionsTable">
-        <caption>Transactions</caption>
+        <caption>Transactions of ${requestScope["login"]}, it's ${requestScope["class"]}</caption>
         <c:forEach var="transaction" items="${ta.transaction}">
             <tr>
                 <td>${transaction.toString()}</td>
@@ -27,5 +26,10 @@
     <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
         <input class="takeClient" type="submit" value="Return to homepage"/>
     </form>
+
+    <form method="get" action="<c:url value="/OneBet.ru/admin/private-room"/>">
+        <input class="takeAdmin" type="submit" value="Enter in private room for Admin only"/>
+    </form>
+
 </body>
 </html>

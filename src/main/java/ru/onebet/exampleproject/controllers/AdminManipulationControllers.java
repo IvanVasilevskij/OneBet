@@ -10,11 +10,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.TransactionDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.AdminDTO;
 import ru.onebet.exampleproject.dto.TransactionDTO;
 import ru.onebet.exampleproject.dto.UserListDTO;
+import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
@@ -25,14 +27,17 @@ public class AdminManipulationControllers {
     private final UserDAOImpl daoUser;
     private final BCryptPasswordEncoder passwordEncoder;
     private final TransactionDAO daoTransaction;
+    private final CheckOperations sCheck;
 
     @Autowired
     public AdminManipulationControllers(UserDAOImpl daoUser,
                                         BCryptPasswordEncoder passwordEncoder,
-                                        TransactionDAO daoTransaction) {
+                                        TransactionDAO daoTransaction,
+                                        CheckOperations sCheck) {
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
         this.daoTransaction = daoTransaction;
+        this.sCheck = sCheck;
     }
 
     @GetMapping("/OneBet.ru/admin/list-of-all-users")
@@ -80,7 +85,7 @@ public class AdminManipulationControllers {
         return "admin/update-admin-details";
     }
 
-    @GetMapping("/admin-root/to-create-new-admin-page")
+    @GetMapping("/OneBet.ru/admin-root/to-create-new-admin-page")
     public String toCreateNewAdmin() {
         return "admin/create-new-admin";
     }
@@ -135,7 +140,7 @@ public class AdminManipulationControllers {
         return "/admin/emit-money";
     }
 
-    @PostMapping("/admin-root/emit-money")
+    @PostMapping("/OneBet.ru/admin-root/emit-money")
     @Transactional
     public String emitMoney(@RequestParam String emit,
                             ModelMap model) {
@@ -143,7 +148,8 @@ public class AdminManipulationControllers {
         ClientImpl client = daoUser.findClient("client");
         Admin root = daoUser.findAdmin("root");
 
-        daoTransaction.emitMoney(root, client, new BigDecimal(emit));
+        BigDecimal admount = sCheck.tryToParseBigDecimalFromString(emit);
+        daoTransaction.emitMoney(root, client, admount);
 
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Admin admin = daoUser.findAdmin(username);
@@ -169,5 +175,62 @@ public class AdminManipulationControllers {
         bean.setTransaction(daoTransaction.transactionList());
         model.put("ta", bean);
         return "admin/all-transaction-list";
+    }
+
+    @GetMapping("/OneBet.ru/admin/to-send-money-page")
+    public String toSendMoneyPage() {
+        return "admin/recive-money";
+    }
+
+    @PostMapping("/OneBet.ru/admin/recive-money")
+    @Transactional
+    public String reciveMoney(@RequestParam String send,
+                            @RequestParam String login,
+                            ModelMap model) {
+        ClientImpl client = daoUser.findClient(login);
+        if (client == null) return "withoutrole/incorrect-login-name";
+
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Admin admin = daoUser.findAdmin(username);
+
+        BigDecimal amount = sCheck.tryToParseBigDecimalFromString(send);
+        daoTransaction.reciveMoney(client, admin, amount);
+
+        AdminDTO bean = new AdminDTO();
+        bean.setAdmin(admin);
+        model.put("user", bean);
+
+        AdminDTO beanSecond = new AdminDTO();
+        beanSecond.setAdmin(daoUser.findAdmin("root"));
+        model.put("root", beanSecond);
+
+        TransactionDTO beanThree = new TransactionDTO();
+        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        model.put("ta", beanThree);
+
+        return "admin/private-room";
+    }
+
+    @PostMapping("/OneBet.ru/admin/listTransactionOfUser")
+    @Transactional
+    public String listTransactionOfUser(@RequestParam String login,
+                                        ModelMap model) {
+        ru.onebet.exampleproject.model.users.User user;
+        TransactionDTO bean = new TransactionDTO();
+
+        user = daoUser.findClient(login);
+        if (user != null) {
+            bean.setTransaction(daoTransaction.transactionListForClient(user.getLogin()));
+        } else {
+            user = daoUser.findAdmin(login);
+            if (user != null) {
+                bean.setTransaction(daoTransaction.transactionListForAdmin(user.getLogin()));
+            } else return "withoutrole/incorrect-login-name";
+        }
+
+        model.put("ta", bean);
+        model.put("login", user.getLogin());
+        model.put("class", (user.getClass().equals(Admin.class) ? "Admin" : "Client"));
+        return "admin/user-transaction-list";
     }
 }

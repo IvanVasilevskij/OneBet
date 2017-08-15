@@ -44,51 +44,51 @@ public class TransactionDAO {
         em.persist(admin);
     }
 
-    public void sendMoney(ClientImpl client, Admin root, BigDecimal amount) {
+    public void sendMoney(ClientImpl client, Admin admin, BigDecimal amount) {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
                     .withClient(client)
-                    .withAdmin(root)
+                    .withAdmin(admin)
                     .build();
 
             em.persist(t);
             em.refresh(client);
-            em.refresh(root);
+            em.refresh(admin);
 
             client = ClientImpl.mutator(client)
                     .withBalance(client.getBalance().subtract(amount))
                     .mutate();
             em.persist(client);
 
-            root = Admin.mutator(root)
-                    .withBalance(root.getBalance().add(amount))
+            admin = Admin.mutator(admin)
+                    .withBalance(admin.getBalance().add(amount))
                     .mutate();
-            em.persist(root);
+            em.persist(admin);
     }
 
-    public void reciveMoney (ClientImpl client, Admin root, BigDecimal amount) {
+    public void reciveMoney (ClientImpl client, Admin admin, BigDecimal amount) {
             Transaction t = Transaction.Builder()
                     .withDate(LocalDateTime.now())
                     .withAmount(amount)
                     .withClient(client)
-                    .withAdmin(root)
+                    .withAdmin(admin)
                     .build();
 
             em.persist(t);
             em.refresh(client);
-            em.refresh(root);
+            em.refresh(admin);
 
             client = ClientImpl.mutator(client)
                     .withBalance(client.getBalance().add(amount))
                     .mutate();
 
-            root = Admin.mutator(root)
-                    .withBalance(root.getBalance().subtract(amount))
+            admin = Admin.mutator(admin)
+                    .withBalance(admin.getBalance().subtract(amount))
                     .mutate();
 
             em.persist(client);
-            em.persist(root);
+            em.persist(admin);
     }
 
     public BigDecimal checkBalanceForPayoutPrize(Admin admin, BigDecimal amount) {
