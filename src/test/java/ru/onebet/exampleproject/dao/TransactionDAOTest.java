@@ -50,11 +50,6 @@ public class TransactionDAOTest {
         // тест transactionsList
         assertEquals(1, daoTransaction.transactionList().size());
         // конец данного теста
-
-        //тест transactionsForAdmin / Client
-        assertEquals(1, daoTransaction.transactionListForClient(clientForEmitMoneyOperation.getLogin()).size());
-        assertEquals(1, daoTransaction.transactionListForAdmin(root.getLogin()).size());
-        //end this
     }
 
     @Test
@@ -90,6 +85,10 @@ public class TransactionDAOTest {
         assertEquals(new BigDecimal("100.00"), client.getBalance());
         assertEquals(new BigDecimal("-100.00"), root.getBalance());
         assertEquals(new BigDecimal("100.00"), client.getTransactions().get(0).getAmount());
+
+        //add other test
+        assertEquals(1, daoTransaction.transactionsListOfClientOrAdmin(client.getLogin()).size());
+        //end
     }
 
     @Test

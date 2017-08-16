@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.onebet.exampleproject.dao.TransactionDAO;
+import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.model.users.User;
@@ -23,7 +25,8 @@ public class UserDAOImpl implements UserDAO{
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserDAOImpl(EntityManager em, BCryptPasswordEncoder passwordEncoder) {
+    public UserDAOImpl(EntityManager em,
+                       BCryptPasswordEncoder passwordEncoder) {
         this.em = em;
         this.passwordEncoder = passwordEncoder;
     }
@@ -160,5 +163,4 @@ public class UserDAOImpl implements UserDAO{
         em.persist(client);
         return client;
     }
-
 }

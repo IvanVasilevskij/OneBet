@@ -74,7 +74,7 @@ public class AdminManipulationControllers {
         model.put("root", beanSecond);
 
         TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        beanThree.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(admin.getLogin()));
         model.put("transaction", beanThree);
 
         return "admin/private-room";
@@ -109,7 +109,7 @@ public class AdminManipulationControllers {
 //                .collect(Collectors.toList()));
 
         TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        beanThree.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(admin.getLogin()));
         model.put("ta", beanThree);
 
         return "admin/private-room";
@@ -163,7 +163,7 @@ public class AdminManipulationControllers {
         model.put("root", beanSecond);
 
         TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        beanThree.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(admin.getLogin()));
         model.put("ta", beanThree);
 
         return "admin/private-room";
@@ -205,7 +205,7 @@ public class AdminManipulationControllers {
         model.put("root", beanSecond);
 
         TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForAdmin(admin.getLogin()));
+        beanThree.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(admin.getLogin()));
         model.put("ta", beanThree);
 
         return "admin/private-room";
@@ -215,22 +215,17 @@ public class AdminManipulationControllers {
     @Transactional
     public String listTransactionOfUser(@RequestParam String login,
                                         ModelMap model) {
-        ru.onebet.exampleproject.model.users.User user;
         TransactionDTO bean = new TransactionDTO();
 
-        user = daoUser.findClient(login);
-        if (user != null) {
-            bean.setTransaction(daoTransaction.transactionListForClient(user.getLogin()));
-        } else {
-            user = daoUser.findAdmin(login);
-            if (user != null) {
-                bean.setTransaction(daoTransaction.transactionListForAdmin(user.getLogin()));
-            } else return "withoutrole/incorrect-login-name";
-        }
+       try {
+           bean.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(login));
+       } catch (IllegalArgumentException e) {
+           return "withoutrole/incorrect-login-name";
+       }
 
         model.put("ta", bean);
-        model.put("login", user.getLogin());
-        model.put("class", (user.getClass().equals(Admin.class) ? "Admin" : "Client"));
+        model.put("login", login);
+        model.put("class", (daoUser.findAdmin(login) != null) ? "Admin" : "Client");
         return "admin/user-transaction-list";
     }
 }

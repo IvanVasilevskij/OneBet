@@ -1,5 +1,6 @@
 package ru.onebet.exampleproject.dao.userdao;
 
+import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 import ru.onebet.exampleproject.model.users.User;

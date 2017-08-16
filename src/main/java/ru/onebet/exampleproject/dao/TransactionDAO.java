@@ -4,6 +4,7 @@ package ru.onebet.exampleproject.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.Transaction;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
@@ -20,6 +21,9 @@ public class TransactionDAO {
 
     @PersistenceContext
     private final EntityManager em;
+
+    @Autowired
+    private UserDAOImpl daoUser;
 
     @Autowired
     public TransactionDAO(EntityManager em) {
@@ -101,15 +105,21 @@ public class TransactionDAO {
         return em.createQuery("from Transaction " , Transaction.class).getResultList();
     }
 
-    public List<Transaction> transactionListForClient(String login) {
-        return em.createNamedQuery(Transaction.FindByLoginClient, Transaction.class)
-                .setParameter("login", login)
-                .getResultList();
-    }
-
-    public List<Transaction> transactionListForAdmin(String login) {
-        return em.createNamedQuery(Transaction.FindByLoginAdmin, Transaction.class)
-                .setParameter("login", login)
-                .getResultList();
+    public List<Transaction> transactionsListOfClientOrAdmin(String login) {
+        List<Transaction> result;
+        ClientImpl client = daoUser.findClient(login);
+        if (client != null) {
+            result = em.createNamedQuery(Transaction.FindByLoginClient, Transaction.class)
+                    .setParameter("login", login)
+                    .getResultList();
+        } else {
+            Admin admin = daoUser.findAdmin(login);
+            if (admin != null) {
+                result = em.createNamedQuery(Transaction.FindByLoginAdmin, Transaction.class)
+                        .setParameter("login", login)
+                        .getResultList();
+            } else throw new IllegalArgumentException("");
+        }
+        return result;
     }
 }

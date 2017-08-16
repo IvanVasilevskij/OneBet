@@ -81,7 +81,7 @@ public class ClientManipulationControllers {
         model.put("user", bean);
 
         TransactionDTO beanThree = new TransactionDTO();
-        beanThree.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        beanThree.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(client.getLogin()));
         model.put("ta", beanThree);
 
         return "client/private-room";
@@ -102,7 +102,7 @@ public class ClientManipulationControllers {
         model.put("user", bean);
 
         TransactionDTO beanTwo = new TransactionDTO();
-        beanTwo.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        beanTwo.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(client.getLogin()));
         model.put("ta", beanTwo);
 
         return "client/private-room";
@@ -132,7 +132,7 @@ public class ClientManipulationControllers {
         model.put("user", bean);
 
         TransactionDTO beanTwo = new TransactionDTO();
-        beanTwo.setTransaction(daoTransaction.transactionListForClient(client.getLogin()));
+        beanTwo.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(client.getLogin()));
         model.put("ta", beanTwo);
 
         return "client/private-room";
