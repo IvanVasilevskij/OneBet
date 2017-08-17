@@ -27,7 +27,7 @@ public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent, Maked
         this.em = em;
     }
 
-    public void makeBet(ClientImpl client,
+    public MakedBetsOfDota makeBet(ClientImpl client,
                         Admin root,
                         DotaEvent event,
                         DotaTeam bettingTeam,
@@ -38,14 +38,22 @@ public class DotaBetsMakerDAO implements BetsMakerDAO<DotaTeam, DotaEvent, Maked
                 .withClient(client)
                 .withBettingTeam(bettingTeam)
                 .withEvent(event)
+                .withAmount(amount)
                 .build();
 
         em.persist(mBet);
         em.refresh(client);
 
+        return mBet;
     }
 
     public List<MakedBetsOfDota> allMakedBets() {
             return em.createQuery("from MakedBetsOfDota", MakedBetsOfDota.class).getResultList();
+    }
+
+    public List<MakedBetsOfDota> allBetsOfOneClient(String login) {
+        return em.createNamedQuery(MakedBetsOfDota.FindBetWithClient, MakedBetsOfDota.class)
+                .setParameter("login", login)
+                .getResultList();
     }
 }

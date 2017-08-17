@@ -57,12 +57,16 @@
             <input class="takeAdmin" type="submit" value="Send money"/>
         </form>
 
-        <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
-            <input class="takeClient" type="submit" value="Return to homepage"/>
-        </form>
-
         <form method="get" action="<c:url value="/OneBet.ru/admin/to-create-event-page"/>">
             <input class="takeAdmin" type="submit" value="Create event">
+        </form>
+
+        <form method="get" action="<c:url value="/OneBet.ru/admin/to-all-bets"/>">
+            <input class="takeAdmin" type="submit" value="See all bets">
+        </form>
+
+        <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
+            <input class="takeClient" type="submit" value="Return to homepage"/>
         </form>
 </body>
 </html>

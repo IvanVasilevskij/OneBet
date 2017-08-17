@@ -6,11 +6,19 @@ import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NamedQueries(
+        @NamedQuery(
+                name = MakedBetsOfDota.FindBetWithClient,
+                query = "select e from MakedBetsOfDota e where e.client.login = :login")
+)
 @Table(name = "MAKING_BETS")
 public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
+    public static final String FindBetWithClient = "MakedBetsOfDota.FindBetWithClient";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", insertable = false, updatable = false)
@@ -28,6 +36,9 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
 
     @ManyToOne(optional = false)
     private DotaEvent event;
+
+    @Column(name = "AMOUNT")
+    private BigDecimal amount;
 
     public MakedBetsOfDota() {
     }
@@ -47,6 +58,7 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         return bettingTeam;
     }
 
+    @Override
     public ClientImpl getClient() {
         return client;
     }
@@ -56,11 +68,17 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         return event;
     }
 
+    @Override
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
     private MakedBetsOfDota(final Builder builder) {
         this.event = builder.event;
         this.date = builder.date;
         this.bettingTeam = builder.bettingTeam;
         this.client = builder.client;
+        this.amount = builder.amount;
     }
 
     public static Builder Builder() {
@@ -72,6 +90,7 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
         private DotaTeam bettingTeam;
         private ClientImpl client;
         private DotaEvent event;
+        private BigDecimal amount;
 
         public Builder() {}
 
@@ -95,6 +114,11 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
             return this;
         }
 
+        public Builder withAmount(final BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
         public MakedBetsOfDota build() {
             return new MakedBetsOfDota(this);
         }
@@ -102,9 +126,12 @@ public class MakedBetsOfDota implements MakedBets<DotaTeam, DotaEvent> {
 
     @Override
     public String toString() {
-        return "MakedBetsOfDota{" +
-                "bettingTeam=" + bettingTeam +
+        return "CLIENT=" +
+                client.getLogin() +
+                "___Bet{" +
+                "bettingTeam=" + bettingTeam.getTeamName() +
                 ", event=" + event +
+                ", amount=" + amount +
                 '}';
     }
 }

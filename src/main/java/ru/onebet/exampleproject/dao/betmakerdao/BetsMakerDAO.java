@@ -11,11 +11,13 @@ import java.util.List;
 
 public interface BetsMakerDAO <T extends Team, E extends EventBetweenCoupleTeam, M extends MakedBets> {
 
-    void makeBet(ClientImpl client,
+    M makeBet(ClientImpl client,
                  Admin root,
                  E event,
                  T bettingTeam,
                  BigDecimal amount);
 
     List<M> allMakedBets();
+
+    List<M> allBetsOfOneClient(String login);
 }

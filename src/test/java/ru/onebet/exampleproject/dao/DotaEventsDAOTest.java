@@ -99,7 +99,7 @@ public class DotaEventsDAOTest {
 
         DotaTeam teamFirst = daoDotaTeam.findTeamByTeamName("EG");
         DotaTeam teamSecond = daoDotaTeam.findTeamByTeamName("VP");
-        LocalDateTime timeOfTheFirstEvent = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+        LocalDateTime timeOfTheFirstEvent = sCheck.tryToParseDateFromString("25.05.2018 16:30");
         DotaEvent eventFirst = daoEventDota.createEvent(teamFirst,
                 teamSecond,
                 timeOfTheFirstEvent,
@@ -115,7 +115,7 @@ public class DotaEventsDAOTest {
 
     // конец проверки, см. выше
 
-        LocalDateTime timeOfTheSecondEvent = sCheck.tryToParseDateFromString("25.06.2015 16:30");
+        LocalDateTime timeOfTheSecondEvent = sCheck.tryToParseDateFromString("25.06.2018 16:30");
         DotaEvent eventSecond = daoEventDota.createEvent(teamFirst,
                 teamSecond,
                 timeOfTheSecondEvent,
@@ -123,10 +123,14 @@ public class DotaEventsDAOTest {
                 12.8,
                 21.9);
 
-        LocalDateTime date = sCheck.tryToParseDateFromString("25.06.2015");
+        LocalDateTime date = sCheck.tryToParseDateFromString("25.06.2018");
 
         List<DotaEvent> resultList = daoEventDota.chooseAllEventInEnteredDate(date);
 
         assertEquals(resultList.size(),1);
+
+        //
+        assertEquals(2, daoEventDota.chooseAllEventLateThatNow().size());
+        //
     }
 }

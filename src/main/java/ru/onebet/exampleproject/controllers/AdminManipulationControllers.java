@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.TransactionDAO;
+import ru.onebet.exampleproject.dao.betmakerdao.DotaBetsMakerDAO;
 import ru.onebet.exampleproject.dao.eventsdao.DotaEventsDAO;
 import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
-import ru.onebet.exampleproject.dto.AdminDTO;
-import ru.onebet.exampleproject.dto.EventDTO;
-import ru.onebet.exampleproject.dto.TransactionDTO;
-import ru.onebet.exampleproject.dto.UserListDTO;
+import ru.onebet.exampleproject.dto.*;
+import ru.onebet.exampleproject.model.betsmaked.MakedBetsOfDota;
 import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
 import ru.onebet.exampleproject.model.team.DotaTeam;
 import ru.onebet.exampleproject.model.users.Admin;
@@ -35,6 +34,7 @@ public class AdminManipulationControllers {
     private final CheckOperations sCheck;
     private final DotaTeamDAO daoDotaTeam;
     private final DotaEventsDAO daoDotaEvent;
+    private final DotaBetsMakerDAO daoMakerBers;
 
     @Autowired
     public AdminManipulationControllers(UserDAOImpl daoUser,
@@ -42,13 +42,15 @@ public class AdminManipulationControllers {
                                         TransactionDAO daoTransaction,
                                         CheckOperations sCheck,
                                         DotaTeamDAO daoDotaTeam,
-                                        DotaEventsDAO daoDotaEvent) {
+                                        DotaEventsDAO daoDotaEvent,
+                                        DotaBetsMakerDAO daoMakerBers) {
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
         this.daoTransaction = daoTransaction;
         this.sCheck = sCheck;
         this.daoDotaTeam = daoDotaTeam;
         this.daoDotaEvent = daoDotaEvent;
+        this.daoMakerBers = daoMakerBers;
     }
 
     @GetMapping("/OneBet.ru/admin/list-of-all-users")
@@ -274,6 +276,14 @@ public class AdminManipulationControllers {
                 persentForTeamSecond);
         model.put("event", event);
         return "admin/event-succesfully-created!";
+    }
+
+    @GetMapping("/OneBet.ru/admin/to-all-bets")
+    public String allBets(ModelMap model) {
+        BetDTO bean = new BetDTO();
+        bean.setBets(daoMakerBers.allMakedBets());
+        model.put("bets", bean);
+        return "admin/all-bets";
     }
 
 }

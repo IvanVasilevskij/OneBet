@@ -12,9 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.TransactionDAO;
+import ru.onebet.exampleproject.dao.betmakerdao.DotaBetsMakerDAO;
+import ru.onebet.exampleproject.dao.eventsdao.DotaEventsDAO;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
+import ru.onebet.exampleproject.dto.BetDTO;
 import ru.onebet.exampleproject.dto.ClientDTO;
+import ru.onebet.exampleproject.dto.EventDTO;
 import ru.onebet.exampleproject.dto.TransactionDTO;
+import ru.onebet.exampleproject.model.betsmaked.MakedBetsOfDota;
+import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
@@ -26,17 +34,26 @@ public class ClientManipulationControllers {
     private final TransactionDAO daoTransaction;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CheckOperations sCheck;
+    private final DotaEventsDAO daoDotaEvent;
+    private final DotaTeamDAO daoDotaTeam;
+    private final DotaBetsMakerDAO daoMakerBets;
 
 
     @Autowired
     public ClientManipulationControllers(UserDAOImpl daoUser,
                                          TransactionDAO daoTransaction,
                                          BCryptPasswordEncoder passwordEncoder,
-                                         CheckOperations sCheck) {
+                                         CheckOperations sCheck,
+                                         DotaEventsDAO daoDotaEvent,
+                                         DotaTeamDAO daoDotaTeam,
+                                         DotaBetsMakerDAO daoMakerBets) {
         this.daoUser = daoUser;
         this.daoTransaction = daoTransaction;
         this.passwordEncoder = passwordEncoder;
         this.sCheck = sCheck;
+        this.daoDotaEvent = daoDotaEvent;
+        this.daoDotaTeam = daoDotaTeam;
+        this.daoMakerBets = daoMakerBets;
     }
 
     @GetMapping("/OneBet.ru/anonymous/to-create-client-page")
@@ -136,5 +153,66 @@ public class ClientManipulationControllers {
         model.put("ta", beanTwo);
 
         return "client/private-room";
+    }
+
+    @GetMapping("/OneBet.ru/client/to-make-bet-page")
+    public String toMakeBetPage(ModelMap model) {
+        EventDTO bean = new EventDTO();
+        bean.setList(daoDotaEvent.chooseAllEventLateThatNow());
+        model.put("events", bean);
+        return "client/make-bet";
+    }
+
+    @PostMapping("/OneBet.ru/client/make-bet")
+    @Transactional
+    public String makeBet(@RequestParam int idOfEvent,
+                          @RequestParam String bettingTeam,
+                          @RequestParam String amount,
+                          ModelMap model) {
+
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        ClientImpl client = daoUser.findClient(username);
+
+        Admin root = daoUser.ensureRootUser();
+
+        BigDecimal amountForBet;
+        try {
+            amountForBet = sCheck.tryToParseBigDecimalFromString(amount);
+        } catch (IllegalArgumentException ie) {
+            return "withoutrole/incorrect-amount";
+        }
+
+        DotaEvent event = daoDotaEvent.chooseEventById(idOfEvent);
+        if (event == null) return "withoutrole/incorrect-event-id";
+
+        DotaTeam team = daoDotaTeam.findTeamByTeamName(bettingTeam);
+        if (team == null) return "withoutrole/incorrect-teamname";
+
+        if (!daoDotaEvent.checkThatThisEventHaveTheTeam(event, team)) return "withoutrole/event-without-team-for-bet";
+
+        MakedBetsOfDota bet = daoMakerBets.makeBet(client,
+                root,
+                event,
+                team,
+                amountForBet);
+
+        daoTransaction.sendMoney(client,
+                root,
+                amountForBet);
+
+        model.put("bet", bet.toString());
+
+        return "client/bet-succesfully-made";
+    }
+
+    @GetMapping("/OneBet.ru/client/to-all-my-bets")
+    public String seeAllMyBets(ModelMap model) {
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        ClientImpl client = daoUser.findClient(username);
+
+        BetDTO bean = new BetDTO();
+        bean.setBets(daoMakerBets.allBetsOfOneClient(client.getLogin()));
+        model.put("bets", bean);
+        return "client/all-my-bets";
     }
 }

@@ -11,7 +11,6 @@ import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Service

@@ -17,11 +17,21 @@ import java.time.LocalDateTime;
         @NamedQuery(
                 name = DotaEvent.FindEventsByEnteredDate,
                 query = "select u from DotaEvent u where u.date > :dateS and u.date < :dateE"
+        ),
+        @NamedQuery(
+                name = DotaEvent.FindEventsLateThatNow,
+                query = "select u from DotaEvent u where u.date > :date"
+        ),
+        @NamedQuery(
+                name = DotaEvent.FindEventById,
+                query = "select u from DotaEvent u where u.id = :id"
         )
 })
 public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
     public static final String FindEventsByTeamName = "DotaTeam.FindEventsByTeamName";
+    public static final String FindEventsLateThatNow = "DotaTeam.FindEventsLateThatNow";
     public static final String FindEventsByEnteredDate = "DotaTeam.FindEventsByEnteredDate";
+    public static final String FindEventById = "DotaTeam.FindEventById";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -144,7 +154,8 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
 
     @Override
     public String toString() {
-        return teamFirst.getTeamName() +
+        return "id of event:" +
+                id + "___" + teamFirst.getTeamName() +
                 " (" + getPercentForTeamFirst() + ") " +
                 "   vs   " +
                 teamSecond.getTeamName() +

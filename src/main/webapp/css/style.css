@@ -17,6 +17,11 @@ caption {
 .transactionsTable td{
     width: 600px;
 }
+
+.betsTable td {
+    width: 1200px;
+}
+
 .loginBody {
     background-image: url("../img/background.jpg");
 }

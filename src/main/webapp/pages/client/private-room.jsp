@@ -37,5 +37,13 @@
             <form method="get" action="<c:url value="/OneBet.ru/client/to-send-money-page"/>">
                 <input class="takeClient" type="submit" value="Send money"/>
             </form>
+
+            <form method="get" action="<c:url value="/OneBet.ru/client/to-make-bet-page"/>">
+                <input class="takeClient" type="submit" value="Make bet">
+            </form>
+
+            <form method="get" action="<c:url value="/OneBet.ru/client/to-all-my-bets"/>">
+                <input class="takeClient" type="submit" value="All my bets">
+            </form>
     </body>
 </html>

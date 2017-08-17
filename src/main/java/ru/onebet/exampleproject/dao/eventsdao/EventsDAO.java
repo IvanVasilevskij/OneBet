@@ -23,4 +23,8 @@ public interface EventsDAO<T extends Team,E extends EventBetweenCoupleTeam> {
     boolean checkThatThisEventHaveTheTeam (E event, T team);
 
     List<E> chooseAllEventInEnteredDate(LocalDateTime date);
+
+    List<E> chooseAllEventLateThatNow();
+
+    E chooseEventById(int id);
 }

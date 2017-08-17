@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
 </head>
 <body>
-<table border="1" class="transactionsTable">
-    <caption>Events</caption>
-    <c:forEach var="event" items="${events.list}">
-        <tr>
-            <td>${event.toString()}</td>
-        </tr>
-    </c:forEach>
-</table>
+    <table border="1" class="transactionsTable">
+        <caption>Events for bets</caption>
+        <c:forEach var="event" items="${events.list}">
+            <tr>
+                <td>${event.toString()}</td>
+            </tr>
+        </c:forEach>
+    </table>
 
 <%--<form method="post" action="<c:url value="/OneBet.ru/admin/list-transaction-of-user"/>">--%>
     <%--<input placeholder="enter login" required type="text" name="login">--%>

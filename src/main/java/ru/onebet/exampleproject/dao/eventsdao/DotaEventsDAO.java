@@ -93,4 +93,22 @@ public class DotaEventsDAO implements EventsDAO <DotaTeam, DotaEvent> {
                 .setParameter("dateE", endOfDayAtEnteredDate)
                 .getResultList();
     }
+
+    @Override
+    public List<DotaEvent> chooseAllEventLateThatNow() {
+        return em.createNamedQuery(DotaEvent.FindEventsLateThatNow, DotaEvent.class)
+                .setParameter("date", LocalDateTime.now())
+                .getResultList();
+    }
+
+    @Override
+    public DotaEvent chooseEventById(int id) {
+        try {
+            return em.createNamedQuery(DotaEvent.FindEventById, DotaEvent.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Throwable t) {
+            return null;
+        }
+    }
 }

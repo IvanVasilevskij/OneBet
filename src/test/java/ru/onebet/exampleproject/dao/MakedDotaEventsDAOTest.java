@@ -106,7 +106,7 @@ public class MakedDotaEventsDAOTest {
 
         Admin root = daoUser.ensureRootUser();
 
-        LocalDateTime timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2015 16:30");
+        LocalDateTime timeOfTheGame = sCheck.tryToParseDateFromString("25.05.2017 16:30");
 
         DotaEvent event = daoEventDota.createEvent(teamFirst,
                 teamSecond,
@@ -131,5 +131,6 @@ public class MakedDotaEventsDAOTest {
                 new BigDecimal("20.00"));
 
         assertEquals(daoBetsMakerDota.allMakedBets().size(), 2);
+
     }
 }
