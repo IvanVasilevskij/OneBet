@@ -17,7 +17,7 @@
         </c:forEach>
     </table>
 
-    <form method="post" action="<c:url value="/OneBet.ru/admin/listTransactionOfUser"/>">
+    <form method="post" action="<c:url value="/OneBet.ru/admin/list-transaction-of-user"/>">
         <input placeholder="enter login" required type="text" name="login">
         <input class="takeAdmin" type="submit" value="View personal transactions"/>
         <security:csrfInput/>

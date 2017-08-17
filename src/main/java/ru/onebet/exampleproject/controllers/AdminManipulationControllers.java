@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.onebet.exampleproject.checks.CheckOperations;
 import ru.onebet.exampleproject.dao.TransactionDAO;
+import ru.onebet.exampleproject.dao.eventsdao.DotaEventsDAO;
+import ru.onebet.exampleproject.dao.teamdao.DotaTeamDAO;
 import ru.onebet.exampleproject.dao.userdao.UserDAOImpl;
 import ru.onebet.exampleproject.dto.AdminDTO;
+import ru.onebet.exampleproject.dto.EventDTO;
 import ru.onebet.exampleproject.dto.TransactionDTO;
 import ru.onebet.exampleproject.dto.UserListDTO;
-import ru.onebet.exampleproject.model.Transaction;
+import ru.onebet.exampleproject.model.coupleteambets.DotaEvent;
+import ru.onebet.exampleproject.model.team.DotaTeam;
 import ru.onebet.exampleproject.model.users.Admin;
 import ru.onebet.exampleproject.model.users.ClientImpl;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Controller
 public class AdminManipulationControllers {
@@ -28,16 +33,22 @@ public class AdminManipulationControllers {
     private final BCryptPasswordEncoder passwordEncoder;
     private final TransactionDAO daoTransaction;
     private final CheckOperations sCheck;
+    private final DotaTeamDAO daoDotaTeam;
+    private final DotaEventsDAO daoDotaEvent;
 
     @Autowired
     public AdminManipulationControllers(UserDAOImpl daoUser,
                                         BCryptPasswordEncoder passwordEncoder,
                                         TransactionDAO daoTransaction,
-                                        CheckOperations sCheck) {
+                                        CheckOperations sCheck,
+                                        DotaTeamDAO daoDotaTeam,
+                                        DotaEventsDAO daoDotaEvent) {
         this.daoUser = daoUser;
         this.passwordEncoder = passwordEncoder;
         this.daoTransaction = daoTransaction;
         this.sCheck = sCheck;
+        this.daoDotaTeam = daoDotaTeam;
+        this.daoDotaEvent = daoDotaEvent;
     }
 
     @GetMapping("/OneBet.ru/admin/list-of-all-users")
@@ -188,7 +199,7 @@ public class AdminManipulationControllers {
                             @RequestParam String login,
                             ModelMap model) {
         ClientImpl client = daoUser.findClient(login);
-        if (client == null) return "withoutrole/incorrect-login-name";
+        if (client == null) return "withoutrole/incorrect-login";
 
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Admin admin = daoUser.findAdmin(username);
@@ -211,7 +222,7 @@ public class AdminManipulationControllers {
         return "admin/private-room";
     }
 
-    @PostMapping("/OneBet.ru/admin/listTransactionOfUser")
+    @PostMapping("/OneBet.ru/admin/list-transaction-of-user")
     @Transactional
     public String listTransactionOfUser(@RequestParam String login,
                                         ModelMap model) {
@@ -220,7 +231,7 @@ public class AdminManipulationControllers {
        try {
            bean.setTransaction(daoTransaction.transactionsListOfClientOrAdmin(login));
        } catch (IllegalArgumentException e) {
-           return "withoutrole/incorrect-login-name";
+           return "withoutrole/incorrect-login";
        }
 
         model.put("ta", bean);
@@ -228,4 +239,41 @@ public class AdminManipulationControllers {
         model.put("class", (daoUser.findAdmin(login) != null) ? "Admin" : "Client");
         return "admin/user-transaction-list";
     }
+
+    @GetMapping("/OneBet.ru/admin/to-create-event-page")
+    public String toCreateEventPage() {
+        return "admin/create-event";
+    }
+
+    @PostMapping("/OneBet.ru/admin/create-event")
+    @Transactional
+    public String createEvent(@RequestParam String teamFirst,
+                              @RequestParam String teamSecond,
+                              @RequestParam double persentForTeamFirst,
+                              @RequestParam double persentForTeamDrow,
+                              @RequestParam double persentForTeamSecond,
+                              @RequestParam String time,
+                              ModelMap model) {
+        LocalDateTime dTime;
+        try {
+            dTime = sCheck.tryToParseDateFromString(time);
+        } catch (IllegalArgumentException e) {
+            return "withoutrole/incorrect-date";
+        }
+        DotaTeam first = daoDotaTeam.findTeamByTeamName(teamFirst);
+        if (first == null) return "withoutrole/incorrect-teamname";
+
+        DotaTeam second = daoDotaTeam.findTeamByTeamName(teamSecond);
+        if (second == null) return "withoutrole/incorrect-teamname";
+
+        DotaEvent event = daoDotaEvent.createEvent(first,
+                second,
+                dTime,
+                persentForTeamFirst,
+                persentForTeamDrow,
+                persentForTeamSecond);
+        model.put("event", event);
+        return "admin/event-succesfully-created!";
+    }
+
 }

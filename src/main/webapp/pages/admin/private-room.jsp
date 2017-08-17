@@ -41,10 +41,6 @@
             <input class="takeAdmin" type="submit" value="Create a new team"/>
         </form>
 
-        <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
-            <input class="takeClient" type="submit" value="Return to homepage"/>
-        </form>
-
         <form method="get" action="<c:url value="/OneBet.ru/admin/list-of-all-dota-team"/>">
             <input class="takeAdmin" type="submit" value="See all created Dota team"/>
         </form>
@@ -61,5 +57,12 @@
             <input class="takeAdmin" type="submit" value="Send money"/>
         </form>
 
+        <form method="get" action="<c:url value="/OneBet.ru/to-home-page"/>">
+            <input class="takeClient" type="submit" value="Return to homepage"/>
+        </form>
+
+        <form method="get" action="<c:url value="/OneBet.ru/admin/to-create-event-page"/>">
+            <input class="takeAdmin" type="submit" value="Create event">
+        </form>
 </body>
 </html>

@@ -18,7 +18,7 @@
       <input class="takeClient" type="submit" value="login"/>
     </form>
 
-    <form method="get" action="<c:url value="/OneBet.ru/free-information/list-of-all-events"/>">
+    <form method="get" action="<c:url value="/OneBet.ru/free/to-all-event-page"/>">
       <input class="takeClient" type="submit" value="See all events"/>
     </form>
 

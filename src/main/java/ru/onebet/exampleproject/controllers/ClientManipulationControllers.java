@@ -119,7 +119,7 @@ public class ClientManipulationControllers {
                             @RequestParam String login,
                             ModelMap model) {
         Admin admin = daoUser.findAdmin(login);
-        if (admin == null) return "withoutrole/incorrect-login-name";
+        if (admin == null) return "withoutrole/incorrect-login";
 
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         ClientImpl client = daoUser.findClient(username);

@@ -27,9 +27,6 @@ import static org.junit.Assert.assertEquals;
 public class TransactionDAOTest {
 
     @Autowired
-    private EntityManager em;
-
-    @Autowired
     private UserDAOImpl daoUser;
 
     @Autowired

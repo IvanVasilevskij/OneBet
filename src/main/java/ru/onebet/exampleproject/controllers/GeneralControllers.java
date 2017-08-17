@@ -16,11 +16,11 @@ import java.util.List;
 
 @Controller
 public class GeneralControllers {
-    private final DotaEventsDAO daoEvent;
+    private final DotaEventsDAO daoDotaEvent;
 
     @Autowired
-    public GeneralControllers(DotaEventsDAO daoEvent) {
-        this.daoEvent = daoEvent;
+    public GeneralControllers(DotaEventsDAO daoDotaEvent) {
+        this.daoDotaEvent = daoDotaEvent;
     }
 
     @GetMapping("/")
@@ -33,18 +33,16 @@ public class GeneralControllers {
         return "/free/403";
     }
 
-    @GetMapping("/OneBet.ru/free-information/list-of-all-events")
-    public String events(ModelMap model) {
-        EventsDTO bean = new EventsDTO();
-        List<DotaEvent> list = daoEvent.allEvents();
-        bean.setEvents(list);
-
-        model.put("events", bean);
-        return "/user/all-events";
-    }
-
     @GetMapping("/OneBet.ru/to-home-page")
     public String toHomePage() {
         return "/free/home-page";
+    }
+
+    @GetMapping("/OneBet.ru/free/to-all-event-page")
+    public String toAllEventPage(ModelMap model) {
+        EventDTO bean = new EventDTO();
+        bean.setList(daoDotaEvent.allEvents());
+        model.put("events", bean);
+        return "free/all-event";
     }
 }

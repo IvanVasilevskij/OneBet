@@ -145,15 +145,18 @@ public class DotaEvent implements EventBetweenCoupleTeam<DotaTeam> {
     @Override
     public String toString() {
         return teamFirst.getTeamName() +
-                "(" + getPercentForTeamFirst() + ")" +
-                " vs " +
+                " (" + getPercentForTeamFirst() + ") " +
+                "   vs   " +
                 teamSecond.getTeamName() +
-                "(" + getPercentForTeamSecond() + ")" +
+                " (" + getPercentForTeamSecond() + ") " +
                 date.getDayOfMonth() + "." +
                 (date.getMonthValue() < 10 ? ("0" + date.getMonthValue()) : (date.getMonthValue())) + "." +
                 date.getYear() + " " +
                 date.getHour() + ":" +
-                date.getMinute();
+                date.getMinute() +
+                "   draw:(" +
+                persentForDrow +
+                ")";
     }
 
     @Override
