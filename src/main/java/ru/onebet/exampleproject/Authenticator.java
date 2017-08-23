@@ -24,15 +24,16 @@ public class Authenticator implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         ClientImpl client = daoUser.findClient(username);
-            if (client != null) {
-                return new User(username, (client.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
-            } else {
-                Admin admin = daoUser.findAdmin(username);
-                    if (admin.getLogin().equals("root")) {
-                        return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINROOT")));
-                    } else if (admin != null) {
-                        return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-                    } else throw  new UsernameNotFoundException("User doesen't exist");
-                }
+        if (client != null) {
+            return new User(username, (client.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        } else {
+            Admin admin = daoUser.findAdmin(username);
+            if (admin != null) {
+                if (admin.getLogin().equals("root")) {
+                    return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMINROOT")));
+                } else
+                    return new User(username, (admin.getPassword()), Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            } else throw new UsernameNotFoundException("User doesen't exist");
+        }
     }
 }
